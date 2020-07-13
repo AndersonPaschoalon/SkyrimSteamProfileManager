@@ -1,0 +1,1 @@
+C:\Users\anderson_paschoalon\Workspace\Sandbox\OpenSource\Cs\SkyrimSteamProfileManager\SSPLogger\obj\Debug\Logger.csprojAssemblyReference.cache

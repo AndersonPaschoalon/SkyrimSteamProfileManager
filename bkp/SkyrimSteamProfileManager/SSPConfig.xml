@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<SSPCONFIG>
+  <SETTINGS steampath="" documentsPath="" appDataPath="" nmmModPath="" nmmInfoPath="" />
+  <PROFILES>
+    <!-- id={unique int number}, isActive={true/false} -->
+    <PROFILE id="" name="" isactive="" />
+  </PROFILES>  
+</SSPCONFIG>
