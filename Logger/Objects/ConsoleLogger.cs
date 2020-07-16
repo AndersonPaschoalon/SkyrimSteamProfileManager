@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Logger.Objects
 {
-    public class ConsoleLogger : Logger
+    public class ConsoleLogger : ILogger
     {
         private const string LV_DEBUG = "DEBUG   ";
         private const string LV_INFO =  "INFO    ";

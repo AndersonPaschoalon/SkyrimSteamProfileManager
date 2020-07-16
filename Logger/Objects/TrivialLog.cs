@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Logger.Objects
 {
-    class TrivialLog : Logger
+    class TrivialLog : ILogger
     {
         private const string LVDEBUG = "DEBUG";
         private const string LVWARN  = "WARN ";

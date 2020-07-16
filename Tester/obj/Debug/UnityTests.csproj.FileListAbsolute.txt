@@ -1,0 +1,15 @@
+C:\Users\anderson_paschoalon\Workspace\Sandbox\OpenSource\Cs\SkyrimSteamProfileManager\Tester\obj\Debug\UnityTests.csprojAssemblyReference.cache
+C:\Users\anderson_paschoalon\Workspace\Sandbox\OpenSource\Cs\SkyrimSteamProfileManager\Tester\obj\Debug\Tester.exe
+C:\Users\anderson_paschoalon\Workspace\Sandbox\OpenSource\Cs\SkyrimSteamProfileManager\Tester\obj\Debug\Tester.pdb
+C:\Users\anderson_paschoalon\Workspace\Sandbox\OpenSource\Cs\SkyrimSteamProfileManager\Tester\bin\Debug\SSPConfig.xml
+C:\Users\anderson_paschoalon\Workspace\Sandbox\OpenSource\Cs\SkyrimSteamProfileManager\Tester\bin\Debug\SSPConfig_Test.xml
+C:\Users\anderson_paschoalon\Workspace\Sandbox\OpenSource\Cs\SkyrimSteamProfileManager\Tester\bin\Debug\Tester.exe.config
+C:\Users\anderson_paschoalon\Workspace\Sandbox\OpenSource\Cs\SkyrimSteamProfileManager\Tester\bin\Debug\Tester.exe
+C:\Users\anderson_paschoalon\Workspace\Sandbox\OpenSource\Cs\SkyrimSteamProfileManager\Tester\bin\Debug\Tester.pdb
+C:\Users\anderson_paschoalon\Workspace\Sandbox\OpenSource\Cs\SkyrimSteamProfileManager\Tester\bin\Debug\Logger.dll
+C:\Users\anderson_paschoalon\Workspace\Sandbox\OpenSource\Cs\SkyrimSteamProfileManager\Tester\bin\Debug\SkyrimSteamProfileManager.dll
+C:\Users\anderson_paschoalon\Workspace\Sandbox\OpenSource\Cs\SkyrimSteamProfileManager\Tester\bin\Debug\SSPErrors.dll
+C:\Users\anderson_paschoalon\Workspace\Sandbox\OpenSource\Cs\SkyrimSteamProfileManager\Tester\bin\Debug\Logger.pdb
+C:\Users\anderson_paschoalon\Workspace\Sandbox\OpenSource\Cs\SkyrimSteamProfileManager\Tester\bin\Debug\SkyrimSteamProfileManager.pdb
+C:\Users\anderson_paschoalon\Workspace\Sandbox\OpenSource\Cs\SkyrimSteamProfileManager\Tester\bin\Debug\SSPErrors.pdb
+C:\Users\anderson_paschoalon\Workspace\Sandbox\OpenSource\Cs\SkyrimSteamProfileManager\Tester\obj\Debug\UnityTests.csproj.CopyComplete

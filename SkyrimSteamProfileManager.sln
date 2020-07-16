@@ -3,13 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29509.3
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tester", "Tester\Tester.csproj", "{DB3EEC6D-B379-49EE-94BD-872286AD15AA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnityTests", "Tester\UnityTests.csproj", "{DB3EEC6D-B379-49EE-94BD-872286AD15AA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logger", "Logger\Logger.csproj", "{CEDC3029-A30F-46D9-9738-98F6114EA896}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SkyrimSteamProfileManager", "SkyrimSteamProfileManager\SkyrimSteamProfileManager.csproj", "{E2EDF30E-8041-4C61-B499-B251E6054A64}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SSPErrors", "SSPErrors\SSPErrors.csproj", "{730E1BFD-DA2F-4ADD-B9E5-6173D5E1BCAF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UiWpf", "UiWpf\UiWpf.csproj", "{CE023760-BE3E-4EF2-A963-0F474D17703A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -105,6 +107,26 @@ Global
 		{730E1BFD-DA2F-4ADD-B9E5-6173D5E1BCAF}.Release|x64.Build.0 = Release|Any CPU
 		{730E1BFD-DA2F-4ADD-B9E5-6173D5E1BCAF}.Release|x86.ActiveCfg = Release|Any CPU
 		{730E1BFD-DA2F-4ADD-B9E5-6173D5E1BCAF}.Release|x86.Build.0 = Release|Any CPU
+		{CE023760-BE3E-4EF2-A963-0F474D17703A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE023760-BE3E-4EF2-A963-0F474D17703A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE023760-BE3E-4EF2-A963-0F474D17703A}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{CE023760-BE3E-4EF2-A963-0F474D17703A}.Debug|ARM.Build.0 = Debug|Any CPU
+		{CE023760-BE3E-4EF2-A963-0F474D17703A}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{CE023760-BE3E-4EF2-A963-0F474D17703A}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{CE023760-BE3E-4EF2-A963-0F474D17703A}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{CE023760-BE3E-4EF2-A963-0F474D17703A}.Debug|x64.Build.0 = Debug|Any CPU
+		{CE023760-BE3E-4EF2-A963-0F474D17703A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{CE023760-BE3E-4EF2-A963-0F474D17703A}.Debug|x86.Build.0 = Debug|Any CPU
+		{CE023760-BE3E-4EF2-A963-0F474D17703A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE023760-BE3E-4EF2-A963-0F474D17703A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE023760-BE3E-4EF2-A963-0F474D17703A}.Release|ARM.ActiveCfg = Release|Any CPU
+		{CE023760-BE3E-4EF2-A963-0F474D17703A}.Release|ARM.Build.0 = Release|Any CPU
+		{CE023760-BE3E-4EF2-A963-0F474D17703A}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{CE023760-BE3E-4EF2-A963-0F474D17703A}.Release|ARM64.Build.0 = Release|Any CPU
+		{CE023760-BE3E-4EF2-A963-0F474D17703A}.Release|x64.ActiveCfg = Release|Any CPU
+		{CE023760-BE3E-4EF2-A963-0F474D17703A}.Release|x64.Build.0 = Release|Any CPU
+		{CE023760-BE3E-4EF2-A963-0F474D17703A}.Release|x86.ActiveCfg = Release|Any CPU
+		{CE023760-BE3E-4EF2-A963-0F474D17703A}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

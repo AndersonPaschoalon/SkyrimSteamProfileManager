@@ -49,10 +49,16 @@ namespace Tester
                 return;
             if (!Assert.Equals("documentsPath-2", config.settings.documentsPath, "appDataPath do not match"))
                 return;
-            if (!Assert.Equals("DEBUG", config.settings.loglevel, "appDataPath do not match"))
-                return;
             if (!Assert.Equals(3, config.listProfiles.profiles.Count, "number of profiles do not match"))
                 return;
+
+            SSPProfile testProf = new SSPProfile();
+            testProf.color = "AZUL";
+            testProf.id = 15;
+            testProf.isActive = "TRUE";
+            testProf.name = "Test_Serialization_back_to_file";
+            config.listProfiles.profiles.Add(testProf);
+            config.saveConfig("saveConfigTest_SSPConfig_Test.xml");
 
             countAcc++;
         }

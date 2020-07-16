@@ -2,3 +2,4 @@ C:\Users\anderson_paschoalon\Workspace\Sandbox\OpenSource\Cs\SkyrimSteamProfileM
 C:\Users\anderson_paschoalon\Workspace\Sandbox\OpenSource\Cs\SkyrimSteamProfileManager\SSPErrors\bin\Debug\SSPErrors.pdb
 C:\Users\anderson_paschoalon\Workspace\Sandbox\OpenSource\Cs\SkyrimSteamProfileManager\SSPErrors\obj\Debug\SSPErrors.dll
 C:\Users\anderson_paschoalon\Workspace\Sandbox\OpenSource\Cs\SkyrimSteamProfileManager\SSPErrors\obj\Debug\SSPErrors.pdb
+C:\Users\anderson_paschoalon\Workspace\Sandbox\OpenSource\Cs\SkyrimSteamProfileManager\SSPErrors\obj\Debug\SSPErrors.csprojAssemblyReference.cache

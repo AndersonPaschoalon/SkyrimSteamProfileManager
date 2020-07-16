@@ -42,7 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Class1.cs" />
-    <Compile Include="Logger.cs" />
+    <Compile Include="ILogger.cs" />
     <Compile Include="LoggerFactory.cs" />
     <Compile Include="Objects\ConsoleLogger.cs" />
     <Compile Include="Objects\Log4NetLogger.cs" />

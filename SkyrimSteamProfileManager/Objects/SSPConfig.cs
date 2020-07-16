@@ -12,7 +12,7 @@ namespace SkyrimSteamProfileManager.Objects
     [XmlRoot("SSPCONFIG", IsNullable = false)]
     public class SSPConfig
     {
-        private static readonly Logger.Logger log = LoggerFactory.getLogger(LoggerFactory.LogType.CONSOLE);
+        private static readonly Logger.ILogger log = LoggerFactory.getLogger(LoggerFactory.LogType.CONSOLE);
         const string CONFIG_FILE_NAME = "SSPConfig.xml";
 
         public SSPConfig()
@@ -42,9 +42,25 @@ namespace SkyrimSteamProfileManager.Objects
             return config;
         }
 
+        public bool saveConfig(string filename)
+        {
+            try
+            {
+                FileStream sspConfigFile = File.OpenWrite(filename);
+                XmlSerializer x = new System.Xml.Serialization.XmlSerializer(this.GetType());
+                x.Serialize(sspConfigFile, this);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                log.Warn("Error serializing SSPSettings XML back to file " + filename + ". Message:" + ex.Message + ", StackTrace:" + ex.StackTrace);
+            }
+            return false;
+        }
+
         public bool saveConfig()
         {
-            return false;
+            return this.saveConfig(CONFIG_FILE_NAME);
         }
 
         [XmlElement("SETTINGS")]

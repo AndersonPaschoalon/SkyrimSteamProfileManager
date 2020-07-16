@@ -20,13 +20,14 @@ namespace SSPErrors
         // PROFILES OPERATION ERRORS
         public const int ERR_INACTIVE_PROFILE_DOES_NOT_EXIST = 100;
         public const int ERR_INACTIVE_PROFILE_CORRUPETED = 101;
-        public const int ERR_cannot_create_backup_of_active = 102;
+        public const int ERR_CANNOT_CREATE_BACKUP_OF_ACTIVE = 102;
         public const int ERR_ACTIVE_PROFILE_ALREADY_EXISTS = 103;
         public const int ERR_INVALID_PROFILE_NAME = 104;
         public const int ERR_PROFILE_NAME_ALREADY_EXISTS = 105;
         public const int ERR_NO_INSTALLATION_TO_CREATE_PROFILE = 106;
         public const int ERR_INVALID_COLOR_NAME = 107;
-
+        public const int ERR_CANNOT_CREATE_INTEGRITY_FILE = 108;
+        public const int ERR_INVALID_SETTINGS = 109;
 
         // NOT DEFINED
         public const int ERR_UNKNOWN = 9999;

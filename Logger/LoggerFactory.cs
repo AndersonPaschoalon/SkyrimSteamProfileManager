@@ -20,9 +20,9 @@ namespace Logger
         { 
         }
 
-        public static Logger getLogger(LogType ltype)
+        public static ILogger getLogger(LogType ltype)
         {
-            Logger logger = null;
+            ILogger logger = null;
             switch(ltype)
             {
                 case LogType.CONSOLE: 
