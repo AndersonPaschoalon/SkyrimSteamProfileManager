@@ -13,7 +13,7 @@ namespace SkyrimSteamProfileManager
 {
     class SkyrimProfileManager
     {
-        enum States
+        public enum States
         {
             // Only configuration operation is permited
             NOT_CONFIGURED = 0,
@@ -33,90 +33,131 @@ namespace SkyrimSteamProfileManager
         private const string ACTIVE_INTEGRITY_FILE_NAME = "active_profile.int";
         private const string SSP_BACKUP = "SkyrimBackups";
         private readonly ILogger log = ConsoleLogger.getInstance();
+
         // state
         private SSPConfig config;
-        private bool isAppConfigured = false;
         private States applicationState = States.NOT_CONFIGURED;
+        private SSPProfile activeProfile;
+        private List<SSPProfile> listDesactivated;
 
         public SkyrimProfileManager()
         {
             // load settings
             this.config = SSPConfig.getConfig();
-            this.isAppConfigured = this.checkConfig();
-            log.Debug("Is app Configured? " + this.isAppConfigured);
-            if (this.isAppConfigured)
-            {
-                this.applicationState = this.discoverAppState();
-            }
-            else
-            {
-                this.applicationState = States.NOT_CONFIGURED;
-            }
-        }
-
-        public int updateSettings(string newSteamPath, string newDocumentsPath, string newAppDataPath, 
-                                  string nmmInfoPath, string nmmModPath)
-        {
-            if (newSteamPath == null ||
-                newDocumentsPath == null ||
-                newAppDataPath == null ||
-                nmmInfoPath == null ||
-                nmmModPath == null ||
-                newSteamPath.Trim().Equals("") ||
-                newDocumentsPath.Trim().Equals("") ||
-                newAppDataPath.Trim().Equals(""))
-            {
-                return Error.ERR_INVALID_SETTINGS;
-            }
-            else
-            {
-                if (!this.checkDir(newSteamPath) ||
-                    !this.checkDir(newDocumentsPath) ||
-                    !this.checkDir(newAppDataPath))
-                {
-                    return Error.ERR_PATH_NOT_EXIST;
-                }
-                if (nmmInfoPath != "")
-                {
-                    if (!this.checkDir(nmmInfoPath))
-                    {
-                        return Error.ERR_PATH_NOT_EXIST;
-                    }
-                }
-                if (nmmModPath != "")
-                {
-                    if (!this.checkDir(nmmModPath))
-                    {
-                        return Error.ERR_PATH_NOT_EXIST;
-                    }
-                }
-
-                // update settings 
-                this.config.settings.appDataPath = newAppDataPath;
-                this.config.settings.steamPath = newSteamPath;
-                this.config.settings.documentsPath = newDocumentsPath;
-                this.config.settings.nmmModPath = nmmInfoPath;
-                this.config.settings.nmmInfoPath = nmmInfoPath;
-
-                // create backup direcotories
-                this.createBackupsFolder();
-
-                // save settings
-                this.config.saveConfig();
-
-                return Error.SUCCESS;
-
-            }
+            bool isAppConfigured = this.checkConfig();
+            log.Debug("Is app Configured? " + isAppConfigured);
+            this.applicationState = this.discoverApplicationState(out this.activeProfile, out this.listDesactivated);
         }
 
         /// <summary>
-        /// Check if there is an inactive profile. 
+        /// This method is used to configure the application for the first time, or to update the configuration.
+        /// In case of success updates the app settings, otherwise returns an error code, and informs wich parameter
+        /// caused the problem.
         /// </summary>
+        /// <param name="newSteamPath"></param>
+        /// <param name="newDocumentsPath"></param>
+        /// <param name="newAppDataPath"></param>
+        /// <param name="nmmInfoPath"></param>
+        /// <param name="nmmModPath"></param>
         /// <returns></returns>
-        public bool checkInactiveProfile()
+        public int updateSettings(string newSteamPath, string newDocumentsPath, string newAppDataPath, 
+                                  string nmmInfoPath, string nmmModPath, out bool isSteamOk, 
+                                  out bool isDocOk, out bool isAppdataOk, out bool isNmmInfoOk,
+                                  out bool isNmmModOk)
         {
-            // TODO
-            return false;
+            int outVal = Error.SUCCESS;
+            isSteamOk = true;
+            isDocOk = true;
+            isAppdataOk = true;
+            isNmmInfoOk = true;
+            isNmmModOk = true;
+
+            // check if settings are valid
+            if (newSteamPath == null || newSteamPath.Trim().Equals(""))
+            {
+                outVal = Error.ERR_INVALID_SETTINGS;
+                isSteamOk = false;
+            }
+            if (newDocumentsPath == null || newDocumentsPath.Trim().Equals(""))
+            {
+                outVal = Error.ERR_INVALID_SETTINGS;
+                isDocOk = false;
+            }
+            if (newAppDataPath == null || newAppDataPath.Trim().Equals(""))
+            {
+                outVal = Error.ERR_INVALID_SETTINGS;
+                isAppdataOk = false;
+            }
+            if (nmmInfoPath == null)
+            {
+                outVal = Error.ERR_INVALID_SETTINGS;
+                isNmmInfoOk = false;
+            }
+            if (nmmModPath == null)
+            {
+                outVal = Error.ERR_INVALID_SETTINGS;
+                isNmmModOk = false;
+            }
+            if (outVal != Error.SUCCESS)
+            {
+                return outVal;
+            }
+
+            // check if paths do exist
+            if (!this.checkDir(newSteamPath))
+            {
+                isSteamOk = false;
+                outVal = Error.ERR_PATH_NOT_EXIST;
+            }
+            if (!this.checkDir(newDocumentsPath))
+            {
+                isDocOk = false;
+                outVal = Error.ERR_PATH_NOT_EXIST;
+            }
+            if (!this.checkDir(newAppDataPath))
+            {
+                isAppdataOk = false;
+                outVal = Error.ERR_PATH_NOT_EXIST;
+            }
+            // optional settings
+            if (!nmmInfoPath.Trim().Equals(""))
+            {
+                if (!this.checkDir(nmmInfoPath))
+                {
+                    isNmmInfoOk = false;
+                    outVal = Error.ERR_PATH_NOT_EXIST;
+                }
+            }
+            if (!nmmModPath.Trim().Equals(""))
+            {
+                if (!this.checkDir(nmmModPath))
+                {
+                    isNmmModOk = false;
+                    outVal = Error.ERR_PATH_NOT_EXIST;
+                }
+            }
+            if (outVal != Error.SUCCESS)
+            {
+                return outVal;
+            }
+
+            // Settings are OK. update settings 
+            this.config.settings.appDataPath = newAppDataPath;
+            this.config.settings.steamPath = newSteamPath;
+            this.config.settings.documentsPath = newDocumentsPath;
+            this.config.settings.nmmModPath = nmmInfoPath;
+            this.config.settings.nmmInfoPath = nmmInfoPath;
+
+            // create backup direcotories
+            this.createBackupsFolder();
+
+            // save settings
+            this.config.saveConfig();
+
+            // update app state
+            this.applicationState = this.discoverApplicationState(out this.activeProfile, out this.listDesactivated);
+
+            return Error.SUCCESS;
         }
 
         /// <summary>
@@ -192,6 +233,36 @@ namespace SkyrimSteamProfileManager
             return Error.ERR_UNKNOWN;
         }
 
+        #region app_state
+        /// <summary>
+        /// return a list of current desactivated profiles
+        /// </summary>
+        /// <returns></returns>
+        public List<SSPProfile> getDesactivatedProfiles()
+        {
+            return this.listDesactivated;
+        }
+
+        /// <summary>
+        /// return the current active profile
+        /// </summary>
+        /// <returns></returns>
+        public SSPProfile getActiveProfile()
+        {
+            return this.activeProfile;
+        }
+
+        /// <summary>
+        /// returns the application state
+        /// </summary>
+        /// <returns></returns>
+        public States getApplicationState()
+        {
+            return this.applicationState;
+        }
+
+        #endregion app_state
+
         #region private_methos
 
         #region paths 
@@ -210,31 +281,26 @@ namespace SkyrimSteamProfileManager
                    name.Trim() + "\\" +
                    this.config.settings.gameFolder.Trim();
         }
-
         private string documentsBackup()
         {
             return this.config.settings.documentsPath + "\\" + SSP_BACKUP;
         }
-
         private string documentsBackupGame(string name)
         {
             return documentsBackup() + "\\" +
                    name.Trim() + "\\" +
                    this.config.settings.gameFolder.Trim();
         }
-
         private string appDataBackup()
         {
             return this.config.settings.appDataPath + "\\" + SSP_BACKUP;
         }
-
         private string appDataBackupGame(string name)
         {
             return appDataBackup() + "\\" +
                    name.Trim() + "\\" +
                    this.config.settings.gameFolder.Trim();
         }
-
         private string nmmInfoBackup()
         {
             if (!this.config.settings.nmmInfoPath.Trim().Equals(""))
@@ -246,7 +312,6 @@ namespace SkyrimSteamProfileManager
                 return "";
             }
         }
-
         private string nmmInfoBackupGame(string name)
         {
             if (!this.config.settings.nmmInfoPath.Trim().Equals(""))
@@ -260,7 +325,6 @@ namespace SkyrimSteamProfileManager
                 return "";
             }
         }
-
         private string nmmModBackup()
         {
             if (!this.config.settings.nmmInfoPath.Trim().Equals(""))
@@ -272,7 +336,6 @@ namespace SkyrimSteamProfileManager
                 return "";
             }
         }
-
         private string nmmModBackupGame(string name)
         {
             if (!this.config.settings.nmmInfoPath.Trim().Equals(""))
@@ -345,6 +408,11 @@ namespace SkyrimSteamProfileManager
             return 0;
         }
 
+        /// <summary>
+        /// Create a integrity file
+        /// </summary>
+        /// <param name="prof"></param>
+        /// <returns></returns>
         bool createIntegrityFile(SSPProfile prof)
         {
             try
@@ -359,15 +427,101 @@ namespace SkyrimSteamProfileManager
             }
         }
 
-        private States discoverAppState()
+        /// <summary>
+        /// Delete integrity file.
+        /// </summary>
+        void deleteIntegrityFile()
         {
-            // TODO
-            return States.ACTIVE_ONLY;
+            try
+            {
+                File.Delete(this.integrityFilePath());
+            }
+            catch (Exception ex)
+            {
+                log.Warn("** Error deleting integrity file. Message:" + ex.Message + ", StackTrace:" + ex.StackTrace);
+            }
         }
 
-        private int checkAllLoadedProfiles()
+        /// <summary>
+        /// Returns the application state, and returns by references (if it exists) the 
+        /// active profile (null otherwise); and the list of desactivated profiles
+        /// (or a empty list otherwise).
+        /// </summary>
+        /// <param name="activeProfileOk"></param>
+        /// <param name="desactivatedProfilesOk"></param>
+        /// <returns></returns>
+        private States discoverApplicationState(out SSPProfile activeProfileOk,
+                                               out List<SSPProfile> desactivatedProfilesOk)
         {
-            return 0;
+            activeProfileOk = null;
+            desactivatedProfilesOk = new List<SSPProfile>();
+            bool isInstalled = true;
+            bool configStatus = this.checkConfig();
+            if (!configStatus)
+            {
+                // settings are not ok
+                return States.NOT_CONFIGURED;
+            }
+            else
+            {
+                // check current instalations
+                if (!this.checkDir(this.config.settings.steamPathGame()))
+                {
+                    isInstalled = false;
+                }
+                else
+                {
+                    foreach (var item in this.config.listProfiles.profiles)
+                    {
+                        if (item.isProfileActive())
+                        {
+                            if (this.checkActiveProfile(item))
+                            {
+                                activeProfileOk = item;
+                                break;
+                            }
+                        }
+                    }
+                    // no active profile
+                    if (activeProfileOk == null)
+                    {
+                        this.deleteIntegrityFile();
+                    }
+                }
+                // check desactivated
+                foreach (var item in this.config.listProfiles.profiles)
+                {
+                    if (!item.isProfileActive())
+                    {
+                        if (this.checkDesactivatedProfile(item))
+                        {
+                            desactivatedProfilesOk.Add(item);
+                        }
+                    }
+                }
+            }
+            if (!isInstalled && desactivatedProfilesOk.Count == 0)
+            {
+                return States.NO_PROFILE;
+            }
+            else if (isInstalled && activeProfileOk == null)
+            {
+                return States.INACTIVE_PROFILE;
+            }
+            else if (activeProfileOk != null && desactivatedProfilesOk.Count == 0)
+            {
+                return States.ACTIVE_ONLY;
+            }
+            else if (activeProfileOk != null && desactivatedProfilesOk.Count > 0)
+            {
+                return States.ACTIVE_AND_DESACTIVATED_PROFILES;
+            }
+            else if (activeProfileOk == null && desactivatedProfilesOk.Count > 0)
+            {
+                return States.DESACTIVATED_ONLY;
+            }
+            log.Error("Invalid Option");
+            return States.NOT_CONFIGURED;
         }
 
         #endregion aux 

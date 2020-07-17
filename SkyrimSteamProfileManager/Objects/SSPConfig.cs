@@ -63,6 +63,84 @@ namespace SkyrimSteamProfileManager.Objects
             return this.saveConfig(CONFIG_FILE_NAME);
         }
 
+        /*
+         clean configuration before loading
+        public SSPConfig cleanConfig(SSPConfig inConfig)
+        {
+            // main objects
+            if (inConfig == null)
+            {
+                inConfig = new SSPConfig();
+            }
+            if (inConfig.settings == null)
+            {
+                inConfig.settings = new SSPSettings();
+            }
+            if (inConfig.listProfiles == null)
+            {
+                inConfig.listProfiles = new SSPProfileList();
+            }
+            if (inConfig.listProfiles.profiles == null)
+            {
+                inConfig.listProfiles.profiles = new List<SSPProfile>();
+            }
+            // settings paths
+            if (inConfig.settings.appDataPath == null)
+            {
+                inConfig.settings.appDataPath = "";
+            }
+            if (inConfig.settings.documentsPath == null)
+            {
+                inConfig.settings.documentsPath = null;
+            }
+            if (inConfig.settings.gameFolder == null)
+            {
+                inConfig.settings.gameFolder = "";
+            }
+            if (inConfig.settings.nmmInfoPath == null)
+            {
+                inConfig.settings.nmmInfoPath = "";
+            }
+            if (inConfig.settings.nmmModPath == null)
+            {
+                inConfig.settings.nmmModPath = "";
+            }
+            if (inConfig.settings.steamPath == null)
+            {
+                inConfig.settings.steamPath = "";
+            }
+            // check profiles
+            // check if thre is no more than one occurence of the same name
+            List<string> names = new List<string>();
+            int countActive = 0;
+            List<int> postToRemove = new List<int>();
+            for (int i = 0; i < inConfig.listProfiles.profiles.Count; i++)
+            {
+                SSPProfile item = inConfig.listProfiles.profiles[i];
+                if (item.name == null || item.name.Trim().Equals(""))
+                {
+                    postToRemove.Add(i);
+                }
+                else
+                {
+                    if (names.Count == 0)
+                    {
+                        names.Add(item.name);
+                    }
+                }
+
+            }
+            foreach (var item in inConfig.listProfiles.profiles)
+            {
+                item
+            }
+
+
+
+            return inConfig;
+        }
+        */ 
+
         [XmlElement("SETTINGS")]
         public SSPSettings settings { get; set; }
 
