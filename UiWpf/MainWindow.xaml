@@ -6,18 +6,102 @@
         xmlns:local="clr-namespace:UiWpf"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
-        Background="{DynamicResource MaterialDesignPaper}"
-        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-        Title="MainWindow" Height="450" Width="800">
-    <Window.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </Window.Resources>
-    <Grid>
+        Title="MainWindow" Height="600" Width="1080" WindowStyle="None" Foreground="White">
 
+    <Window.Resources>
+        <Storyboard x:Key="MenuOpen">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="GridMenu">
+                <EasingDoubleKeyFrame KeyTime="0" Value="70"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="200"/>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+        <Storyboard x:Key="MenuClose">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="GridMenu">
+                <EasingDoubleKeyFrame KeyTime="0" Value="200"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="70"/>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+    </Window.Resources>
+
+    <Window.Triggers>
+        <EventTrigger RoutedEvent="ButtonBase.Click" SourceName="ButtonOpenMenu" >
+            <BeginStoryboard Storyboard="{StaticResource MenuOpen}" />
+        </EventTrigger>
+        <EventTrigger RoutedEvent="ButtonBase.Click" SourceName="ButtonCloseMenu" >
+            <BeginStoryboard Storyboard="{StaticResource MenuClose}" />
+        </EventTrigger>
+    </Window.Triggers>
+
+    <Grid Background="#FF090951">
+        <Grid x:Name="GridMain" HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="540" Width="1010"/>
+
+        <Grid x:Name="GridTop" Height="70" VerticalAlignment="Top" Background="Black" >
+            <Grid.Effect>
+                <DropShadowEffect BlurRadius="1" ShadowDepth="1" Color="#FFACACAC"/>
+            </Grid.Effect>
+            <TextBlock Text="Steam Game Install Manager" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="22" >
+            </TextBlock>
+            <StackPanel VerticalAlignment="Center" Orientation="Horizontal" HorizontalAlignment="Right">
+                <TextBlock Text="Game Select" VerticalAlignment="Center" FontSize="18"/>
+                <materialDesign:PopupBox  PlacementMode="BottomAndAlignRightEdges" StaysOpen="False" Margin="10" >
+                    <StackPanel Width="150">
+                        <Separator/>
+                        <Button Content="Skyrim" />
+                        <Separator/>
+                        <Button Content="Skyrim SE" />
+                        <Separator/>
+                    </StackPanel>
+                </materialDesign:PopupBox>
+            </StackPanel>
+        </Grid>
+
+        <Grid x:Name="GridMenu" Width="60" HorizontalAlignment="Left" Background="Black" >
+            <StackPanel>
+                <Grid Height="150" Background="Black">
+                    <Button x:Name="ButtonCloseMenu" Width="60" 
+                            Height="60" VerticalAlignment="Top" 
+                            HorizontalAlignment="Right" Background="{x:Null}" 
+                            BorderBrush="{x:Null}" Visibility="Collapsed"
+                            Click="ButtonCloseMenu_Click">
+                        <materialDesign:PackIcon Foreground="White"  Kind="ArrowLeft" Width="25" Height="25"/>
+                    </Button>
+                    <Button x:Name="ButtonOpenMenu" Width="60" 
+                            Height="60" VerticalAlignment="Top" 
+                            HorizontalAlignment="Right" Background="{x:Null}" 
+                            BorderBrush="{x:Null}"  Visibility="Visible"
+                            Click="ButtonOpenMenu_Click">
+                        <materialDesign:PackIcon Foreground="White"  Kind="Menu" Width="25" Height="25"/>
+                    </Button>
+                </Grid>
+                <ListView x:Name="ListViewMenu" ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
+                          Foreground="White" SelectionChanged="ListViewMenu_SelectionChanged">
+                    <ListViewItem x:Name="ItemHome" Height="60">
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="ViewDashboard" Width="25" Height="25" Margin="10" VerticalAlignment="Center"/>
+                            <TextBlock Text="Home" VerticalAlignment="Center" Margin="20 10"/>
+                        </StackPanel>
+                    </ListViewItem>
+                    <ListViewItem x:Name="ItemSettings"  Height="60">
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="Gear" Width="25" Height="25" Margin="10" VerticalAlignment="Center"/>
+                            <TextBlock Text="Settings" VerticalAlignment="Center" Margin="20 10"/>
+                        </StackPanel>
+                    </ListViewItem>
+                    <ListViewItem x:Name="ItemHelp" Height="60">
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Kind="HelpBox" Width="25" Height="25" Margin="10" VerticalAlignment="Center"/>
+                            <TextBlock Text="Ticket" VerticalAlignment="Center" Margin="20 10"/>
+                        </StackPanel>
+                    </ListViewItem>
+                </ListView>
+            </StackPanel>
+        </Grid>
+    </Grid>
+
+</Window>
+
+<!--
+    <Grid>
         <StackPanel>
             <Button Style="{StaticResource MaterialDesignRaisedAccentButton}"
                     Width="150"
@@ -63,7 +147,5 @@
             </Button>
 
         </StackPanel>
-
-
     </Grid>
-</Window>
+-->

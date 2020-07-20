@@ -24,5 +24,41 @@ namespace UiWpf
         {
             InitializeComponent();
         }
+
+        private void ListViewMenu_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            UserControl usc = null;
+            GridMain.Children.Clear();
+
+            switch (((ListViewItem)((ListView)sender).SelectedItem).Name)
+            {
+                case "ItemHome":
+                    usc = new UserControlHome();
+                    GridMain.Children.Add(usc);
+                    break;
+                case "ItemSettings":
+                    usc = new UserControlSettings();
+                    GridMain.Children.Add(usc);
+                    break;
+                case "ItemHelp":
+                    usc = new UserControlHelp();
+                    GridMain.Children.Add(usc);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void ButtonCloseMenu_Click(object sender, RoutedEventArgs e)
+        {
+            ButtonOpenMenu.Visibility = Visibility.Visible;
+            ButtonCloseMenu.Visibility = Visibility.Collapsed;
+        }
+
+        private void ButtonOpenMenu_Click(object sender, RoutedEventArgs e)
+        {
+            ButtonOpenMenu.Visibility = Visibility.Collapsed;
+            ButtonCloseMenu.Visibility = Visibility.Visible;
+        }
     }
 }
