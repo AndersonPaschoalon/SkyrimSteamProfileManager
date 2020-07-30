@@ -4,29 +4,74 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:UiWpf"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="10*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="3*" />
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
 
-        
-        
-        <StackPanel Grid.Row="0" Grid.Column="0" Margin="50 50">
-            <TextBlock x:Name="lblSteam" Margin="10 10 10 0" Text="Steamm\Commons Folder"></TextBlock>
-            <TextBox x:Name="txtSteam" Margin="10 0 10 10" ></TextBox>
 
-            <TextBlock x:Name="lblDocs" Text="Documents Folder" Margin="10 10 10 0"></TextBlock>
-            <TextBox x:Name="txtDocs" Margin="10 0 10 10"></TextBox>
+        <StackPanel Grid.Row="1" Grid.Column="1" >
 
-            <TextBlock x:Name="lblAppdir" Text="AppDir folder" Margin="10 10 10 0"></TextBlock>
-            <TextBox x:Name="txtEndereco" Margin="10 0 10 10"></TextBox>
+            <TextBlock x:Name="lblSteam" Margin="3" Text="Steamm\Commons Folder" FontWeight="Bold"></TextBlock>
+            <StackPanel HorizontalAlignment="Left" Orientation="Horizontal" Margin="20 5 5 5">
+                <Button  BorderBrush="{x:Null}" Height="25" Width="35" Padding="0" Margin="0" >
+                    <materialDesign:PackIcon Grid.Column="0" Kind="FolderSearchOutline" Width="20" Height="20" Margin="0 0 0 0" HorizontalAlignment="Left"  />
+                </Button>
+                <TextBox x:Name="txtSteam" Margin="3" >C:\Users\anderson_paschoalon\Workspace\Sandbox\OpenSource\Cs\SkyrimSteamProfileManager</TextBox>
+            </StackPanel>
 
-            <TextBlock x:Name="lblNmmInfo" Text="NmmInfo" Margin="10 10 10 0"></TextBlock>
-            <TextBox x:Name="txtNmmInfo" Margin="10 0 10 10"></TextBox>
 
-            <TextBlock x:Name="lblNmmMod" Text="NmmMod" Margin="10 10 10 0"></TextBlock>
-            <TextBox x:Name="txtNmmMod" Margin="10 0 10 10"></TextBox>
+            <TextBlock x:Name="lblDocs" Margin="3" Text="Documents Folder" FontWeight="Bold"></TextBlock>
+            <StackPanel HorizontalAlignment="Left" Orientation="Horizontal" Margin="20 5 5 5">
+                <Button  BorderBrush="{x:Null}"  Height="25" Width="35" Padding="0" Margin="0">
+                    <materialDesign:PackIcon Grid.Column="0" Kind="FolderSearchOutline" Width="20" Height="20" Margin="0 0 0 0" HorizontalAlignment="Left"  />
+                </Button>
+                <TextBox x:Name="txtDocs" Margin="3" >C:\Users\anderson_paschoalon\Workspace\Sandbox\OpenSource\Cs\SkyrimSteamProfileManager</TextBox>
+            </StackPanel>
+
+
+            <TextBlock x:Name="lblAppdir" Margin="3" Text="Appdir Folder" FontWeight="Bold"></TextBlock>
+            <StackPanel HorizontalAlignment="Left" Orientation="Horizontal" Margin="20 5 5 5">
+                <Button BorderBrush="{x:Null}"  Height="25" Width="35" Padding="0" Margin="0">
+                    <materialDesign:PackIcon Grid.Column="0" Kind="FolderSearchOutline" Width="20" Height="20" Margin="0 0 0 0" HorizontalAlignment="Left"  />
+                </Button>
+                <TextBox x:Name="txtAppdir" Margin="3" >C:\Users\anderson_paschoalon\Workspace\Sandbox\OpenSource\Cs\SkyrimSteamProfileManager</TextBox>
+            </StackPanel>
+
+
+            <TextBlock x:Name="lblNmmInfo" Margin="3" Text="NmmInfo Folder" FontWeight="Bold"></TextBlock>
+            <StackPanel HorizontalAlignment="Left" Orientation="Horizontal" Margin="20 5 5 5">
+                <Button  BorderBrush="{x:Null}"  Height="25" Width="35" Padding="0" Margin="0">
+                    <materialDesign:PackIcon Grid.Column="0" Kind="FolderSearchOutline" Width="20" Height="20" Margin="0 0 0 0" HorizontalAlignment="Left"  />
+                </Button>
+                <TextBox x:Name="txtNmmInfo" Margin="3" >C:\Users\anderson_paschoalon\Workspace\Sandbox\OpenSource\Cs\SkyrimSteamProfileManager</TextBox>
+            </StackPanel>
+
+
+            <TextBlock x:Name="lblNmmMod" Margin="3" Text="NmmMod Folder" FontWeight="Bold"></TextBlock>
+            <StackPanel HorizontalAlignment="Left" Orientation="Horizontal" Margin="20 5 5 5">
+                <Button  BorderBrush="{x:Null}"  Height="25" Width="35" Padding="0" Margin="0">
+                    <materialDesign:PackIcon Grid.Column="0" Kind="FolderSearchOutline" Width="20" Height="20" Margin="0 0 0 0" HorizontalAlignment="Left"  />
+                </Button>
+                <TextBox x:Name="txtNmmMod" Margin="3" >C:\Users\anderson_paschoalon\Workspace\Sandbox\OpenSource\Cs\SkyrimSteamProfileManager</TextBox>
+            </StackPanel>
+
             
-            <Button x:Name="saveConfig" Grid.Column="0" Width="200" Height="30" Margin="5,5,5,5" Click="saveConfig_Click" Content="Incluir"></Button>
+            <Button x:Name="saveConfig" Grid.Column="0" 
+                    Width="150" Height="30"  
+                    Margin="5,5,5,5" Click="saveConfig_Click"
+                    BorderBrush="{x:Null}"
+                    Content="Incluir" ></Button>
         </StackPanel>        
     </Grid>
 </UserControl>

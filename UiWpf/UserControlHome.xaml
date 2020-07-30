@@ -13,8 +13,8 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="4*"/>
-                <RowDefinition Height="3*"/>
-                <RowDefinition Height="*"/>                
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
@@ -23,77 +23,91 @@
             </Grid.ColumnDefinitions>
 
             <Grid Grid.Row="1" Grid.Column="1">
-                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                    <TextBlock Text="AAAAA" Margin="10" ></TextBlock>
-                </StackPanel>
+                
+                <Grid  x:Name="gridProfiles" VerticalAlignment="Top" HorizontalAlignment="Center" 
+                       Width="480" >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="2*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <ListView Grid.Column="0" HorizontalAlignment="Center" Background="#c7c5c2"  >
+                        <ListView.View>
+                            <GridView AllowsColumnReorder="true" ColumnHeaderToolTip="Authors">
+                                <GridViewColumn Header="Activated"  DisplayMemberBinding="{Binding Path=Name}" />
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+
+                    <ListView Grid.Column="2" HorizontalAlignment="Center" SelectionMode="Single" Background="#c7c5c2"  >
+                        <ListView.View>
+                            <GridView AllowsColumnReorder="true" ColumnHeaderToolTip="Authors">
+                                <GridViewColumn Width="30">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <CheckBox IsChecked="{Binding IsSelected,
+                                              RelativeSource={RelativeSource
+                                              AncestorType={x:Type ListViewItem}}}" />
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Header="Desativated"  DisplayMemberBinding="{Binding Path=name}" />
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </Grid>
             </Grid>
 
             <Grid Grid.Row="2" Grid.Column="1">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-
-                <StackPanel>
-                    
-                </StackPanel>
-
-                <Button Grid.Column="0" 
-                        Grid.Row="0"
-                        Margin="15 0"
-                        Background="LimeGreen"
-                        Style="{StaticResource MaterialDesignRaisedLightButton}" Height="50"
-                        ToolTip="todo DESCRIPTION" 
->
-                    <StackPanel HorizontalAlignment="Left" Orientation="Horizontal" Width="171">
-                        <materialDesign:PackIcon Kind="PlayCircleOutline" Width="30" Height="30" Margin="0 0 25 0" HorizontalAlignment="Left" />
-                        <TextBlock   VerticalAlignment="Center" HorizontalAlignment="Center" TextWrapping="Wrap" MaxWidth="149">
-                            Activate Profile INACTIVE
-                        </TextBlock>
-                    </StackPanel>
+                <!--
+                <Button Content="Activate" Grid.Column="0" Height="40" Margin="20" Background="SlateGray" BorderBrush="SlateGray" IsEnabled="False"/>
+                -->
+                <Button Grid.Column="0" Height="30" 
+                        Margin="10" x:Name="btnActivate"
+                        BorderBrush="{x:Null}" Click="btnActivate_Click">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="2*"/>
+                        </Grid.ColumnDefinitions>
+                        <materialDesign:PackIcon Grid.Column="0" Kind="PlayCircleOutline" Width="20" Height="20" Margin="0 0 5 0" HorizontalAlignment="Left"  />
+                        <TextBlock Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center">Activate</TextBlock>
+                    </Grid>
                 </Button>
-                
-                <Button Grid.Column="1" Grid.Row="0"
-                        Margin="15 0"
-                        Background="LimeGreen"
-                        Style="{StaticResource MaterialDesignRaisedLightButton}" Height="50"
-                        ToolTip="todo DESCRIPTION" >
-                    <StackPanel HorizontalAlignment="Left" Orientation="Horizontal" Width="171">
-                        <materialDesign:PackIcon Kind="Restore" Width="30" Height="30" Margin="0 0 25 0"/>
-                        <TextBlock   VerticalAlignment="Center" HorizontalAlignment="Center" TextWrapping="Wrap" MaxWidth="149">
-                            Activate Profile DESACTIVATED 
-                        </TextBlock>
-                    </StackPanel>
-                </Button>
-                
-                <Button Grid.Column="0" Grid.Row="1"
-                        Margin="15 0"
-                        Background="Red"
-                        Style="{StaticResource MaterialDesignRaisedLightButton}" Height="50"
-                        ToolTip="todo DESCRIPTION" >
-                    <StackPanel HorizontalAlignment="Left" Orientation="Horizontal" Width="171">
-                        <materialDesign:PackIcon Kind="CloseBoxOutline" Width="30" Height="30" Margin="0 0 25 0"/>
-                        <TextBlock Text="Desactivate Profile"  VerticalAlignment="Center"/>
-                    </StackPanel>                    
-                </Button>
-                <Button Grid.Column="1" Grid.Row="1"
-                        Margin="15 0"
-                        Background="Yellow"
-                        Style="{StaticResource MaterialDesignRaisedLightButton}" Height="50"
-                        ToolTip="todo DESCRIPTION" >
-                    <StackPanel HorizontalAlignment="Left" Orientation="Horizontal" Width="171">
-                        <materialDesign:PackIcon Kind="ArrowLeftRightBoldOutline" Width="30" Height="30" Margin="0 0 25 0"/>
-                        <TextBlock Text="Switch Profiles"  VerticalAlignment="Center"/>
-                    </StackPanel>
-                </Button>                
-                
 
-        </Grid>
-                
+                <Button Grid.Column="1" BorderBrush="{x:Null}"
+                        Height="30" Margin="10"
+                        x:Name="btnDesactivate" Click="btnDesactivate_Click">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="2*"/>
+                        </Grid.ColumnDefinitions>
+                        <materialDesign:PackIcon Grid.Column="0" Kind="CloseCircleOutline" Width="20" Height="20" Margin="0 0 5 0" HorizontalAlignment="Left"  />
+                        <TextBlock Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center"> Desactivate</TextBlock>
+                    </Grid>
+                </Button>
+
+                <Button Grid.Column="2" 
+                        Height="30" Margin="10" 
+                        BorderBrush="{x:Null}" x:Name="Switch" 
+                        Click="Switch_Click">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="2*"/>
+                        </Grid.ColumnDefinitions>
+                        <materialDesign:PackIcon Grid.Column="0" Kind="ArrowLeftRightBoldOutline" Width="20" Height="20" Margin="0 0 5 0" HorizontalAlignment="Left"  />
+                        <TextBlock Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center"> Switch</TextBlock>
+                    </Grid>
+                </Button>
+            </Grid>
         </Grid>
     </Grid>
 </UserControl>

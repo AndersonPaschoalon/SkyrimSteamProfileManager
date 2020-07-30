@@ -5,8 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
-using SkyrimSteamProfileManager;
-using SkyrimSteamProfileManager.Objects;
+using SteamProfileManager;
+using SteamProfileManager.Objects;
 
 
 namespace Tester
@@ -24,7 +24,7 @@ namespace Tester
             bool test01 = true;
 
             if (test01)
-                testSSPConfigXml();
+                testSPConfigXml();
         }
 
         public static void testHeader(string msg)
@@ -35,15 +35,15 @@ namespace Tester
             Console.WriteLine("*******************************************************");
         }
 
-        public static void testSSPConfigXml()
+        public static void testSPConfigXml()
         {
-            testHeader("SSPConfig.xml");
+            testHeader("SPConfig.xml");
 
-            string configFile = "SSPConfig_Test.xml";
-            XmlSerializer serializer = new XmlSerializer(typeof(SSPConfig));
+            string configFile = "SPConfig_Test.xml";
+            XmlSerializer serializer = new XmlSerializer(typeof(SPConfig));
             FileStream fs = new FileStream(configFile, FileMode.Open);
-            SSPConfig config;
-            config = (SSPConfig)serializer.Deserialize(fs);
+            SPConfig config;
+            config = (SPConfig)serializer.Deserialize(fs);
 
             if(!Assert.Equals("appDataPath-3", config.settings.appDataPath, "appDataPath do not match")) 
                 return;
@@ -52,13 +52,13 @@ namespace Tester
             if (!Assert.Equals(3, config.listProfiles.profiles.Count, "number of profiles do not match"))
                 return;
 
-            SSPProfile testProf = new SSPProfile();
+            SPProfile testProf = new SPProfile();
             testProf.color = "AZUL";
             testProf.id = 15;
             testProf.isActive = "TRUE";
             testProf.name = "Test_Serialization_back_to_file";
             config.listProfiles.profiles.Add(testProf);
-            config.saveConfig("saveConfigTest_SSPConfig_Test.xml");
+            config.saveConfig("saveConfigTest_SPConfig_Test.xml");
 
             countAcc++;
         }

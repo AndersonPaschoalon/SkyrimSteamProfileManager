@@ -44,7 +44,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
     <Compile Include="ILogger.cs" />
     <Compile Include="LoggerFactory.cs" />
     <Compile Include="Objects\ConsoleLogger.cs" />
@@ -56,6 +55,7 @@
     <Content Include="LogConfig.xml" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Log4Net.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

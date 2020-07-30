@@ -56,17 +56,17 @@
       <Project>{cedc3029-a30f-46d9-9738-98f6114ea896}</Project>
       <Name>Logger</Name>
     </ProjectReference>
-    <ProjectReference Include="..\SkyrimSteamProfileManager\SkyrimSteamProfileManager.csproj">
+    <ProjectReference Include="..\SkyrimSteamProfileManager\SteamProfileManager.csproj">
       <Project>{e2edf30e-8041-4c61-b499-b251e6054a64}</Project>
-      <Name>SkyrimSteamProfileManager</Name>
+      <Name>SteamProfileManager</Name>
     </ProjectReference>
-    <ProjectReference Include="..\SSPErrors\SSPErrors.csproj">
+    <ProjectReference Include="..\SSPErrors\SPErrors.csproj">
       <Project>{730e1bfd-da2f-4add-b9e5-6173d5e1bcaf}</Project>
-      <Name>SSPErrors</Name>
+      <Name>SPErrors</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="SSPConfig_Test.xml">
+    <Content Include="SPConfig_Test.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

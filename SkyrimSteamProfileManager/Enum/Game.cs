@@ -4,9 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SkyrimSteamProfileManager
+namespace SteamProfileManager.Enum
 {
-    class SPSettings
+    public enum Game
     {
+        SKYRIM = 0,
+        SKYRIM_SE = 1
     }
 }

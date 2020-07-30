@@ -7,9 +7,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnityTests", "Tester\UnityT
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logger", "Logger\Logger.csproj", "{CEDC3029-A30F-46D9-9738-98F6114EA896}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SkyrimSteamProfileManager", "SkyrimSteamProfileManager\SkyrimSteamProfileManager.csproj", "{E2EDF30E-8041-4C61-B499-B251E6054A64}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SteamProfileManager", "SkyrimSteamProfileManager\SteamProfileManager.csproj", "{E2EDF30E-8041-4C61-B499-B251E6054A64}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SSPErrors", "SSPErrors\SSPErrors.csproj", "{730E1BFD-DA2F-4ADD-B9E5-6173D5E1BCAF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SPErrors", "SSPErrors\SPErrors.csproj", "{730E1BFD-DA2F-4ADD-B9E5-6173D5E1BCAF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UiWpf", "UiWpf\UiWpf.csproj", "{CE023760-BE3E-4EF2-A963-0F474D17703A}"
 EndProject

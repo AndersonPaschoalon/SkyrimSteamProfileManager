@@ -5,19 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
-namespace SkyrimSteamProfileManager.Objects
+namespace SteamProfileManager.Objects
 {
-    public class SSPProfile
+    public class SPProfile
     {
-        public enum State
-        {
-            EXISTS_INACTIVE,
-            EXISTS_ACTIVE,
-            NOT_EXISTS,
-            CORRUPTED
-        }
-
-        public SSPProfile()
+        public SPProfile()
         {
             this.id = 0;
             this.name = "";
@@ -38,18 +30,11 @@ namespace SkyrimSteamProfileManager.Objects
         {
             get 
             {
-                return (this._isActive)? "TRUE" : "FALSE";
+                return Helper.boolToStr(this._isActive);
             }
             set
             {
-                if (value.ToUpper() == "FALSE" || value == "0" || value.Trim().Equals(""))
-                {
-                    this._isActive = false;
-                }
-                else
-                {
-                    this._isActive = true;
-                }
+                this._isActive = Helper.strToBool(value);
             }
         }
 

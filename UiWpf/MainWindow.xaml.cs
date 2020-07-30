@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using UiWpf.ViewModel;
 
 namespace UiWpf
 {
@@ -20,9 +21,14 @@ namespace UiWpf
     /// </summary>
     public partial class MainWindow : Window
     {
+        private ViewModel.DataModel context;
         public MainWindow()
         {
             InitializeComponent();
+            this.context = new DataModel();
+            context.selectedGame = "Skyrim";
+            this.DataContext = this.context;
+
         }
 
         private void ListViewMenu_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -59,6 +65,17 @@ namespace UiWpf
         {
             ButtonOpenMenu.Visibility = Visibility.Collapsed;
             ButtonCloseMenu.Visibility = Visibility.Visible;
+        }
+
+
+        private void btnGameSkyrim_Click(object sender, RoutedEventArgs e)
+        {
+            this.context.selectedGame = "Skyrim";
+        }
+
+        private void btnGameSkyrimSE_Click(object sender, RoutedEventArgs e)
+        {
+            this.context.selectedGame = "SkyrimSE";
         }
     }
 }

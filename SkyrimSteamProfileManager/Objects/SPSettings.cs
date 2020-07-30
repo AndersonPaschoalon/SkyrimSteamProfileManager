@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
-namespace SkyrimSteamProfileManager.Objects
+namespace SteamProfileManager.Objects
 {
-    public class SSPSettings
+    public class SPSettings
     {
 
         [XmlAttribute("steamPath")]

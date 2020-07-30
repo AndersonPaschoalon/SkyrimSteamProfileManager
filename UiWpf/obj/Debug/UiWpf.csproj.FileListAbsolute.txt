@@ -25,3 +25,8 @@ C:\Users\anderson_paschoalon\Workspace\Sandbox\OpenSource\Cs\SkyrimSteamProfileM
 C:\Users\anderson_paschoalon\Workspace\Sandbox\OpenSource\Cs\SkyrimSteamProfileManager\UiWpf\obj\Debug\UserControlHome.baml
 C:\Users\anderson_paschoalon\Workspace\Sandbox\OpenSource\Cs\SkyrimSteamProfileManager\UiWpf\obj\Debug\UserControlSettings.baml
 C:\Users\anderson_paschoalon\Workspace\Sandbox\OpenSource\Cs\SkyrimSteamProfileManager\UiWpf\obj\Debug\UiWpf.csprojAssemblyReference.cache
+C:\Users\anderson_paschoalon\Workspace\Sandbox\OpenSource\Cs\SkyrimSteamProfileManager\UiWpf\bin\Debug\SPConfig.xml
+C:\Users\anderson_paschoalon\Workspace\Sandbox\OpenSource\Cs\SkyrimSteamProfileManager\UiWpf\bin\Debug\SkyrimSteamProfileManager.dll
+C:\Users\anderson_paschoalon\Workspace\Sandbox\OpenSource\Cs\SkyrimSteamProfileManager\UiWpf\bin\Debug\Logger.dll
+C:\Users\anderson_paschoalon\Workspace\Sandbox\OpenSource\Cs\SkyrimSteamProfileManager\UiWpf\bin\Debug\SkyrimSteamProfileManager.pdb
+C:\Users\anderson_paschoalon\Workspace\Sandbox\OpenSource\Cs\SkyrimSteamProfileManager\UiWpf\bin\Debug\Logger.pdb

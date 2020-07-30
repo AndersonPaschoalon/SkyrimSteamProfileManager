@@ -5,19 +5,17 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
-namespace SkyrimSteamProfileManager.Objects
+namespace SteamProfileManager.Objects
 {
-    public class SSPProfileList
+    public class SPProfileList
     {
-        public SSPProfileList()
+        public SPProfileList()
         {
-            this.profiles = new List<SSPProfile>();
+            this.profiles = new List<SPProfile>();
         }
 
         [XmlElement("PROFILE")]
-        public List<SSPProfile> profiles { get; set; }
-
-
+        public List<SPProfile> profiles { get; set; }
 
     }
 }

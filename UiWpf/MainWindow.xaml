@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:UiWpf"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
-        Title="MainWindow" Height="600" Width="1080" WindowStyle="None" Foreground="White">
+        Title="MainWindow" Height="600" Width="1080" WindowStyle="None" Style="{StaticResource windowProperties}">
 
     <Window.Resources>
         <Storyboard x:Key="MenuOpen">
@@ -32,32 +32,29 @@
         </EventTrigger>
     </Window.Triggers>
 
-    <Grid Background="#FF090951">
+    <Grid Style="{StaticResource appBackground}">
         <Grid x:Name="GridMain" HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="540" Width="1010"/>
 
-        <Grid x:Name="GridTop" Height="70" VerticalAlignment="Top" Background="Black" >
+        <Grid x:Name="GridTop" Height="70" VerticalAlignment="Top"  Style="{StaticResource appHeader}" >
             <Grid.Effect>
                 <DropShadowEffect BlurRadius="1" ShadowDepth="1" Color="#FFACACAC"/>
             </Grid.Effect>
-            <TextBlock Text="Steam Game Install Manager" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="22" >
+            <TextBlock Text="Steam Game Install Manager" FontFamily="Motiva Sans"  VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="22" >
             </TextBlock>
             <StackPanel VerticalAlignment="Center" Orientation="Horizontal" HorizontalAlignment="Right">
-                <TextBlock Text="Game Select" VerticalAlignment="Center" FontSize="18"/>
+                <TextBlock Text="{Binding selectedGame, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" FontSize="18"/>
                 <materialDesign:PopupBox  PlacementMode="BottomAndAlignRightEdges" StaysOpen="False" Margin="10" >
                     <StackPanel Width="150">
-                        <Separator/>
-                        <Button Content="Skyrim" />
-                        <Separator/>
-                        <Button Content="Skyrim SE" />
-                        <Separator/>
+                        <Button Content="Skyrim"  x:Name="btnGameSkyrim" Click="btnGameSkyrim_Click" />
+                        <Button Content="Skyrim SE" x:Name="btnGameSkyrimSE" Click="btnGameSkyrimSE_Click" />
                     </StackPanel>
                 </materialDesign:PopupBox>
             </StackPanel>
         </Grid>
 
-        <Grid x:Name="GridMenu" Width="60" HorizontalAlignment="Left" Background="Black" >
+        <Grid x:Name="GridMenu" Width="60" HorizontalAlignment="Left" Background="#376d91" >
             <StackPanel>
-                <Grid Height="150" Background="Black">
+                <Grid Height="150" Background="#376d91">
                     <Button x:Name="ButtonCloseMenu" Width="60" 
                             Height="60" VerticalAlignment="Top" 
                             HorizontalAlignment="Right" Background="{x:Null}" 

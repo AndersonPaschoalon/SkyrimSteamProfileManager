@@ -5,8 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 
 using Logger;
-using SkyrimSteamProfileManager;
-using SSPErrors;
+using SteamProfileManager;
+using SPErrors;
 
 namespace Tester
 {
