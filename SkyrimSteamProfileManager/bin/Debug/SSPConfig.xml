@@ -1,8 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
-<SSPCONFIG>
-  <SETTINGS steamPath="" documentsPath="" appDataPath="" nmmModPath="" nmmInfoPath=""  gameFolder="Skyrim"/>
-  <PROFILES>
-    <!-- id={unique int number}, isActive={true/false} -->
-    <PROFILE id="" name="" isActive="" color="" valid=""/>
-  </PROFILES>  
-</SSPCONFIG>

@@ -12,7 +12,8 @@ namespace Logger
         public enum LogType
         {
             CONSOLE,
-            LOG4NET
+            LOG4NET,
+            TRIVIAL_LOG
         }
 
 

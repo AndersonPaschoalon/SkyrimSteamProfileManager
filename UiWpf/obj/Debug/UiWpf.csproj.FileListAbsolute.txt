@@ -30,3 +30,4 @@ C:\Users\anderson_paschoalon\Workspace\Sandbox\OpenSource\Cs\SkyrimSteamProfileM
 C:\Users\anderson_paschoalon\Workspace\Sandbox\OpenSource\Cs\SkyrimSteamProfileManager\UiWpf\bin\Debug\Logger.dll
 C:\Users\anderson_paschoalon\Workspace\Sandbox\OpenSource\Cs\SkyrimSteamProfileManager\UiWpf\bin\Debug\SkyrimSteamProfileManager.pdb
 C:\Users\anderson_paschoalon\Workspace\Sandbox\OpenSource\Cs\SkyrimSteamProfileManager\UiWpf\bin\Debug\Logger.pdb
+C:\Users\anderson_paschoalon\Workspace\Sandbox\OpenSource\Cs\SkyrimSteamProfileManager\UiWpf\obj\Debug\UiWpf_Content.g.cs
