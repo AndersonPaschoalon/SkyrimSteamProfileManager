@@ -21,9 +21,9 @@ namespace SteamProfileManager
 
         int editProfile(string newProfileName, string newColor);
 
-        int desactivateProfile(SPProfile profile);
+        int desactivateProfile(string profile);
 
-        int switchProfile(SPProfile active, SPProfile desactivated)
+        int switchProfiles(string active, string desactivated);
 
 
     }

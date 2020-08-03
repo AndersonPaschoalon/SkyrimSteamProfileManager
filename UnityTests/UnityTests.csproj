@@ -4,16 +4,17 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{E2EDF30E-8041-4C61-B499-B251E6054A64}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SteamProfileManager</RootNamespace>
-    <AssemblyName>SteamProfileManager</AssemblyName>
+    <ProjectGuid>{DB3EEC6D-B379-49EE-94BD-872286AD15AA}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Tester</RootNamespace>
+    <AssemblyName>Tester</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -23,6 +24,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -31,8 +33,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.VisualBasic" />
-    <Reference Include="PresentationCore" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -43,34 +43,32 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Enum\Game.cs" />
-    <Compile Include="IProfielManager.cs" />
-    <Compile Include="Objects\ConfigContainer.cs" />
-    <Compile Include="Objects\Utils.cs" />
-    <Compile Include="Objects\PathsHelper.cs" />
-    <Compile Include="Objects\SPConfig.cs" />
-    <Compile Include="Objects\SPProfileList.cs" />
-    <Compile Include="ProfileData.cs" />
+    <Compile Include="Assert.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Enum\SPMState.cs" />
-    <Compile Include="SteamProfileManager.cs" />
-    <Compile Include="Objects\SPProfile.cs" />
-    <Compile Include="Objects\SPSettings.cs" />
+    <Compile Include="Tests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Settings\SPConfigSyrim.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Logger\Logger.csproj">
       <Project>{cedc3029-a30f-46d9-9738-98f6114ea896}</Project>
       <Name>Logger</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SteamProfileManager\SteamProfileManager.csproj">
+      <Project>{e2edf30e-8041-4c61-b499-b251e6054a64}</Project>
+      <Name>SteamProfileManager</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SPErrors\SPErrors.csproj">
       <Project>{730e1bfd-da2f-4add-b9e5-6173d5e1bcaf}</Project>
       <Name>SPErrors</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="SPConfig_Test.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

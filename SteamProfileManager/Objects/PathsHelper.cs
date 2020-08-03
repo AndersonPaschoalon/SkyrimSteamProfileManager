@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SteamProfileManager.Enum;
+using SPErrors;
 
 namespace SteamProfileManager.Objects
 {
@@ -75,6 +76,12 @@ namespace SteamProfileManager.Objects
             this.execUpdate(settings.steamPath, settings.appDataPath, settings.documentsPath,
                             settings.nmmInfoPath, settings.nmmModPath, settings.gameFolder, 
                             settings.backupFolder);
+        }
+
+        public int checkSettings()
+        {
+            // TODO
+            return Errors.SUCCESS;
         }
 
         // Config file

@@ -1,14 +1,17 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
 using SteamProfileManager.Objects;
 using SteamProfileManager.Enum;
 using SPErrors;
 using Logger;
 using Logger.Objects;
+using Microsoft.VisualBasic.FileIO;
 
 namespace SteamProfileManager
 {
@@ -317,22 +320,180 @@ namespace SteamProfileManager
             return Errors.SUCCESS;
         }
 
-
-
         /// <summary>
         /// Desactivate an active profile. If cannot complete the operation, does nothing and return an error code.
         /// </summary>
         /// <returns></returns>
-        public int desactivateProfile(SPProfile profile)
+        public int desactivateActiveProfile(string profileName)
         {
-            // TODO
+            // check state
+            this.updateManagerState();
+            if ((this.applicationState != SPMState.ACTIVE_AND_DESACTIVATED_PROFILES) ||
+                (this.applicationState != SPMState.ACTIVE_ONLY))
+            {
+                log.Warn("-- invalid state for desactivateActiveProfile operation! State:" + this.applicationState);
+                return Errors.ERR_INVALID_STATE_FOR_REQUESTED_OPERATION;
+            }
+
+            // check if integrity file information matches
+            profileName.Trim();
+            string id = "";
+            string name = "";
+            string color = "";
+            int ret = this.readIntegrityFile(out id, out name, out color);
+            if (name != profileName)
+            {
+                log.Warn("active profile corrupted");
+                this.deleteIntegrityFile();
+                this.updateManagerState();
+                return Errors.ERR_ACTIVE_PROFILE_CORRUPTED;
+            }
+            log.Debug("-- integrity file OK! " + id + ", " + name + ", " + color);
+
+            // delete integrity file
+            this.deleteIntegrityFile();
+
+            // create backup dir if does not exit
+            this.createBackupProfilesFolder(profileName);
+
+            // move directories to backup dir
+            Utils.safeMove(this.paths.steamGame, this.paths.steamBkpProf(profileName));
+            Utils.safeMove(this.paths.docsGame, this.paths.docsBkpProf(profileName));
+            Utils.safeMove(this.paths.appDirGame, this.paths.appDirBkpProf(profileName));
+            if (this.paths.nmmInfo != "")
+            {
+                Utils.safeMove(this.paths.nmmInfoGame, this.paths.nmmInfoBkpProf(profileName));
+            }
+            if (this.paths.nmmMod != "")
+            {
+                Utils.safeMove(this.paths.nmmModGame, this.paths.nmmModBkpProf(profileName));
+            }
+
+            // set profile as desativated
+            foreach (var item in this.config.listProfiles.profiles)
+            {
+                if (item.name.Trim() == profileName)
+                {
+                    item.isActive = Utils.FALSE;
+                    break;
+                }
+            }
+
+            // save settings
+            this.config.saveConfig();
+            
             return Errors.ERR_UNKNOWN;
         }
 
-        public int switchProfile(SPProfile active, SPProfile desactivated)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="activeProf"></param>
+        /// <param name="desactivatedProf"></param>
+        /// <returns></returns>
+        public int switchProfile(string activeProf, string desactivatedProf)
         {
-            // TODO
-            return Errors.ERR_UNKNOWN;
+            // check state
+            this.updateManagerState();
+            if (this.applicationState != SPMState.ACTIVE_AND_DESACTIVATED_PROFILES)
+            {
+                log.Warn("-- invalid state for desactivateActiveProfile operation! State:" + this.applicationState);
+                return Errors.ERR_INVALID_STATE_FOR_REQUESTED_OPERATION;
+            }
+
+            int ret;
+            activeProf.Trim();
+            desactivatedProf.Trim();
+            ret = this.desactivateActiveProfile(activeProf);
+            if (ret != Errors.SUCCESS)
+            {
+                log.Error("-- Error desactivating profile activeProf:" + activeProf + ", ret:" + ret);
+                return ret;
+            }
+
+            ret = this.activateDesactivatedProfile(desactivatedProf);
+            if (ret != Errors.SUCCESS)
+            {
+                log.Error("-- Error activating profile desactivatedProf:" + desactivatedProf + ", ret:" + ret);
+                log.Info("-- UNDOING THE LAST DESACTIVATION!!");
+                this.activateDesactivatedProfile(activeProf);
+                return ret;
+            }
+
+            // update settings
+            this.config.saveConfig();
+            this.updateManagerState();
+
+            return Errors.SUCCESS;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="profNameOld"></param>
+        /// <param name="profNameNew"></param>
+        /// <param name="color"></param>
+        /// <returns></returns>
+        public int editProfile(string profNameOld, string profNameNew, string color)
+        {
+            // check state
+            this.updateManagerState();
+            if ((this.applicationState != SPMState.ACTIVE_AND_DESACTIVATED_PROFILES) ||
+                (this.applicationState != SPMState.ACTIVE_ONLY) ||
+                (this.applicationState != SPMState.DESACTIVATED_ONLY))
+            {
+                log.Warn("-- invalid state for requested operation editProfile. State:" + this.applicationState);
+                return Errors.ERR_INVALID_STATE_FOR_REQUESTED_OPERATION;
+            }
+
+            profNameOld.Trim();
+            SPProfile prof = this.searchProfile(profNameOld, 0); // any profile
+            if (prof != null)
+            {
+                prof.name = profNameNew;
+                prof.color = color;
+
+                if (prof.isProfileActive())
+                {
+                    // update integrity file
+                    this.createIntegrityFile(prof);
+                }
+                else
+                {
+                    // rename backup folders
+                    // Steam bkp
+                    log.Info("-- renaming " + this.paths.steamBkpProf(profNameOld) + " -> " + profNameNew);
+                    FileSystem.RenameDirectory(this.paths.steamBkpProf(profNameOld), profNameNew);
+
+                    //Docs bkp
+                    log.Info("-- renaming " + this.paths.docsBkpProf(profNameOld) + " -> " + profNameNew);
+                    FileSystem.RenameDirectory(this.paths.docsBkpProf(profNameOld), profNameNew);
+
+                    // appData bkp
+                    log.Info("-- renaming " + this.paths.appDirBkpProf(profNameOld) + " -> " + profNameNew);
+                    FileSystem.RenameDirectory(this.paths.appDirBkpProf(profNameOld), profNameNew);
+
+                    // nmm Info
+                    if (!this.paths.nmmInfoEmpty)
+                    {
+                        log.Info("-- renaming " + this.paths.nmmInfoBkpProf(profNameOld) + " -> " + profNameNew);
+                        FileSystem.RenameDirectory(this.paths.nmmInfoBkpProf(profNameOld), profNameNew);
+                    }
+
+                    // nmm Mod
+                    if (!this.paths.nmmModEmpty)
+                    {
+                        log.Info("-- renaming " + this.paths.nmmModBkpProf(profNameOld) + " -> " + profNameNew);
+                        FileSystem.RenameDirectory(this.paths.nmmModBkpProf(profNameOld), profNameNew);
+                    }
+                }
+
+                this.config.saveConfig();
+                this.updateManagerState();
+                return Errors.SUCCESS;
+            }
+            log.Warn("-- invalid profile name profNameOld:" + profNameOld);
+            return Errors.ERR_INVALID_PROFILE_NAME;
         }
 
         #region app_state
@@ -365,95 +526,8 @@ namespace SteamProfileManager
 
         #endregion app_state
 
+
         #region private_methos
-
-        #region paths 
-
-        private string integrityFilePath()
-        {
-            return this.paths.steamGame + "\\" + ACTIVE_INTEGRITY_FILE_NAME;
-        }
-
-        //private string steamBackup()
-        //{
-        //    return this.config.settings.steamPath + "\\" + this.backupRoot;
-        //}
-        //private string steamBackupGame(string name)
-        //{
-        //    return steamBackup() + "\\" + 
-        //           name.Trim() + "\\" +
-        //           this.config.settings.gameFolder.Trim();
-        //}
-        //private string documentsBackup()
-        //{
-        //    return this.config.settings.documentsPath + "\\" + this.backupRoot;
-        //}
-        //private string documentsBackupGame(string name)
-        //{
-        //    return documentsBackup() + "\\" +
-       //            name.Trim() + "\\" +
-       //            this.config.settings.gameFolder.Trim();
-        //}
-        //private string appDataBackup()
-        //{
-        //    return this.config.settings.appDataPath + "\\" + this.backupRoot;
-        //}
-        //private string appDataBackupGame(string name)
-        //{
-        //    return appDataBackup() + "\\" +
-        //           name.Trim() + "\\" +
-        //           this.config.settings.gameFolder.Trim();
-       // }
-        //private string nmmInfoBackup()
-        //{
-        //    if (!this.config.settings.nmmInfoPath.Trim().Equals(""))
-        //    {
-        //        return this.config.settings.nmmInfoPath + "\\" + this.backupRoot;
-        //    }
-        //    else
-        //    {
-        //        return "";
-        //    }
-        //}
-        // private string nmmInfoBackupGame(string name)
-        // {
-        //     if (!this.config.settings.nmmInfoPath.Trim().Equals(""))
-        //     { 
-        //         return nmmInfoBackup() + "\\" +
-        //                name.Trim() + "\\" +
-        //                this.config.settings.gameFolder.Trim();
-        //     }
-        //     else
-        //     {
-        //         return "";
-        //     }
-        // }
-        // private string nmmModBackup()
-        // {
-        //     if (!this.config.settings.nmmInfoPath.Trim().Equals(""))
-        //     {
-        //         return this.config.settings.nmmModPath + "\\" + this.backupRoot;
-        //     }
-        //     else
-        //     {
-        //         return "";
-        //     }
-        // }
-        // private string nmmModBackupGame(string name)
-        // {
-        //     if (!this.config.settings.nmmInfoPath.Trim().Equals(""))
-        //     {
-        //         return nmmModBackup() + "\\" +
-        //                name.Trim() + "\\" +
-        //                this.config.settings.gameFolder.Trim();
-        //     }
-        //     else
-        //     {
-        //         return "";
-        //     }
-        // }
-
-        #endregion paths 
 
         #region utils 
 
@@ -470,6 +544,11 @@ namespace SteamProfileManager
         #endregion utils 
 
         #region aux 
+
+        private string integrityFilePath()
+        {
+            return this.paths.steamGame + "\\" + ACTIVE_INTEGRITY_FILE_NAME;
+        }
 
         private void undoDesactiveActivation(int moveCounter, string profName)
         {
@@ -539,6 +618,21 @@ namespace SteamProfileManager
             }
         }
 
+        private void createBackupProfilesFolder(string profName)
+        {
+            Directory.CreateDirectory(this.paths.steamBkpProf(profName));
+            Directory.CreateDirectory(this.paths.docsBkpProf(profName));
+            Directory.CreateDirectory(this.paths.appDirBkpProf(profName));
+            if (!this.paths.nmmInfoBkp.Trim().Equals(""))
+            {
+                Directory.CreateDirectory(this.paths.nmmInfoBkpProf(profName));
+            }
+            if (!this.paths.nmmMod.Trim().Equals(""))
+            {
+                Directory.CreateDirectory(this.paths.nmmModBkpProf(profName));
+            }
+        }
+
         private int countProfiles()
         {
             try
@@ -584,6 +678,37 @@ namespace SteamProfileManager
             {
                 log.Warn("** Error deleting integrity file. Message:" + ex.Message + ", StackTrace:" + ex.StackTrace);
             }
+        }
+
+        int readIntegrityFile(out string id, out string name, out string color)
+        {
+            id = "";
+            name = "";
+            color = "";
+            try
+            {
+                string content = File.ReadAllText(this.integrityFilePath());
+                List<string> integrityFileElements = Utils.splitCsv(content);
+                try
+                {
+                    id = integrityFileElements[0].Trim();
+                    name = integrityFileElements[1].Trim();
+                    color = integrityFileElements[2].Trim();
+                }
+                catch (Exception ex)
+                {
+                    log.Warn("-- Could nor create integrity file. Message:" + ex.Message + ", StackTrace:" + ex.StackTrace);
+                    return Errors.ERR_PARSING_INTEGRITY_FILE;
+                }
+                
+            }
+            catch (Exception ex)
+            {
+                log.Warn("-- Could nor create integrity file. Message:" + ex.Message + ", StackTrace:" + ex.StackTrace);
+                return Errors.ERR_COULD_NOT_OPEN_INTEGRIY_FILE;
+            }
+            return Errors.SUCCESS;
+
         }
 
         /// <summary>
@@ -668,6 +793,53 @@ namespace SteamProfileManager
             return SPMState.NOT_CONFIGURED;
         }
 
+        /// <summary>
+        /// Search for profile on the Manager profile list.
+        /// </summary>
+        /// <param name="profName"></param>
+        /// <param name="option">1 for active, 2 for desactivated, otherwise both</param>
+        /// <returns></returns>
+        private SPProfile searchProfile(string profName, int option)
+        {
+            profName.Trim();
+            this.updateManagerState();
+            if (option == 1)
+            {
+                if (this.activeProfile.name == profName)
+                {
+                    return activeProfile;
+                }
+                log.Warn("-- could not find profile " + profName + " on ACTIVE profiles");
+            }
+            else if (option == 2)
+            {
+                foreach (var item in this.listDesactivated)
+                {
+                    if (item.name == profName)
+                    {
+                        return item;
+                    }
+                }
+                log.Warn("-- could not find profile " + profName + " on DESACTIVATED profiles");
+            }
+            else
+            {
+                if (this.activeProfile.name == profName)
+                {
+                    return activeProfile;
+                }
+                foreach (var item in this.listDesactivated)
+                {
+                    if (item.name == profName)
+                    {
+                        return item;
+                    }
+                }
+                log.Warn("-- could not find profile " + profName + " on ACTIVE/DESACTIVATED profiles");
+            }
+            return null;
+        }
+
         #endregion aux 
 
         #region checkHelpers
@@ -709,16 +881,17 @@ namespace SteamProfileManager
             {
                 return false;
             }
-            string currDir = Directory.GetCurrentDirectory().Trim();
-            if (currDir == this.config.settings.appDataPathGame() ||
-                currDir == this.config.settings.documentsPathGame() ||
-                currDir == this.config.settings.appDataPathGame() ||
-                currDir == this.config.settings.nmmInfoPathGame() ||
-                currDir == this.config.settings.nmmModPathGame())
-            {
-                log.Error("INVALID CONFIGURATION PATH!!!!");
-                return false;
-            }
+            //string currDir = Directory.GetCurrentDirectory().Trim();
+            // TODO
+//            if (currDir == this.config.settings.appDataPathGame() ||
+//                currDir == this.config.settings.documentsPathGame() ||
+//                currDir == this.config.settings.appDataPathGame() ||
+//                currDir == this.config.settings.nmmInfoPathGame() ||
+//                currDir == this.config.settings.nmmModPathGame())
+//            {
+//                log.Error("INVALID CONFIGURATION PATH!!!!");
+//                return false;
+//            }
             else if (this.config.listProfiles == null)
             {
                 log.Error("List of profiles must exist");
@@ -759,6 +932,8 @@ namespace SteamProfileManager
             }
         }
 
+
+
         /// <summary>
         /// Check all settings of a specified ACTIVE profile. If some settings are inconsistent 
         /// with an active profile, returns false.
@@ -773,17 +948,17 @@ namespace SteamProfileManager
                 log.Warn("Object property isActive is set as false or invalid");
                 return false;
             }
-
+            //TODO
             // checar configuração
-            if (!this.checkDir(this.config.settings.appDataPathGame()) ||
-                !this.checkDir(this.config.settings.documentsPathGame()) ||
-                !this.checkDir(this.config.settings.steamPathGame()))
-            {
-                log.Warn("A game directory does not exist. appDataPathGame:{" + this.config.settings.appDataPathGame() + "}" +
-                         ", documentsPathGame:{" + this.config.settings.documentsPathGame() + "}" +
-                         ", steamPathGame:{" + this.config.settings.steamPathGame() + "}");
-                return false;
-            }
+//           if (!this.checkDir(this.config.settings.appDataPathGame()) ||
+//               !this.checkDir(this.config.settings.documentsPathGame()) ||
+//               !this.checkDir(this.config.settings.steamPathGame()))
+//           {
+//               log.Warn("A game directory does not exist. appDataPathGame:{" + this.config.settings.appDataPathGame() + "}" +
+//                        ", documentsPathGame:{" + this.config.settings.documentsPathGame() + "}" +
+//                        ", steamPathGame:{" + this.config.settings.steamPathGame() + "}");
+//               return false;
+//           }
             if (!this.checkDir(this.integrityFilePath()))
             {
                 log.Warn("Integrity file of active profile does not exist");
@@ -830,48 +1005,47 @@ namespace SteamProfileManager
                 return false;
             }
             // root\backupDir\ProfName\gameFolder
-            string desactivatedPathBase = this.backupRoot + "\\" + prof.name + "\\" + config.settings.gameFolder;
-            string steamDesPath = this.config.settings.steamPath + desactivatedPathBase;
-            string docsDesPath = this.config.settings.documentsPath + desactivatedPathBase;
-            string appDirDesPath = this.config.settings.appDataPath + desactivatedPathBase;
-            string nmmInfoDesPath = this.config.settings.nmmInfoPath + desactivatedPathBase;
-            string nmmModsDesPath = this.config.settings.nmmModPath + desactivatedPathBase;
-
-            // check mandatory paths
-            if (!this.checkDir(steamDesPath))
-            {
-                return false;
-            }
-            if (!this.checkDir(docsDesPath))
-            {
-                return false;
-            }
-            if (!this.checkDir(appDirDesPath))
-            {
-                return false;
-            }
-
-            // optional: check if is defined
-            if (!this.config.settings.nmmInfoPath.Trim().Equals(""))
-            {
-                if (!this.checkDir(nmmInfoDesPath))
-                {
-                    return false;
-                }
-            }
-            if (!this.config.settings.nmmModPath.Trim().Equals(""))
-            {
-                if (!this.checkDir(nmmModsDesPath))
-                {
-                    return false;
-                }
-            }
+// TODO
+//            string desactivatedPathBase = this.backupRoot + "\\" + prof.name + "\\" + config.settings.gameFolder;
+//            string steamDesPath = this.config.settings.steamPath + desactivatedPathBase;
+//            string docsDesPath = this.config.settings.documentsPath + desactivatedPathBase;
+//            string appDirDesPath = this.config.settings.appDataPath + desactivatedPathBase;
+//            string nmmInfoDesPath = this.config.settings.nmmInfoPath + desactivatedPathBase;
+//            string nmmModsDesPath = this.config.settings.nmmModPath + desactivatedPathBase;
+//
+//           // check mandatory paths
+//           if (!this.checkDir(steamDesPath))
+//           {
+//               return false;
+//           }
+//           if (!this.checkDir(docsDesPath))
+//           {
+//               return false;
+//           }
+//           if (!this.checkDir(appDirDesPath))
+//           {
+//               return false;
+//           }
+//
+//            // optional: check if is defined
+//            if (!this.config.settings.nmmInfoPath.Trim().Equals(""))
+//            {
+//                if (!this.checkDir(nmmInfoDesPath))
+//                {
+//                    return false;
+//                }
+//            }
+//            if (!this.config.settings.nmmModPath.Trim().Equals(""))
+//            {
+//                if (!this.checkDir(nmmModsDesPath))
+//                {
+//                    return false;
+//                }
+//            }
 
             log.Debug("-- profile " + prof.name + " is ok");
             return true;
         }
-
-
 
         #endregion checkHelpers
 
