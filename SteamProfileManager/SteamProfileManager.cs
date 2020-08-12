@@ -6,19 +6,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using SteamProfileManager.Objects;
-using SteamProfileManager.Enum;
+using ProfileManager.Objects;
+using ProfileManager.Enum;
 using SPErrors;
 using Logger;
 using Logger.Objects;
 using Microsoft.VisualBasic.FileIO;
 
-namespace SteamProfileManager
+namespace ProfileManager
 {
     /** 
      * Usage:
-     * SteamProfileManager manager = new SteamProfileManager(Game.SKYRIM);
-     * 
+     * ProfileManager manager = new ProfileManager(Game.SKYRIM);
      */
     public class SteamProfileManager
     {
@@ -26,7 +25,6 @@ namespace SteamProfileManager
         private const string ACTIVE_INTEGRITY_FILE_NAME = "active_profile.int";
 
         // readonly
-        //private readonly string backupRoot = "";
         private readonly ILogger log = ConsoleLogger.getInstance();
 
         // state
@@ -40,10 +38,31 @@ namespace SteamProfileManager
         {
             log.Debug("-- Constructor for game " + game.ToString());
             log.Debug("-- load settings");
-            this.config = SPConfig.getConfig(game);
+            this.config = SPConfig.loadConfig();
             this.paths = new PathsHelper(game, this.config.settings);
             log.Debug("-- updateManagerState()");
             this.updateManagerState();
+        }
+
+        public SPMState showState()
+        {
+            this.updateManagerState();
+            Console.WriteLine("*********************************************");
+            Console.WriteLine("** STEAM PROFILE MANAGER");
+            Console.WriteLine("*********************************************");
+            Console.WriteLine("applicationState:" + this.applicationState.ToString());
+            Console.WriteLine("* Active profiles");
+            if (this.activeProfile != null)
+            {
+                Console.WriteLine("  name:" + this.activeProfile.name + ", color:" + this.activeProfile.color);
+            }
+            Console.WriteLine("* Desactivated profiles [Count:" + this.listDesactivated.Count + "]");
+            foreach (var item in this.listDesactivated)
+            {
+                Console.WriteLine("  name:" + item.name + ", color:" + item.color);
+
+            }
+            return this.applicationState;
         }
 
         /// <summary>
@@ -188,7 +207,6 @@ namespace SteamProfileManager
             }
             SPProfile newProfile = new SPProfile();
             newProfile.color = color;
-            newProfile.id = profileNewId;
             newProfile.isActive = Utils.TRUE;
             newProfile.name = profileName;
 
@@ -262,11 +280,11 @@ namespace SteamProfileManager
             moveCounter++;
 
             // move appData folder
-            srcDir = this.paths.appDirBkpProfGame(profileName);
-            check = Utils.safeMove(srcDir, this.paths.appDir);
+            srcDir = this.paths.appDataBkpProfGame(profileName);
+            check = Utils.safeMove(srcDir, this.paths.appData);
             if (check != Errors.SUCCESS)
             {
-                log.Warn("-- Error moving " + srcDir + " -> " + this.paths.appDir);
+                log.Warn("-- Error moving " + srcDir + " -> " + this.paths.appData);
                 this.undoDesactiveActivation(moveCounter, profileName);
                 return check;
             }
@@ -340,7 +358,7 @@ namespace SteamProfileManager
             string id = "";
             string name = "";
             string color = "";
-            int ret = this.readIntegrityFile(out id, out name, out color);
+            int ret = this.readIntegrityFile(out name, out color);
             if (name != profileName)
             {
                 log.Warn("active profile corrupted");
@@ -359,7 +377,7 @@ namespace SteamProfileManager
             // move directories to backup dir
             Utils.safeMove(this.paths.steamGame, this.paths.steamBkpProf(profileName));
             Utils.safeMove(this.paths.docsGame, this.paths.docsBkpProf(profileName));
-            Utils.safeMove(this.paths.appDirGame, this.paths.appDirBkpProf(profileName));
+            Utils.safeMove(this.paths.appDataGame, this.paths.appDataBkpProf(profileName));
             if (this.paths.nmmInfo != "")
             {
                 Utils.safeMove(this.paths.nmmInfoGame, this.paths.nmmInfoBkpProf(profileName));
@@ -470,8 +488,8 @@ namespace SteamProfileManager
                     FileSystem.RenameDirectory(this.paths.docsBkpProf(profNameOld), profNameNew);
 
                     // appData bkp
-                    log.Info("-- renaming " + this.paths.appDirBkpProf(profNameOld) + " -> " + profNameNew);
-                    FileSystem.RenameDirectory(this.paths.appDirBkpProf(profNameOld), profNameNew);
+                    log.Info("-- renaming " + this.paths.appDataBkpProf(profNameOld) + " -> " + profNameNew);
+                    FileSystem.RenameDirectory(this.paths.appDataBkpProf(profNameOld), profNameNew);
 
                     // nmm Info
                     if (!this.paths.nmmInfoEmpty)
@@ -583,8 +601,8 @@ namespace SteamProfileManager
                     case 2:
                         {
                             log.Info("-- undo AppData move");
-                            dirDst = this.paths.appDirBkpProf(profName);
-                            Utils.safeMove(this.paths.appDirGame, dirDst);
+                            dirDst = this.paths.appDataBkpProf(profName);
+                            Utils.safeMove(this.paths.appDataGame, dirDst);
                             break;
                         }
                     case 1:
@@ -607,7 +625,7 @@ namespace SteamProfileManager
         {
             Directory.CreateDirectory(this.paths.steamBkp);
             Directory.CreateDirectory(this.paths.docsBkp);
-            Directory.CreateDirectory(this.paths.appDirBkp);
+            Directory.CreateDirectory(this.paths.appDataBkp);
             if (!this.paths.nmmInfoBkp.Trim().Equals(""))
             {
                 Directory.CreateDirectory(this.paths.nmmInfoBkp);
@@ -622,7 +640,7 @@ namespace SteamProfileManager
         {
             Directory.CreateDirectory(this.paths.steamBkpProf(profName));
             Directory.CreateDirectory(this.paths.docsBkpProf(profName));
-            Directory.CreateDirectory(this.paths.appDirBkpProf(profName));
+            Directory.CreateDirectory(this.paths.appDataBkpProf(profName));
             if (!this.paths.nmmInfoBkp.Trim().Equals(""))
             {
                 Directory.CreateDirectory(this.paths.nmmInfoBkpProf(profName));
@@ -655,7 +673,7 @@ namespace SteamProfileManager
         {
             try
             {
-                File.WriteAllText(this.integrityFilePath(), prof.id + "," + prof.name + "," + prof.color);
+                File.WriteAllText(this.integrityFilePath(), prof.name + "," + prof.color);
                 return true;
             }
             catch (Exception ex)
@@ -680,9 +698,8 @@ namespace SteamProfileManager
             }
         }
 
-        int readIntegrityFile(out string id, out string name, out string color)
+        int readIntegrityFile(out string name, out string color)
         {
-            id = "";
             name = "";
             color = "";
             try
@@ -691,9 +708,8 @@ namespace SteamProfileManager
                 List<string> integrityFileElements = Utils.splitCsv(content);
                 try
                 {
-                    id = integrityFileElements[0].Trim();
-                    name = integrityFileElements[1].Trim();
-                    color = integrityFileElements[2].Trim();
+                    name = integrityFileElements[0].Trim();
+                    color = integrityFileElements[1].Trim();
                 }
                 catch (Exception ex)
                 {
@@ -916,8 +932,7 @@ namespace SteamProfileManager
             log.Debug("-- Active Profile");
             if (this.activeProfile != null)
             {
-                log.Debug("  id:" + this.activeProfile.id + 
-                          ", name:" + this.activeProfile.name + ", isActive:" + this.activeProfile.isActive );
+                log.Debug("  name:" + this.activeProfile.name + ", isActive:" + this.activeProfile.isActive );
             }
             else
             {
@@ -926,8 +941,7 @@ namespace SteamProfileManager
             log.Debug("-- Desactivated Profiles [Count:" + this.listDesactivated.Count + "]");
             foreach (var item in this.listDesactivated)
             {
-                log.Debug("  id:" + item.id +
-                          ", name:" + item.name + 
+                log.Debug("  name:" + item.name + 
                           ", isActive:" + item.isActive);
             }
         }
@@ -966,24 +980,17 @@ namespace SteamProfileManager
             }
             string integrityFile = File.ReadAllText(this.integrityFilePath());
             List<string> profData = Utils.splitCsv(integrityFile);
-            if (profData.Count < 3)
+            if (profData.Count < 2)
             {
                 log.Warn("Integrity file corrupted {" + integrityFile + "}");
                 return false;
             }
-            int val0 = 0;
-            int.TryParse(profData[0], out val0);
-            if (prof.id != val0)
-            {
-                log.Warn("Ids do not match");
-                return false;
-            }
-            if (prof.name.Trim() != profData[1].Trim())
+            if (prof.name.Trim() != profData[0].Trim())
             {
                 log.Warn("Names do not match");
                 return false;
             }
-            if (prof.color.Trim() != profData[2].Trim())
+            if (prof.color.Trim() != profData[1].Trim())
             {
                 log.Warn("Colors do not match");
                 return false;

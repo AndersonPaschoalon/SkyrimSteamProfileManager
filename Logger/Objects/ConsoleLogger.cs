@@ -22,7 +22,7 @@ namespace Logger.Objects
         private void Write(string level, string msg)
         {
             // critical region 
-            Console.Write(level + msg);
+            Console.WriteLine(level + msg);
             // end critical region 
         }
 

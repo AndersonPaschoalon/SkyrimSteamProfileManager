@@ -5,20 +5,15 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
-namespace SteamProfileManager.Objects
+namespace ProfileManager.Objects
 {
     public class SPProfile
     {
         public SPProfile()
         {
-            this.id = 0;
             this.name = "";
             this.isActive = "TRUE";
         }
-
-        // id={unique int number}
-        [XmlAttribute("id")]
-        public int id;
 
         //  name={alphanumeric string}
         [XmlAttribute("name")]

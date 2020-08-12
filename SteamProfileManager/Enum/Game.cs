@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SteamProfileManager.Enum
+namespace ProfileManager.Enum
 {
     public enum Game
     {

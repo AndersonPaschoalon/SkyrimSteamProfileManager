@@ -6,21 +6,40 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 using Logger;
-using SteamProfileManager.Enum;
+using ProfileManager.Enum;
 
-namespace SteamProfileManager.Objects
+namespace ProfileManager.Objects
 {
-    [XmlRoot("SPCONFIG", IsNullable = false)]
+    [XmlRoot("CONFIG", IsNullable = false)]
     public class SPConfig
     {
         private static Logger.ILogger log = LoggerFactory.getLogger(LoggerFactory.LogType.CONSOLE);
         private string configFileName;
+        private static SPConfig instance = null;
 
-        public static SPConfig getConfig(Game game)
+        public static SPConfig loadConfig()
         {
-            SPConfig temp = new SPConfig(game);
-            SPConfig instance = temp.pGetConfig();
-            return instance;
+            if (SPConfig.instance == null)
+            {
+                // TODO -> melhorar isso
+                string configFileName = "Settings\\SPConfigSyrim.xml";
+                log.Debug("-- CurrentDirectory:" + Directory.GetCurrentDirectory());
+                try
+                {
+                    //if (File.Exists(configFileName))
+                    //{
+                        XmlSerializer serializer = new XmlSerializer(typeof(SPConfig));
+                        FileStream fs = new FileStream(configFileName, FileMode.Open);
+                        SPConfig.instance = (SPConfig)serializer.Deserialize(fs);
+                    //}
+                }
+                catch (Exception ex)
+                {
+                    log.Error("Erro loading config file: " + configFileName +
+                              ". Message:" + ex.Message + ", StackTrace:" + ex.StackTrace);
+                }
+            }
+            return SPConfig.instance;
         }
 
         /// <summary>
@@ -32,9 +51,11 @@ namespace SteamProfileManager.Objects
         {
             try
             {
-                FileStream spConfigFile = File.OpenWrite(filename);
-                XmlSerializer x = new System.Xml.Serialization.XmlSerializer(this.GetType());
-                x.Serialize(spConfigFile, this);
+                using (FileStream spConfigFile = File.OpenWrite(filename))
+                {
+                    XmlSerializer x = new System.Xml.Serialization.XmlSerializer(this.GetType());
+                    x.Serialize(spConfigFile, this);
+                }
                 return true;
             }
             catch (Exception ex)
@@ -63,37 +84,13 @@ namespace SteamProfileManager.Objects
 
         #region private 
 
-        // private constructor
-        private SPConfig(Game game)
+        private SPConfig()
         {
             this.settings = new SPSettings();
             this.listProfiles = new SPProfileList();
             this.game = "";
-            this.configFileName = PathsHelper.getConfigFileName(game);
-        }
-
-        /// <summary>
-        /// Returns a serialized version of the SPConfig file into a class
-        /// </summary>
-        /// <returns></returns>
-        private SPConfig pGetConfig()
-        {
-            SPConfig config = null;
-            try
-            {
-                if (File.Exists(this.configFileName))
-                {
-                    XmlSerializer serializer = new XmlSerializer(typeof(SPConfig));
-                    FileStream fs = new FileStream(this.configFileName, FileMode.Open);
-                    config = (SPConfig)serializer.Deserialize(fs);
-                }
-            }
-            catch (Exception ex)
-            {
-                log.Error("Erro loading config file: " + this.configFileName +
-                          ". Message:" + ex.Message + ", StackTrace:" + ex.StackTrace);
-            }
-            return config;
+           // this.configFileName = PathsHelper.getConfigFileName(game);
+            this.configFileName = PathsHelper.getConfigFileName();
         }
 
         #endregion private

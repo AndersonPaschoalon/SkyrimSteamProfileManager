@@ -49,5 +49,11 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SteamProfileManager\ProfileManager.csproj">
+      <Project>{e2edf30e-8041-4c61-b499-b251e6054a64}</Project>
+      <Name>ProfileManager</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

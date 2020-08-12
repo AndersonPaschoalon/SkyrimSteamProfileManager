@@ -5,8 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
-using SteamProfileManager;
-using SteamProfileManager.Objects;
+using ProfileManager;
+using ProfileManager.Objects;
 
 
 namespace Tester
@@ -54,7 +54,6 @@ namespace Tester
 
             SPProfile testProf = new SPProfile();
             testProf.color = "AZUL";
-            testProf.id = 15;
             testProf.isActive = "TRUE";
             testProf.name = "Test_Serialization_back_to_file";
             config.listProfiles.profiles.Add(testProf);

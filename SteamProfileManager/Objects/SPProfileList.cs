@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
-namespace SteamProfileManager.Objects
+namespace ProfileManager.Objects
 {
     public class SPProfileList
     {

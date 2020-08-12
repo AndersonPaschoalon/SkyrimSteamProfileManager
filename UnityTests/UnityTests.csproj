@@ -56,9 +56,9 @@
       <Project>{cedc3029-a30f-46d9-9738-98f6114ea896}</Project>
       <Name>Logger</Name>
     </ProjectReference>
-    <ProjectReference Include="..\SteamProfileManager\SteamProfileManager.csproj">
+    <ProjectReference Include="..\SteamProfileManager\ProfileManager.csproj">
       <Project>{e2edf30e-8041-4c61-b499-b251e6054a64}</Project>
-      <Name>SteamProfileManager</Name>
+      <Name>ProfileManager</Name>
     </ProjectReference>
     <ProjectReference Include="..\SPErrors\SPErrors.csproj">
       <Project>{730e1bfd-da2f-4add-b9e5-6173d5e1bcaf}</Project>

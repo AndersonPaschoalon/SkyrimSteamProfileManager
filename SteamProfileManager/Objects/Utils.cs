@@ -8,7 +8,7 @@ using Logger;
 using Logger.Objects;
 using SPErrors;
 
-namespace SteamProfileManager.Objects
+namespace ProfileManager.Objects
 {
     public class Utils
     {
@@ -72,7 +72,7 @@ namespace SteamProfileManager.Objects
             {
                 if (char.IsLetterOrDigit(item))
                 {
-                    outStr.Append(item);
+                    outStr += item;
                 }
             }
             return outStr;

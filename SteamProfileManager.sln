@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UiWpf", "UiWpf\UiWpf.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UiConsole", "UiConsole\UiConsole.csproj", "{8C52BEF8-2120-4CF3-8D95-2505F242CE34}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SteamProfileManager", "SteamProfileManager\SteamProfileManager.csproj", "{E2EDF30E-8041-4C61-B499-B251E6054A64}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProfileManager", "SteamProfileManager\ProfileManager.csproj", "{E2EDF30E-8041-4C61-B499-B251E6054A64}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SPErrors", "SPErrors\SPErrors.csproj", "{730E1BFD-DA2F-4ADD-B9E5-6173D5E1BCAF}"
 EndProject
@@ -18,6 +18,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Resources", "Resources\Resources.csproj", "{165F5A85-0C37-438E-8122-D5C40457E7D5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnityTests", "UnityTests\UnityTests.csproj", "{DB3EEC6D-B379-49EE-94BD-872286AD15AA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProfileManagerBL", "ProfileManagerBL\ProfileManagerBL.csproj", "{F8EAEF56-A5C9-4163-94BA-3F0B702CC0FD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -193,6 +195,26 @@ Global
 		{DB3EEC6D-B379-49EE-94BD-872286AD15AA}.Release|x64.Build.0 = Release|Any CPU
 		{DB3EEC6D-B379-49EE-94BD-872286AD15AA}.Release|x86.ActiveCfg = Release|Any CPU
 		{DB3EEC6D-B379-49EE-94BD-872286AD15AA}.Release|x86.Build.0 = Release|Any CPU
+		{F8EAEF56-A5C9-4163-94BA-3F0B702CC0FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F8EAEF56-A5C9-4163-94BA-3F0B702CC0FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F8EAEF56-A5C9-4163-94BA-3F0B702CC0FD}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{F8EAEF56-A5C9-4163-94BA-3F0B702CC0FD}.Debug|ARM.Build.0 = Debug|Any CPU
+		{F8EAEF56-A5C9-4163-94BA-3F0B702CC0FD}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{F8EAEF56-A5C9-4163-94BA-3F0B702CC0FD}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{F8EAEF56-A5C9-4163-94BA-3F0B702CC0FD}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{F8EAEF56-A5C9-4163-94BA-3F0B702CC0FD}.Debug|x64.Build.0 = Debug|Any CPU
+		{F8EAEF56-A5C9-4163-94BA-3F0B702CC0FD}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{F8EAEF56-A5C9-4163-94BA-3F0B702CC0FD}.Debug|x86.Build.0 = Debug|Any CPU
+		{F8EAEF56-A5C9-4163-94BA-3F0B702CC0FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F8EAEF56-A5C9-4163-94BA-3F0B702CC0FD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F8EAEF56-A5C9-4163-94BA-3F0B702CC0FD}.Release|ARM.ActiveCfg = Release|Any CPU
+		{F8EAEF56-A5C9-4163-94BA-3F0B702CC0FD}.Release|ARM.Build.0 = Release|Any CPU
+		{F8EAEF56-A5C9-4163-94BA-3F0B702CC0FD}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{F8EAEF56-A5C9-4163-94BA-3F0B702CC0FD}.Release|ARM64.Build.0 = Release|Any CPU
+		{F8EAEF56-A5C9-4163-94BA-3F0B702CC0FD}.Release|x64.ActiveCfg = Release|Any CPU
+		{F8EAEF56-A5C9-4163-94BA-3F0B702CC0FD}.Release|x64.Build.0 = Release|Any CPU
+		{F8EAEF56-A5C9-4163-94BA-3F0B702CC0FD}.Release|x86.ActiveCfg = Release|Any CPU
+		{F8EAEF56-A5C9-4163-94BA-3F0B702CC0FD}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

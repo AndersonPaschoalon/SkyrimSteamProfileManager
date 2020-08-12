@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
 using System.Windows.Media;
-using SteamProfileManager.Objects;
+using ProfileManager.Objects;
 
-namespace SteamProfileManager
+namespace ProfileManager
 {
     public class ProfileData
     {

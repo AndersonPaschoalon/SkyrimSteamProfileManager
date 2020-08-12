@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SteamProfileManager.Objects
+namespace ProfileManager.Objects
 {
     public class ConfigContainer
     {

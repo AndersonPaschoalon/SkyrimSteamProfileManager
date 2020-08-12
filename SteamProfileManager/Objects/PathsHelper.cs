@@ -4,10 +4,10 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using SteamProfileManager.Enum;
+using ProfileManager.Enum;
 using SPErrors;
 
-namespace SteamProfileManager.Objects
+namespace ProfileManager.Objects
 {
     /// <summary>
     /// This class helps to hold and generate paths used in the project, encapsulating 
@@ -26,6 +26,11 @@ namespace SteamProfileManager.Objects
         #endregion
 
         #region static_helpers
+
+        public static string getConfigFileName()
+        {
+            return "Settings\\SPConfigSkyrim.xml";
+        }
 
         public static string getConfigFileName(Game game)
         {
@@ -80,7 +85,52 @@ namespace SteamProfileManager.Objects
 
         public int checkSettings()
         {
-            // TODO
+            if (!Directory.Exists(this.steam))
+            {
+                return Errors.ERR_STEAM_DIRRECTORY_MISSING;
+            }
+            if (!Directory.Exists(this.steamBkp))
+            {
+                return Errors.ERR_STEAMBKP_DIRRECTORY_MISSING;
+            }
+            if (!Directory.Exists(this.docs))
+            {
+                return Errors.ERR_DOCUMENTS_DIRRECTORY_MISSING;
+            }
+            if (!Directory.Exists(this.docsBkp))
+            {
+                return Errors.ERR_DOCUMENTSBKP_DIRRECTORY_MISSING; 
+            }
+            if (!Directory.Exists(this.appData))
+            {
+                return Errors.ERR_APPDATA_DIRRECTORY_MISSING;
+            }
+            if (!Directory.Exists(this.appDataBkp))
+            {
+                return Errors.ERR_APPDATABKP_DIRRECTORY_MISSING;
+            }
+            if (!this.nmmInfoEmpty)
+            {
+                if (!Directory.Exists(this.nmmInfo))
+                {
+                    return Errors.ERR_NMMINFO_DIRRECTORY_MISSING;
+                }
+                if (!Directory.Exists(this.nmmInfoBkp))
+                {
+                    return Errors.ERR_NMMINFOBKP_DIRRECTORY_MISSING;
+                }
+            }
+            if (!this.nmmModEmpty)
+            {
+                if (!Directory.Exists(this.nmmMod))
+                {
+                    return Errors.ERR_NMMMOD_DIRRECTORY_MISSING;
+                }
+                if (!Directory.Exists(this.nmmModBkp))
+                {
+                    return Errors.ERR_NMMMODBKP_DIRRECTORY_MISSING;
+                }
+            }
             return Errors.SUCCESS;
         }
 
@@ -103,15 +153,15 @@ namespace SteamProfileManager.Objects
             return this._steamBackup + "\\" + prof + "\\" + this._gameFolder; 
         }
 
-        // appDir
-        public string appDir { get { return this._appDir; } }
-        public string appDirGame { get { return this._appDirGame; } }
-        public string appDirBkp { get { return this._appDirBackup; } }
-        public string appDirBkpProf(string prof) 
+        // appData
+        public string appData { get { return this._appData; } }
+        public string appDataGame { get { return this._appDirGame; } }
+        public string appDataBkp { get { return this._appDirBackup; } }
+        public string appDataBkpProf(string prof) 
         { 
             return this._appDirBackup + "\\" + prof; 
         }
-        public string appDirBkpProfGame(string prof) 
+        public string appDataBkpProfGame(string prof) 
         { 
             return this._appDirBackup + "\\" + prof + "\\" + this._gameFolder; 
         }
@@ -144,7 +194,7 @@ namespace SteamProfileManager.Objects
         public bool nmmInfoEmpty { get; private set; }
 
         // nmmMod
-        public string nmmMod { get { return this.nmmMod; } }
+        public string nmmMod { get { return this._nmmMod; } }
         public string nmmModGame { get { return this._nmmModGame; } }
         public string nmmModBkp { get { return this._nmmModBackup; } }
         public string nmmModBkpProf(string prof) 
@@ -192,84 +242,72 @@ namespace SteamProfileManager.Objects
         #region private 
 
         private Game _game;
-        private string _gameFolder;
-        private string _backupFolder;
+        private string _gameFolder = "";
+        private string _backupFolder = "";
 
-        private string _steam;
-        private string _steamGame;
-        private string _steamBackup;
+        private string _steam = "";
+        private string _steamGame = "";
+        private string _steamBackup = "";
 
-        private string _appDir;
-        private string _appDirGame;
-        private string _appDirBackup;
+        private string _appData = "";
+        private string _appDirGame = "";
+        private string _appDirBackup = "";
 
-        private string _docs;
-        private string _docsGame;
-        private string _docsBackup;
+        private string _docs = "";
+        private string _docsGame = "";
+        private string _docsBackup = "";
 
-        private string _nmmInfo;
-        private string _nmmInfoGame;
-        private string _nmmInfoBackup;
+        private string _nmmInfo = "";
+        private string _nmmInfoGame = "";
+        private string _nmmInfoBackup = "";
 
-        private string _nmmMod;
-        private string _nmmModGame;
-        private string _nmmModBackup;
+        private string _nmmMod = "";
+        private string _nmmModGame = "";
+        private string _nmmModBackup = "";
 
-        private void execUpdate(string steam, string appDir, string myDocs, string nmmInfo,
+        private void execUpdate(string steam, string appData, string myDocs, string nmmInfo,
                                 string nmmMod, string gameFolder, string backupFolder)
         {
-            // if (steam == null) steam = "";
-            // if (appDir == null) appDir = "";
-            // if (myDocs == null) myDocs = "";
-            // if (nmmInfo == null) nmmInfo = "";
-            // if (nmmMod == null) nmmMod = "";
-            // if (gameFolder == null) gameFolder = "";
-            // if (backupFolder == null) backupFolder = "";
-            steam = Utils.alphaNumeric(steam);
-            appDir = Utils.alphaNumeric(appDir);
-            myDocs = Utils.alphaNumeric(myDocs);
-            nmmInfo = Utils.alphaNumeric(nmmInfo);
-            nmmMod = Utils.alphaNumeric(nmmMod);
+            steam.Trim();
+            appData.Trim();
+            myDocs.Trim();
+            nmmInfo.Trim();
+            nmmMod.Trim();
             gameFolder = Utils.alphaNumeric(gameFolder);
             backupFolder = Utils.alphaNumeric(backupFolder);
 
             this._gameFolder = gameFolder;
             this._backupFolder = backupFolder;
 
-            this._steam = steam;
-            this._steamGame = steam + "\\" + gameFolder;
-            this._steamBackup = steam + "\\" + this._backupFolder;
-
-            this._appDir = appDir;
-            this._appDirGame = appDir + "\\" + gameFolder;
-            this._appDirBackup = appDir + "\\" + this._backupFolder;
-
-            this._docs = myDocs;
-            this._docsGame = myDocs + "\\" + gameFolder;
-            this._docsBackup = myDocs + "\\" + this._backupFolder;
+            if (!steam.Trim().Equals(""))
+            {
+                this._steam = steam;
+                this._steamGame = steam + "\\" + gameFolder;
+                this._steamBackup = steam + "\\" + this._backupFolder;
+            }
+            if (!appData.Trim().Equals(""))
+            {
+                this._appData = appData;
+                this._appDirGame = appData + "\\" + gameFolder;
+                this._appDirBackup = appData + "\\" + this._backupFolder;
+            }
+            if (!myDocs.Trim().Equals(""))
+            {
+                this._docs = myDocs;
+                this._docsGame = myDocs + "\\" + gameFolder;
+                this._docsBackup = myDocs + "\\" + this._backupFolder;
+            }
 
             this._nmmInfo = nmmInfo;
             this._nmmMod = nmmMod;
             this.nmmInfoEmpty = (nmmInfo.Trim().Equals("")) ? true : false;
             this.nmmModEmpty = (nmmMod.Trim().Equals("")) ? true : false;
-
-            if (this.nmmInfoEmpty)
-            {
-                this._nmmInfoGame = "";
-                this._nmmInfoBackup = "";
-            }
-            else
+            if (!this.nmmInfoEmpty)
             {
                 this._nmmInfoGame = nmmInfo + "\\" + gameFolder;
                 this._nmmInfoBackup = nmmInfo + "\\" + this._backupFolder;
             }
-
-            if (this.nmmModEmpty)
-            {
-                this._nmmModGame = "";
-                this._nmmModBackup = "";
-            }
-            else
+            if (!this.nmmModEmpty)
             {
                 this._nmmModGame = nmmMod + "\\" + gameFolder;
                 this._nmmModBackup = nmmMod + "\\" + this._backupFolder;

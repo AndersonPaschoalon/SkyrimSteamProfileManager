@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SteamProfileManager.Enum
+namespace ProfileManager.Enum
 {
     public enum SPMState
     {
@@ -12,7 +12,7 @@ namespace SteamProfileManager.Enum
         NOT_CONFIGURED = 0,
         // Only configuration operation is permited
         NO_PROFILE = 1,
-        // configuration and activation operation is permited
+        // configuration and activation operation is permited 
         INACTIVE_PROFILE = 2,
         // configuration, desactivation and switch operations are permited
         ACTIVE_AND_DESACTIVATED_PROFILES = 3,

@@ -13,7 +13,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using UiWpf.ViewModel;
-using SteamProfileManager.Objects;
+using ProfileManager;
+using ProfileManager.Objects;
 namespace UiWpf
 {
     /// <summary>

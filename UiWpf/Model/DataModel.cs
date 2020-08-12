@@ -1,10 +1,12 @@
-﻿using SteamProfileManager.Objects;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ProfileManager;
+using ProfileManager.Enum;
+using ProfileManager.Objects;
 
 namespace UiWpf.Model
 {
@@ -17,7 +19,7 @@ namespace UiWpf.Model
             this.steamPath = "";
             this.appDirPath = "";
             this.docsPath = "";
-            this.state = SteamProfileManager.SteamProfileManager.State.NO_PROFILE;
+            this.state = ProfileManager.Enum.SPMState.NO_PROFILE;
             this.activeProf = null;
             this.desactivatedProf = new List<SPProfile>();
         }
@@ -106,7 +108,7 @@ namespace UiWpf.Model
 
 
 
-        public SteamProfileManager.SteamProfileManager.State state 
+        public ProfileManager.Enum.SPMState state 
         {
             get { return this._state; }
             set
@@ -193,8 +195,8 @@ namespace UiWpf.Model
         public bool updateBtnActivateActive()
         {
             bool btnVal = false;
-            if (this.state == SteamProfileManager.SteamProfileManager.State.DESACTIVATED_ONLY ||
-               this.state == SteamProfileManager.SteamProfileManager.State.INACTIVE_PROFILE)
+            if (this.state == SPMState.DESACTIVATED_ONLY||
+               this.state == SPMState.INACTIVE_PROFILE)
             {
                 if (activeSelected == "")
                 {
@@ -210,8 +212,8 @@ namespace UiWpf.Model
         public bool updateBtnDesactivate()
         {
             bool btnVal = false;
-            if (this.state == SteamProfileManager.SteamProfileManager.State.ACTIVE_AND_DESACTIVATED_PROFILES ||
-               this.state == SteamProfileManager.SteamProfileManager.State.ACTIVE_ONLY)
+            if (this.state == SPMState.ACTIVE_AND_DESACTIVATED_PROFILES ||
+               this.state == SPMState.ACTIVE_ONLY)
             {
                 if (inactiveSelected == "" && desactivatedSelected == "")
                 {
@@ -229,7 +231,7 @@ namespace UiWpf.Model
         public bool updateBtnSwitch()
         {
             bool btnVal = false;
-            if (this.state == SteamProfileManager.SteamProfileManager.State.ACTIVE_AND_DESACTIVATED_PROFILES)
+            if (this.state == SPMState.ACTIVE_AND_DESACTIVATED_PROFILES)
             {
                 if (this.activeSelected != "" && this.desactivatedSelected != "")
                 {
@@ -279,9 +281,6 @@ namespace UiWpf.Model
 
         #endregion btns_state
 
-        #region profilesChecked
-
-        #region
 
         #region view_model
 
@@ -299,7 +298,7 @@ namespace UiWpf.Model
         private string _docsPath;
         private string _nmmInfoPath;
         private string _nmmModPath;
-        private SteamProfileManager.SteamProfileManager.State _state;
+        private SPMState _state = SPMState.NO_PROFILE;
         private SPProfile _activeProf;
         private List<SPProfile> _desactivatedProf;
         private bool _btnActivateActive;

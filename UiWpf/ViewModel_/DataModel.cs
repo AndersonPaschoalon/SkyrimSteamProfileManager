@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using SteamProfileManager.Objects;
-using SteamProfileManager;
+using ProfileManager;
+using ProfileManager.Objects;
 
 namespace UiWpf.ViewModel
 {
@@ -18,7 +18,7 @@ namespace UiWpf.ViewModel
             this.steamPath = "";
             this.appDirPath = "";
             this.docsPath = "";
-            this.state = SteamProfileManager.SteamProfileManager.State.NO_PROFILE;
+            this.state = ProfileManager.Enum.SPMState.NO_PROFILE;
             this.activeProf = null;
             this.desactivatedProf = new List<SPProfile>();
         }
@@ -28,7 +28,7 @@ namespace UiWpf.ViewModel
         public string docsPath { get; set; }
         public string nmmInfoPath { get; set; }
         public string nmmModPath { get; set; }
-        public SteamProfileManager.SteamProfileManager.State state { get; set; }
+        public ProfileManager.Enum.SPMState state { get; set; }
         public SPProfile activeProf { get; set; }
         public List<SPProfile> desactivatedProf { get; set; }
     }

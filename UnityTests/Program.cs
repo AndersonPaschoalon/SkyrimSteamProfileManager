@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using Logger;
-using SteamProfileManager;
+using ProfileManager;
 using SPErrors;
 
 namespace Tester
