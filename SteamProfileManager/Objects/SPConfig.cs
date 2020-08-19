@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 using Logger;
+using Logger.Loggers;
 using ProfileManager.Enum;
 
 namespace ProfileManager.Objects
@@ -13,7 +14,9 @@ namespace ProfileManager.Objects
     [XmlRoot("CONFIG", IsNullable = false)]
     public class SPConfig
     {
-        private static Logger.ILogger log = LoggerFactory.getLogger(LoggerFactory.LogType.CONSOLE);
+        // private static Logger.ILogger log = Logger.Loggers.ConsoleLogger.getInstance();
+        // private static Logger.ILogger log = Logger.Loggers.TrivialLog.getInstance("triviallogfile.log");
+        private static ILogger log = Log4NetLogger.getInstance(LogAppender.MANAGER);
         private string configFileName;
         private static SPConfig instance = null;
 

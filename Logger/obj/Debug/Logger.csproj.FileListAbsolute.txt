@@ -1,3 +1,6 @@
+C:\Users\anderson_paschoalon\Workspace\Sandbox\OpenSource\Cs\SkyrimSteamProfileManager\Logger\bin\Debug\App.config
+C:\Users\anderson_paschoalon\Workspace\Sandbox\OpenSource\Cs\SkyrimSteamProfileManager\Logger\bin\Debug\Log4Net.config
+C:\Users\anderson_paschoalon\Workspace\Sandbox\OpenSource\Cs\SkyrimSteamProfileManager\Logger\bin\Debug\Logger.dll.config
 C:\Users\anderson_paschoalon\Workspace\Sandbox\OpenSource\Cs\SkyrimSteamProfileManager\Logger\bin\Debug\Logger.dll
 C:\Users\anderson_paschoalon\Workspace\Sandbox\OpenSource\Cs\SkyrimSteamProfileManager\Logger\bin\Debug\Logger.pdb
 C:\Users\anderson_paschoalon\Workspace\Sandbox\OpenSource\Cs\SkyrimSteamProfileManager\Logger\bin\Debug\log4net.dll

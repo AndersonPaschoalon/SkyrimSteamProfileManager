@@ -1,25 +1,34 @@
 ﻿using ProfileManagerBL.ViewModel;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
+//using System.Windows.Media;
+//using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ProfileManager;
+using Logger;
+using Logger.Loggers;
+using System.Drawing;
+using System.Windows.Forms;
+using System.Diagnostics;
+using ProfileManager.Enum;
 
 namespace ProfileManagerBL
 {
     public class ProfileManagerBusinessLayer
     {
         private const string HELP_PAGE = "HelpPage.html";
+        private readonly ILogger log;
         private ProfileViewData checkedActiveProfile = null;
         private ProfileViewData checkedDesactivatedProfile = null;
         private ProfileManager.SteamProfileManager manager;
         private ProfileManager.Enum.SPMState managerState;
 
-        public ProfileManagerBusinessLayer(ViewGame game)
+        public ProfileManagerBusinessLayer(string game)
         {
-            this.manager = new SteamProfileManager((ProfileManager.Enum.Game)game);
+            this.log = Log4NetLogger.getInstance(LogAppender.MANAGER);
+            this.manager = new SteamProfileManager(ViewGame.enumGame(game));
         }
 
         #region bl_helpers
@@ -28,16 +37,12 @@ namespace ProfileManagerBL
         {
             get
             {
-                EnabledOp eop = EnabledOp.getInstance();
-
-                eop.editProfile = false;
-                eop.activateProfile = false;
-                eop.desactivateProfile = false;
-                eop.editProfile = false;
+                
                 int nIn = this.countCheckedInactive();
                 int nAc = this.countCheckedActive();
                 int nDe = this.countCheckedDesactivated();
                 ProfileManager.Enum.SPMState state = this.manager.showState();
+                EnabledOp eop = new EnabledOp();
                 switch (state)
                 {
                     case ProfileManager.Enum.SPMState.NO_PROFILE:
@@ -103,19 +108,75 @@ namespace ProfileManagerBL
             }
         }
 
-        public List<ProfileViewData> active { get; private set; }
+        private List<ProfileViewData> _active;
+        private List<ProfileViewData> _desactivated;
+        private List<ProfileViewData> _inactive = null;
+        public List<ProfileViewData> active {
+            get
+            {
+                if (this.managerState == ProfileManager.Enum.SPMState.INACTIVE_PROFILE)
+                {
+                    if (this._inactive == null)
+                    {
+                        // in case of a inactive profile, returns a profile for visualization.
+                        this._inactive = new List<ProfileViewData>();
+                        Color darkGray = Color.FromName("DarkGray");
+                        ProfileViewData inactiveProfileView = new ProfileViewData();
+                        inactiveProfileView.name = "~INACTIVE";
+                        inactiveProfileView.color = darkGray;
+                        inactiveProfileView.state = ProfileType.INACTIVE;
+                        this._inactive.Add(inactiveProfileView);
+                    }
+                    return this._inactive;
+                }
+                this._inactive = null;
+                return this._active;
+            }
+            private set
+            {
+                this._active = value;
+            }
+        }
 
-        public List<ProfileViewData> desactivated { get; private set; }
+        public List<ProfileViewData> desactivated 
+        {
+            get
+            {
+                return this._desactivated;
+            }
+            private set
+            {
+                this._desactivated = value;
+            }
+        }
 
         public void openHelpPage()
         {
+            string htmlPage = Environment.CurrentDirectory + "\\" + HELP_PAGE;
             try
             {
-                System.Diagnostics.Process.Start(HELP_PAGE);
+                System.Diagnostics.Process.Start(htmlPage);
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Process.Start("Chrome", Uri.EscapeDataString(HELP_PAGE));
+                System.Diagnostics.Process.Start("Chrome", Uri.EscapeDataString(htmlPage));
+            }
+        }
+
+        public void openLogFiles()
+        {
+            List<string> logFiles = new List<string> 
+            {"manager.log","ui.log"};
+            foreach (var item in logFiles)
+            {
+                try
+                {
+                    Process.Start(item);
+                }
+                catch (Exception ex)
+                {
+                    Process.Start("notepad.exe", item);
+                }
             }
         }
 
@@ -156,6 +217,156 @@ namespace ProfileManagerBL
 
         #region test_methods
 
+        /// <summary>
+        /// Generate manager states
+        /// </summary>
+        /// <param name="test"></param>
+        /// <returns></returns>
+        public EnabledOp test_getAllowed(int test)
+        {
+            log.Debug("-- test_getAllowed: " + test);
+            log.Debug("0 - ACTIVE_AND_DESACTIVATED_PROFILES");
+            log.Debug("1 - NOT_CONFIGURED ");
+            log.Debug("2 - NO_PROFILE ");
+            log.Debug("3 - INACTIVE_PROFILE ");
+            log.Debug("4 - ACTIVE_ONLY ");
+            log.Debug("5 - DESACTIVATED_ONLY ");
+            log.Debug("6 - ACTIVE_AND_DESACTIVATED_PROFILES ");
+
+
+            int nIn = this.countCheckedInactive();
+            int nAc = this.countCheckedActive();
+            int nDe = this.countCheckedDesactivated();
+            log.Debug("nIn:" + nIn + ", nAc:" + nAc + ", nDe:" + nDe);
+
+            ProfileManager.Enum.SPMState state;
+            switch (test)
+            {
+                case 0:
+                    {
+                        state = ProfileManager.Enum.SPMState.ACTIVE_AND_DESACTIVATED_PROFILES;
+                        break;
+                    }
+                case 1:
+                    {
+                        state = ProfileManager.Enum.SPMState.NOT_CONFIGURED;
+                        break;
+                    }
+                case 2:
+                    {
+                        state = ProfileManager.Enum.SPMState.NO_PROFILE;
+                        break;
+                    }
+                case 3:
+                    {
+                        state = ProfileManager.Enum.SPMState.INACTIVE_PROFILE;
+                        break;
+                    }
+                case 4:
+                    {
+                        state = ProfileManager.Enum.SPMState.ACTIVE_ONLY;
+                        break;
+                    }
+                case 5:
+                    {
+                        state = ProfileManager.Enum.SPMState.DESACTIVATED_ONLY;
+                        break;
+                    }
+                case 6:
+                    {
+                        state = ProfileManager.Enum.SPMState.ACTIVE_AND_DESACTIVATED_PROFILES;
+                        break;
+                    }
+                case 7:
+                    {
+                        state = ProfileManager.Enum.SPMState.ACTIVE_AND_DESACTIVATED_PROFILES;
+                        break;
+                    }
+                default:
+                    {
+                        state = ProfileManager.Enum.SPMState.ACTIVE_AND_DESACTIVATED_PROFILES;
+                        break;
+                    }
+            }
+            log.Debug("STATE:" + state);
+
+            EnabledOp eop = new EnabledOp(); // return obj
+            switch (state)
+            {
+                case ProfileManager.Enum.SPMState.NO_PROFILE:
+                    {
+                        log.Debug("No Profile, No Operations Allowed");
+                        return eop;
+                    }
+                case ProfileManager.Enum.SPMState.NOT_CONFIGURED:
+                    {
+                        log.Debug("Not Configured, No Operations Allowed");
+                        return eop;
+                    }
+                case ProfileManager.Enum.SPMState.INACTIVE_PROFILE:
+                    // configuration and activation operation is permited
+                    {
+                        log.Debug("INACTIVE_PROFILE, activation is permited if selected");
+                        if (nIn == 1)
+                        {
+                            log.Debug("One INACTIVE selected");
+                            eop.activateProfile = true;
+                        }
+                        return eop;
+                    }
+                case ProfileManager.Enum.SPMState.DESACTIVATED_ONLY:
+                    // configuration and activation operations are permited
+                    {
+                        log.Debug("DESACTIVATED_ONLY edit and activation is permited if ONE is selected");
+                        if (nDe == 1)
+                        {
+                            log.Debug("one is selected");
+                            eop.activateProfile = true;
+                            eop.editProfile = true;
+                        }
+                        return eop;
+                    }
+                case ProfileManager.Enum.SPMState.ACTIVE_ONLY:
+                    // configuration and desactivation operations are permited
+                    {
+                        log.Debug("ACTIVE_ONLY if one is selected desactivation and edit is permited");
+                        if (nAc == 1)
+                        {
+                            eop.desactivateProfile = true;
+                            eop.editProfile = true;
+                        }
+                        return eop;
+                    }
+                case ProfileManager.Enum.SPMState.ACTIVE_AND_DESACTIVATED_PROFILES:
+                    // configuration, desactivation and switch operations are permited
+                    {
+                        log.Debug("ACTIVE_AND_DESACTIVATED_PROFILES edit, switch, desactive and edit permited");
+                        if (nAc == 1 && nDe <= 0)
+                        {
+                            log.Debug("active selected: edit, desactive");
+                            eop.desactivateProfile = true;
+                            eop.editProfile = true;
+                        }
+                        else if (nAc == 1 && nDe == 1)
+                        {
+                            log.Debug("active+desactivated selected: switch");
+                            eop.switchProfile = true;
+                        }
+                        else if (nAc <= 0 && nDe == 1)
+                        {
+
+                            log.Debug("desactivated selected: edit, active");
+                            eop.editProfile = true;
+                        }
+                        return eop;
+                    }
+                default:
+                    {
+                        return eop;
+                    }
+            }
+        }
+
         public List<ProfileViewData> test_getActive(int test)
         {
             // 0 - ACTIVE_AND_DESACTIVATED_PROFILES
@@ -194,6 +405,7 @@ namespace ProfileManagerBL
                     {
                         // 3 - INACTIVE_PROFILE 
                         managerState = ProfileManager.Enum.SPMState.INACTIVE_PROFILE;
+                        return this.active;
                         break;
                     }
                 case 4:
@@ -245,47 +457,50 @@ namespace ProfileManagerBL
                 case 0:
                     {
                         // 0 - ACTIVE_AND_DESACTIVATED_PROFILES
+                        MessageBox.Show("ACTIVE_AND_DESACTIVATED_PROFILES");
                         managerState = ProfileManager.Enum.SPMState.ACTIVE_AND_DESACTIVATED_PROFILES;
                         break;
                     }
                 case 1:
                     {
                         // 1 - NOT_CONFIGURED  
+                        MessageBox.Show("NOT_CONFIGURED");
                         managerState = ProfileManager.Enum.SPMState.NOT_CONFIGURED;
                         break;
                     }
                 case 2:
                     {
                         // 2 - NO_PROFILE 
+                        MessageBox.Show("NO_PROFILE");
                         managerState = ProfileManager.Enum.SPMState.NO_PROFILE;
                         break;
                     }
                 case 3:
                     {
                         // 3 - INACTIVE_PROFILE 
+                        MessageBox.Show("INACTIVE_PROFILE");
                         managerState = ProfileManager.Enum.SPMState.INACTIVE_PROFILE;
                         break;
                     }
                 case 4:
                     {
                         // 4 - ACTIVE_ONLY 
+                        MessageBox.Show("ACTIVE_ONLY");
                         managerState = ProfileManager.Enum.SPMState.ACTIVE_ONLY;
                         break;
                     }
                 case 5:
                     {
                         // 5 - DESACTIVATED_ONLY 
+                        MessageBox.Show("DESACTIVATED_ONLY");
                         managerState = ProfileManager.Enum.SPMState.DESACTIVATED_ONLY;
                         break;
                     }
                 case 6:
                     {
-                        // 6 - ACTIVE_AND_DESACTIVATED_PROFILES 
+                        // 6 - ACTIVE_AND_DESACTIVATED_PROFILES
+                        MessageBox.Show("ACTIVE_AND_DESACTIVATED_PROFILES");
                         managerState = ProfileManager.Enum.SPMState.ACTIVE_AND_DESACTIVATED_PROFILES;
-                        break;
-                    }
-                case 7:
-                    {
                         break;
                     }
                 default:

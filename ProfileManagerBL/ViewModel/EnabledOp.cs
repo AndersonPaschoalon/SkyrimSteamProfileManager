@@ -8,19 +8,22 @@ namespace ProfileManagerBL.ViewModel
 {
     public class EnabledOp
     {
-        private static EnabledOp instance;
-        private EnabledOp()
-        { 
+        public  EnabledOp()
+        {
+            this.editProfile = false;
+            this.desactivateProfile = false;
+            this.activateProfile = false;
+            this.switchProfile = false;
         }
 
-        public static EnabledOp getInstance()
-        {
-            if (EnabledOp.instance == null)
-            {
-                EnabledOp.instance = new EnabledOp();
-            }
-            return EnabledOp.instance;
-        }
+        //public static EnabledOp getInstance()
+        //{
+        //    if (EnabledOp.instance == null)
+        //    {
+        //        EnabledOp.instance = new EnabledOp();
+        //    }
+        //    return EnabledOp.instance;
+        //}
 
         public  bool editProfile { get; set; }
         public  bool activateProfile { get; set; }

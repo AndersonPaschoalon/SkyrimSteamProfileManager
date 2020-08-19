@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using Logger;
-using Logger.Objects;
+using Logger.Loggers;
 using SPErrors;
 
 namespace ProfileManager.Objects

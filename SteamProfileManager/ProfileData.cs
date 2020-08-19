@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
-using System.Windows.Media;
+
 using ProfileManager.Objects;
 
 namespace ProfileManager
@@ -14,12 +14,14 @@ namespace ProfileManager
         private string _profileName;
         private Color _color;
 
-        public ProfileData(string name, string color)
-        { 
-        }
+        //public ProfileData(string name, string color)
+        //{ 
+        //}
 
         public ProfileData(string name, Color color)
         {
+            this.color = color;
+            this.profileName = name;
         }
 
         public string profileName
@@ -57,13 +59,16 @@ namespace ProfileManager
             Color col;
             try
             {
-                col = (Color)ColorConverter.ConvertFromString(hexCode);
+                // TODO
+                //col = (Color)ColorConverter.ConvertFromString(hexCode);
             }
             catch (Exception ex)
             {
-                col = (Color)ColorConverter.ConvertFromString("#66FFF5");
+                // TODO
+                //col = (Color)ColorConverter.ConvertFromString("#66FFF5");
             }
-            this._color = col;
+            // TODO
+            //this._color = col;
         }
 
 

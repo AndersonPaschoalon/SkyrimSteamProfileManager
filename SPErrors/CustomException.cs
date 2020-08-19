@@ -1,5 +1,5 @@
 ﻿using Logger;
-using Logger.Objects;
+using Logger.Loggers;
 using System;
 using System.Collections.Generic;
 using System.Linq;

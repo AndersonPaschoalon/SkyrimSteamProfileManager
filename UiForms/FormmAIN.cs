@@ -1,4 +1,6 @@
-﻿using ProfileManagerBL;
+﻿using Logger;
+using Logger.Loggers;
+using ProfileManagerBL;
 using ProfileManagerBL.ViewModel;
 using System;
 using System.Collections.Generic;
@@ -7,6 +9,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -14,6 +17,8 @@ namespace UiForms
 {
     public partial class FormMain : Form
     {
+        // log
+        private readonly ILogger log;
         private EnabledOp ops;
         // Select Game Menu
         private ViewGame game;
@@ -28,47 +33,100 @@ namespace UiForms
         private BindingSource bindingSourceActive = new BindingSource();
         private DataGridView dataGridViewDesactivated = new DataGridView();
         private BindingSource bindingSourceDesactivated = new BindingSource();
-
-
-
-        // Test
+        // Tests
+        private const bool enableTesting = true;
         private int testToRun = 0;
 
         public FormMain()
         {
+            log = Log4NetLogger.getInstance(LogAppender.APP_UI);
+            //log = ConsoleLogger.getInstance();
+            log.Debug("############################################################################");
+            log.Debug("# INITIALIZE FormMain");
+            log.Debug("############################################################################");
             InitializeComponent();
-            this.managerBusinessLayer = new ProfileManagerBusinessLayer(ViewGame.SKYRIM);
-        }
-
-        private void setSkyrim()
-        {
-            skyrimSEToolStripMenuItem.Checked = false;
-            this.game = ViewGame.SKYRIM;
-            this.managerBusinessLayer = new ProfileManagerBusinessLayer(this.game);
-        }
-
-        private void setSkyrimSE()
-        {
-            skyrimSEToolStripMenuItem.Checked = false;
-            this.game = ViewGame.SKYRIM_SE;
-            this.managerBusinessLayer = new ProfileManagerBusinessLayer(this.game);
+            // enable testing panel
+            this.panelTests.Visible = enableTesting;
+            // select first item as default
+            log.Debug("-- select first item as default");
+            this.toolStripComboBoxSelectGame.SelectedIndex = 0;
         }
 
         private void fillDataGrids()
         {
-            // List<ProfileViewData> lpd = this.managerBusinessLayer.desactivated;
-            this.lpd =  this.managerBusinessLayer.test_getDesactivated(0);
+            log.Debug("-- fillDataGrids");
+            this.lpd = this.managerBusinessLayer.test_getDesactivated(0);
             this.loadDatagrid(ref this.dataGridViewDesactivated, ref this.bindingSourceDesactivated,
-                              ref this.panelDesactivated, ref lpd, this.dataGridViewDesactivated_CellMouseClick);
-
-            // List<ProfileViewData> lpa = this.managerBusinessLayer.active;
+                              ref this.panelDesactivatedGrid, ref lpd, this.dataGridViewDesactivated_CellMouseClick);
             this.lpa = this.managerBusinessLayer.test_getActive(0);
             this.loadDatagrid(ref this.dataGridViewActive, ref this.bindingSourceActive,
-                              ref this.panelActivated, ref lpa, this.dataGridViewActive_CellMouseClick);
-
+                              ref this.panelActivatedGrid, ref lpa, this.dataGridViewActive_CellMouseClick);
+            // update allowed actions
+            updateToolStripButtons();
         }
 
-        private void loadDatagrid(ref DataGridView dgv, ref BindingSource bs, ref Panel panel, 
+        #region events 
+
+        // update settings after saving data
+        private void configureToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FormSettings settings = new FormSettings();
+            settings.ShowDialog();
+            if (settings.saveSettings)
+            {
+                this.managerBusinessLayer.action_updateSettings(settings.settings);
+            }
+        }
+
+        private void FormMain_Load(object sender, EventArgs e)
+        {
+            this.fillDataGrids();
+        }
+
+        private void dataGridViewActive_CellMouseClick(object sender, DataGridViewCellEventArgs e)
+        {
+            this.datagridRadioBtnColClickHandler(e, ref this.dataGridViewActive, 0);
+            this.updateToolStripButtons();
+        }
+
+
+        private void dataGridViewDesactivated_CellMouseClick(object sender, DataGridViewCellEventArgs e)
+        {
+            this.datagridRadioBtnColClickHandler(e, ref this.dataGridViewDesactivated, 0);
+            this.updateToolStripButtons();
+        }
+
+        #endregion events
+
+        #region events_helpers
+
+        /// <summary>
+        /// This routine must be run after any click on the datagridview or after 
+        /// any change on the application state
+        /// </summary>
+        private void updateToolStripButtons()
+        {
+            log.Debug("-- updateToolStripButtons");
+            Thread.Sleep(100);
+            //EnabledOp enabled = managerBusinessLayer.allowedOperations;
+            EnabledOp enabled = managerBusinessLayer.test_getAllowed(this.testToRun);
+            // enable/disable allowed operations
+            log.Debug("allowed operations >> Activate:" + enabled.activateProfile +
+                      ", Desactivate:" + enabled.desactivateProfile +
+                      ", Switch:" + enabled.switchProfile +
+                      ", Edit:" + enabled.editProfile);
+            this.toolStripButtonActivate.Enabled = enabled.activateProfile;
+            this.toolStripButtonDesactivate.Enabled = enabled.desactivateProfile;
+            this.toolStripButtonSwitch.Enabled = enabled.switchProfile;
+            this.toolStripButtonEdit.Enabled = enabled.editProfile;
+        }
+
+        #endregion events_helpers
+
+        #region form_helpers
+
+        // create a datagridview into a panel
+        private void loadDatagrid(ref DataGridView dgv, ref BindingSource bs, ref Panel panel,
                                   ref List<ProfileViewData> lp, DataGridViewCellEventHandler cellMouseClick)
         {
             bs.DataSource = lp;
@@ -85,7 +143,9 @@ namespace UiForms
             dgv.RowHeadersVisible = false;
             dgv.CellContentClick += new DataGridViewCellEventHandler(cellMouseClick);
             dgv.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCellsExceptHeaders;
-            //dgv.RowHeaderMouseClick += new DataGridViewCellMouseEventHandler(findSelectedRow);
+            dgv.GridColor = SystemColors.Control;
+            dgv.BorderStyle = BorderStyle.None;
+            dgv.BackgroundColor = SystemColors.Control;
 
             // Initialize and add a check box column.
             DataGridViewColumn column = new DataGridViewTextBoxColumn();
@@ -106,118 +166,90 @@ namespace UiForms
 
             // Initialize the DataGridView.
             dgv.AutoGenerateColumns = false;
+            dgv.ScrollBars = ScrollBars.Both;
             dgv.AutoSize = true;
 
             panel.Controls.Add(dgv);
-            //panel.Controls.Add(dgv);
             this.AutoSize = true;
-
         }
 
-        #region events 
-
-        // Set Skyrim as main game on the toolstrip menu
-        private void skyrimToolStripMenuItem_Click(object sender, EventArgs e)
+        private void datagridRadioBtnColClickHandler(DataGridViewCellEventArgs e, ref DataGridView dgv, int col)
         {
-            setSkyrim();
-        }
-
-        // set Skyrim SE as main game on toolstrip menu
-        private void skyrimSEToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            setSkyrimSE();
-        }
-
-        // update settings after saving data
-        private void configureToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            FormSettings settings = new FormSettings();
-            settings.ShowDialog();
-            if (settings.saveSettings)
+            bool oldVal = (bool)dgv.Rows[e.RowIndex].Cells[col].Value;
+            for (int i = 0; i < dgv.Rows.Count; i++)
             {
-                this.managerBusinessLayer.action_updateSettings(settings.settings);
+                dgv.Rows[i].Cells[col].Value = false;
             }
-        }
-
-        private void helpToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            this.managerBusinessLayer.openHelpPage();
-        }
-
-        private void FormMain_Load(object sender, EventArgs e)
-        {
-            this.fillDataGrids();
-        }
-
-        private void dataGridViewActive_CellMouseClick(object sender, DataGridViewCellEventArgs e)
-        {
-            var a = dataGridViewActive.Rows[0].Cells[0].Value;
-            for (int i = 0; i < dataGridViewActive.Rows.Count; i++)
-            {
-                dataGridViewActive.Rows[i].Cells[0].Value = false;
-            }
-            dataGridViewActive.RefreshEdit();
-
+            dgv.RefreshEdit();
             if (e.RowIndex >= 0)
             {
-                dataGridViewActive.Rows[e.RowIndex].Cells[0].Value = true;
-                dataGridViewActive.RefreshEdit();
+                dgv.Rows[e.RowIndex].Cells[col].Value = !oldVal;
+                dgv.RefreshEdit();
             }
         }
 
-        private void dataGridViewDesactivated_CellMouseClick(object sender, DataGridViewCellEventArgs e)
-        {
-            var a = dataGridViewDesactivated.Rows[0].Cells[0].Value;
-            for (int i = 0; i < dataGridViewDesactivated.Rows.Count; i++)
-            {
-                dataGridViewDesactivated.Rows[i].Cells[0].Value = false;
-            }
-            dataGridViewDesactivated.RefreshEdit();
-
-            if (e.RowIndex >= 0)
-            {
-                dataGridViewDesactivated.Rows[e.RowIndex].Cells[0].Value = true;
-                dataGridViewDesactivated.RefreshEdit();
-            }
-        }
-
-        #endregion events
+        #endregion form_helpers
 
         private void openWithNotepadToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("In Development...");
+            this.managerBusinessLayer.openLogFiles();
         }
 
         private void exportAszipToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("In Development...");
+            MessageBox.Show("TODO: In Development...");
         }
 
-        private void deleteAllBackupsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void toolStripButtonActivate_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("In Development...");
+            MessageBox.Show("TODO: Button Activate...");
         }
 
-        private void buttonTest_Click(object sender, EventArgs e)
+        private void toolStripButtonDesactivate_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("TODO: Button Desactivate...");
+        }
+
+        private void toolStripButtonSwitch_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("TODO: Button Switch...");
+        }
+
+        private void toolStripButtonEdit_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("TODO: Button Edit...");
+        }
+
+        private void buttonRunTest_Click(object sender, EventArgs e)
         {
             managerBusinessLayer.test_updateBl(this.testToRun, ref this.lpa, ref this.lpd);
-
+            this.updateToolStripButtons();
             this.bindingSourceActive.DataSource = this.lpa;
             this.bindingSourceDesactivated.DataSource = this.lpd;
+        }
 
-            //this.bindingSourceActive.ResetBindings(false);
-            //this.bindingSourceDesactivated.ResetBindings(false);
-            //this.bindingSourceDesactivated.EndEdit();
-            //dataGridViewActive.Update();
-            //dataGridViewActive.Refresh();
-            //dataGridViewDesactivated.Update();
-            //dataGridViewDesactivated.Refresh();
-            this.buttonTest.Text = "Test <" + this.testToRun + ">";
+        // Test button
+        private void buttonSelectTest_Click(object sender, EventArgs e)
+        {
             this.testToRun++;
             if (this.testToRun > 6)
             {
                 this.testToRun = 0;
             }
+            this.textBoxSelectedTest.Text = "Test <" + this.testToRun + "> ";
+        }
+
+        private void openHeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.managerBusinessLayer.openHelpPage();
+        }
+
+        private void toolStripComboBoxSelectGame_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            log.Debug("-- toolStripComboBoxSelectGame_SelectedIndexChanged");
+            log.Info("SELECTED GAME: " + this.toolStripComboBoxSelectGame.Text);
+            string selected = this.toolStripComboBoxSelectGame.Text;
+            this.managerBusinessLayer = new ProfileManagerBusinessLayer(selected);
         }
     }
 }

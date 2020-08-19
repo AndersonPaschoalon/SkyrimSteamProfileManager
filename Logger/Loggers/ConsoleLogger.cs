@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Logger.Objects
+namespace Logger.Loggers
 {
     public class ConsoleLogger : ILogger
     {
@@ -12,6 +12,9 @@ namespace Logger.Objects
         private const string LV_INFO =  "INFO    ";
         private const string LV_WARN =  "WARN    ";
         private const string LV_ERROR = "ERROR   ";
+
+        // loglevel
+        private LogLevel level = LogLevel.DEBUG;
 
         private ConsoleLogger()
         {  
@@ -38,16 +41,19 @@ namespace Logger.Objects
         }
         public void Debug(string msg)
         {
+            if (this.level > LogLevel.DEBUG) return;
             this.Write(LV_DEBUG, msg);
         }
 
         public void Info(string msg)
         {
+            if (this.level > LogLevel.INFO) return;
             this.Write(LV_INFO, msg);
         }
 
         public void Warn(string msg)
         {
+            if (this.level > LogLevel.WARN) return;
             this.Write(LV_WARN, msg);
         }
 

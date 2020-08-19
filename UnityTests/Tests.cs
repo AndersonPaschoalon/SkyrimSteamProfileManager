@@ -7,7 +7,8 @@ using System.Threading.Tasks;
 using System.Xml.Serialization;
 using ProfileManager;
 using ProfileManager.Objects;
-
+using Logger;
+using Logger.Loggers;
 
 namespace Tester
 {
@@ -21,10 +22,13 @@ namespace Tester
             countAcc = 0;
             countErr = 0;
 
-            bool test01 = true;
+            bool test01 = false;
+            bool test02 = true;
 
             if (test01)
                 testSPConfigXml();
+            if (test02)
+                testLogger();
         }
 
         public static void testHeader(string msg)
@@ -62,5 +66,23 @@ namespace Tester
             countAcc++;
         }
 
+
+        public static void testLogger()
+        {
+            ILogger logConsole = ConsoleLogger.getInstance();
+            ILogger logLog4net = Log4NetLogger.getInstance(LogAppender.MANAGER);
+            ILogger logLog4netUi = Log4NetLogger.getInstance(LogAppender.APP_UI);
+            ILogger logTlog = TrivialLog.getInstance("triviallogTest.log");
+
+            logLog4net.Debug("TEST LOG4NET Debug");
+            logLog4net.Info("TEST LOG4NET Info");
+            logLog4net.Warn("TEST LOG4NET Warn");
+            logLog4net.Error("TEST LOG4NET Error");
+
+            logLog4netUi.Debug("TEST LOG4NET Debug");
+            logLog4netUi.Info("TEST LOG4NET Info");
+            logLog4netUi.Warn("TEST LOG4NET Warn");
+            logLog4netUi.Error("TEST LOG4NET Error");
+        }
     }
 }

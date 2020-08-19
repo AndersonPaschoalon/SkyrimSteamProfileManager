@@ -142,5 +142,20 @@
       <Name>ProfileManagerBL</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\15-tick.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\15-2arrow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\15-cancel.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\15-edit.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\15-engineering.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

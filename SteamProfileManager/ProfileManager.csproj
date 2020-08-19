@@ -35,6 +35,7 @@
     <Reference Include="PresentationCore" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -45,7 +46,6 @@
   <ItemGroup>
     <Compile Include="Enum\Game.cs" />
     <Compile Include="IProfielManager.cs" />
-    <Compile Include="Objects\ConfigContainer.cs" />
     <Compile Include="Objects\Utils.cs" />
     <Compile Include="Objects\PathsHelper.cs" />
     <Compile Include="Objects\SPConfig.cs" />

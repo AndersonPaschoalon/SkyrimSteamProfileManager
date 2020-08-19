@@ -6,9 +6,9 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Logger.Objects
+namespace Logger.Loggers
 {
-    class TrivialLog : ILogger
+    public class TrivialLog : ILogger
     {
         private const string LVDEBUG = "DEBUG";
         private const string LVWARN  = "WARN ";
@@ -16,6 +16,8 @@ namespace Logger.Objects
         private const string LVERROR = "ERROR";
         private const string DEFLOGFILE = "defaultlogfile";
         private string logfile = "";
+        // loglevel
+        private LogLevel level = LogLevel.DEBUG;
         // static member
         private static Dictionary<string, TrivialLog>  instancesDic = new Dictionary<string, TrivialLog>();
         private static Mutex mutDic = new Mutex();
@@ -64,16 +66,19 @@ namespace Logger.Objects
 
         public void Debug(string msg, string className)
         {
+            if (this.level > LogLevel.DEBUG) return;
             this.WriteLog(msg, TrivialLog.LVDEBUG, className);
         }
         
         public void Info(string msg, string className)
         {
+            if (this.level > LogLevel.INFO) return;
             this.WriteLog(msg, TrivialLog.LVINFO, className);
         }
 
         public void Warn(string msg, string className)
         {
+            if (this.level > LogLevel.WARN) return;
             this.WriteLog(msg, TrivialLog.LVWARN, className);
         }
         public void Error(string msg, string className)
@@ -83,20 +88,24 @@ namespace Logger.Objects
 
         public void Debug(string msg)
         {
+            if (this.level > LogLevel.DEBUG) return;
             this.WriteLog(msg, TrivialLog.LVDEBUG, "");
         }
 
         public void Info(string msg)
         {
+            if (this.level > LogLevel.INFO) return;
             this.WriteLog(msg, TrivialLog.LVINFO, "");
         }
 
         public void Warn(string msg)
         {
+            if (this.level > LogLevel.WARN) return;
             this.WriteLog(msg, TrivialLog.LVWARN, "");
         }
         public void Error(string msg)
         {
+            if (this.level > LogLevel.ERROR) return;
             this.WriteLog(msg, TrivialLog.LVERROR, "");
         }
 

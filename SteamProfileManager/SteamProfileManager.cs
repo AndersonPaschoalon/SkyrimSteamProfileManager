@@ -10,7 +10,7 @@ using ProfileManager.Objects;
 using ProfileManager.Enum;
 using SPErrors;
 using Logger;
-using Logger.Objects;
+using Logger.Loggers;
 using Microsoft.VisualBasic.FileIO;
 
 namespace ProfileManager
@@ -25,7 +25,8 @@ namespace ProfileManager
         private const string ACTIVE_INTEGRITY_FILE_NAME = "active_profile.int";
 
         // readonly
-        private readonly ILogger log = ConsoleLogger.getInstance();
+        private static ILogger log = ConsoleLogger.getInstance();
+        //private static Logger.ILogger log = Log4NetLogger.getInstance(Logger.Loggers.LogAppender.MANAGER);
 
         // state
         private PathsHelper paths;

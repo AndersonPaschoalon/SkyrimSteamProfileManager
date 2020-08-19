@@ -121,4 +121,19 @@
   <data name="arrow1_40529" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\arrow1_40529.ico;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="_15_2arrow" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\15-2arrow.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="_15_cancel" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\15-cancel.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="_15_edit" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\15-edit.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="_15_engineering" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\15-engineering.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="_15_tick" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\15-tick.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

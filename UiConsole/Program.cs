@@ -4,6 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Logger;
+using Logger.Loggers;
 using ProfileManager;
 using ProfileManager.Enum;
 
@@ -11,8 +13,11 @@ namespace UiConsole
 {
     class Program
     {
+
         static void Main(string[] args)
         {
+            ILogger log = Log4NetLogger.getInstance(LogAppender.APP_UI);
+
             SteamProfileManager manager = new SteamProfileManager(Game.SKYRIM);
             bool quit = false;
             while (true)

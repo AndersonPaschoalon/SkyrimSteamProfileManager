@@ -17,5 +17,6 @@ namespace Logger
 
         void Error(string msg);
 
+
     }
 }
