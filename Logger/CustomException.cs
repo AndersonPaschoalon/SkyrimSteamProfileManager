@@ -1,13 +1,12 @@
-﻿using Logger;
-using Logger.Loggers;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Utils.Loggers;
 
-namespace SSPErrors
+namespace Utils
 {
     public class CustomException
     {
@@ -16,10 +15,10 @@ namespace SSPErrors
 
         public static void fatalError(int errorCode, string info, Exception ex)
         {
-            
+
             // Console logger
             ILogger log = ConsoleLogger.getInstance();
-            string errTitle = "Error " + errorCode + ": " + SPErrors.Errors.errMsg(errorCode);
+            string errTitle = "Error " + errorCode + ": " + Errors.errMsg(errorCode);
             string errMsg = "";
             if (info == null) info = "";
             if (!info.Trim().Equals(""))
@@ -33,7 +32,7 @@ namespace SSPErrors
             log.Info("-- closing application");
             Application.Exit();
         }
-    
+
 
     }
 }

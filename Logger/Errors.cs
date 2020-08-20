@@ -4,59 +4,58 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SPErrors
+namespace Utils
 {
-
     public static class Errors
     {
-        
+
         // SUCCESS
-        public const int SUCCESS                                          = 000;
+        public const int SUCCESS = 000;
         // GENERAL ERROS
-        public const int ERR_READ_WRITE_PERM                              = 001;
-        public const int ERR_PATH_NOT_EXIST                               = 002;
-        public const int ERR_FILE_NOT_EXIST                               = 003;
-        public const int ARGUMENT_EXCEPTION                               = 004;
-        public const int ARGUMENT_NULL                                    = 005;
-        public const int UNAUTHORIZED_ACCESS                              = 006;
-        public const int IO_EXCEPTION                                     = 007;
-        public const int DIRECTORY_NOT_FOUND                              = 008;
-        public const int PATH_TOO_LONG                                    = 009;
+        public const int ERR_READ_WRITE_PERM = 001;
+        public const int ERR_PATH_NOT_EXIST = 002;
+        public const int ERR_FILE_NOT_EXIST = 003;
+        public const int ARGUMENT_EXCEPTION = 004;
+        public const int ARGUMENT_NULL = 005;
+        public const int UNAUTHORIZED_ACCESS = 006;
+        public const int IO_EXCEPTION = 007;
+        public const int DIRECTORY_NOT_FOUND = 008;
+        public const int PATH_TOO_LONG = 009;
         // PROFILES OPERATION ERRORS
-        public const int ERR_INACTIVE_PROFILE_DOES_NOT_EXIST              = 100;
-        public const int ERR_INACTIVE_PROFILE_CORRUPETED                  = 101;
-        public const int ERR_CANNOT_CREATE_BACKUP_OF_ACTIVE               = 102;
-        public const int ERR_ACTIVE_PROFILE_ALREADY_EXISTS                = 103;
-        public const int ERR_INVALID_PROFILE_NAME                         = 104;
-        public const int ERR_PROFILE_NAME_ALREADY_EXISTS                  = 105;
-        public const int ERR_NO_INSTALLATION_TO_CREATE_PROFILE            = 106;
-        public const int ERR_INVALID_COLOR_NAME                           = 107;
-        public const int ERR_CANNOT_CREATE_INTEGRITY_FILE                 = 108;
-        public const int ERR_INVALID_SETTINGS                             = 109;
-        public const int ERR_INVALID_STATE_FOR_REQUESTED_OPERATION        = 110;
-        public const int ERR_PARSING_INTEGRITY_FILE                       = 111;
-        public const int ERR_COULD_NOT_OPEN_INTEGRIY_FILE                 = 112;
-        public const int ERR_ACTIVE_PROFILE_CORRUPTED                     = 113;
-        public const int ERR_STEAM_DIRRECTORY_MISSING                     = 114;
-        public const int ERR_DOCUMENTS_DIRRECTORY_MISSING                 = 115;
-        public const int ERR_APPDATA_DIRRECTORY_MISSING                   = 116;
-        public const int ERR_STEAMBKP_DIRRECTORY_MISSING                  = 117;
-        public const int ERR_DOCUMENTSBKP_DIRRECTORY_MISSING              = 118;
-        public const int ERR_APPDATABKP_DIRRECTORY_MISSING                = 119;
-        public const int ERR_STEAMGAME_DIRRECTORY_MISSING                 = 200;
-        public const int ERR_DOCUMENTSGAME_DIRRECTORY_MISSING             = 201;
-        public const int ERR_APPDATAGAME_DIRRECTORY_MISSING               = 202;
-        public const int ERR_NMMINFO_DIRRECTORY_MISSING                   = 203;
-        public const int ERR_NMMINFOBKP_DIRRECTORY_MISSING                = 204;
-        public const int ERR_NMMINFOGAME_DIRRECTORY_MISSING               = 205;
-        public const int ERR_NMMMOD_DIRRECTORY_MISSING                    = 206;
-        public const int ERR_NMMMODBKP_DIRRECTORY_MISSING                 = 207;
-        public const int ERR_NMMMODGAME_DIRRECTORY_MISSING                = 208;
+        public const int ERR_INACTIVE_PROFILE_DOES_NOT_EXIST = 100;
+        public const int ERR_INACTIVE_PROFILE_CORRUPETED = 101;
+        public const int ERR_CANNOT_CREATE_BACKUP_OF_ACTIVE = 102;
+        public const int ERR_ACTIVE_PROFILE_ALREADY_EXISTS = 103;
+        public const int ERR_INVALID_PROFILE_NAME = 104;
+        public const int ERR_PROFILE_NAME_ALREADY_EXISTS = 105;
+        public const int ERR_NO_INSTALLATION_TO_CREATE_PROFILE = 106;
+        public const int ERR_INVALID_COLOR_NAME = 107;
+        public const int ERR_CANNOT_CREATE_INTEGRITY_FILE = 108;
+        public const int ERR_INVALID_SETTINGS = 109;
+        public const int ERR_INVALID_STATE_FOR_REQUESTED_OPERATION = 110;
+        public const int ERR_PARSING_INTEGRITY_FILE = 111;
+        public const int ERR_COULD_NOT_OPEN_INTEGRIY_FILE = 112;
+        public const int ERR_ACTIVE_PROFILE_CORRUPTED = 113;
+        public const int ERR_STEAM_DIRRECTORY_MISSING = 114;
+        public const int ERR_DOCUMENTS_DIRRECTORY_MISSING = 115;
+        public const int ERR_APPDATA_DIRRECTORY_MISSING = 116;
+        public const int ERR_STEAMBKP_DIRRECTORY_MISSING = 117;
+        public const int ERR_DOCUMENTSBKP_DIRRECTORY_MISSING = 118;
+        public const int ERR_APPDATABKP_DIRRECTORY_MISSING = 119;
+        public const int ERR_STEAMGAME_DIRRECTORY_MISSING = 200;
+        public const int ERR_DOCUMENTSGAME_DIRRECTORY_MISSING = 201;
+        public const int ERR_APPDATAGAME_DIRRECTORY_MISSING = 202;
+        public const int ERR_NMMINFO_DIRRECTORY_MISSING = 203;
+        public const int ERR_NMMINFOBKP_DIRRECTORY_MISSING = 204;
+        public const int ERR_NMMINFOGAME_DIRRECTORY_MISSING = 205;
+        public const int ERR_NMMMOD_DIRRECTORY_MISSING = 206;
+        public const int ERR_NMMMODBKP_DIRRECTORY_MISSING = 207;
+        public const int ERR_NMMMODGAME_DIRRECTORY_MISSING = 208;
         // invalid arguments
-        public const int ERR_INVALID_GAME                                 = 200;
-        public const int ERR_INVALID_GAME_FOLDER                          = 201;
+        public const int ERR_INVALID_GAME = 200;
+        public const int ERR_INVALID_GAME_FOLDER = 201;
         // NOT DEFINED
-        public const int ERR_UNKNOWN                                      = 9999;
+        public const int ERR_UNKNOWN = 9999;
 
 
         public static string errMsg(int errNumber)
@@ -147,7 +146,7 @@ namespace SPErrors
                         return "ERR_INVALID_SETTINGS";
                     }
                 case ERR_INVALID_STATE_FOR_REQUESTED_OPERATION:
-            
+
                     {
                         return "ERR_INVALID_STATE_FOR_REQUESTED_OPERATION";
                     }

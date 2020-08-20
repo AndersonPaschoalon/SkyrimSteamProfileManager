@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Logger.Loggers
+namespace Utils.Loggers
 {
     public class TrivialLog : ILogger
     {

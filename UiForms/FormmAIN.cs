@@ -1,8 +1,4 @@
-﻿using Logger;
-using Logger.Loggers;
-using ProfileManagerBL;
-using ProfileManagerBL.ViewModel;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -12,6 +8,10 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Utils;
+using Utils.Loggers;
+using ProfileManagerBL;
+using ProfileManagerBL.ViewModel;
 
 namespace UiForms
 {
@@ -19,11 +19,6 @@ namespace UiForms
     {
         // log
         private readonly ILogger log;
-        private EnabledOp ops;
-        // Select Game Menu
-        private ViewGame game;
-        // Settings Menu
-        private SettingsViewData settings;
         // Profile Manager
         private ProfileManagerBusinessLayer managerBusinessLayer;
         // Data Grid View
@@ -34,7 +29,7 @@ namespace UiForms
         private DataGridView dataGridViewDesactivated = new DataGridView();
         private BindingSource bindingSourceDesactivated = new BindingSource();
         // Tests
-        private const bool enableTesting = true;
+        private const bool ENABLE_TESTING = true;
         private int testToRun = 0;
 
         public FormMain()
@@ -46,26 +41,13 @@ namespace UiForms
             log.Debug("############################################################################");
             InitializeComponent();
             // enable testing panel
-            this.panelTests.Visible = enableTesting;
+            this.panelTests.Visible = ENABLE_TESTING;
             // select first item as default
             log.Debug("-- select first item as default");
             this.toolStripComboBoxSelectGame.SelectedIndex = 0;
         }
 
-        private void fillDataGrids()
-        {
-            log.Debug("-- fillDataGrids");
-            this.lpd = this.managerBusinessLayer.test_getDesactivated(0);
-            this.loadDatagrid(ref this.dataGridViewDesactivated, ref this.bindingSourceDesactivated,
-                              ref this.panelDesactivatedGrid, ref lpd, this.dataGridViewDesactivated_CellMouseClick);
-            this.lpa = this.managerBusinessLayer.test_getActive(0);
-            this.loadDatagrid(ref this.dataGridViewActive, ref this.bindingSourceActive,
-                              ref this.panelActivatedGrid, ref lpa, this.dataGridViewActive_CellMouseClick);
-            // update allowed actions
-            updateToolStripButtons();
-        }
-
-        #region events 
+        #region window_events 
 
         // update settings after saving data
         private void configureToolStripMenuItem_Click(object sender, EventArgs e)
@@ -89,16 +71,36 @@ namespace UiForms
             this.updateToolStripButtons();
         }
 
-
         private void dataGridViewDesactivated_CellMouseClick(object sender, DataGridViewCellEventArgs e)
         {
             this.datagridRadioBtnColClickHandler(e, ref this.dataGridViewDesactivated, 0);
             this.updateToolStripButtons();
         }
 
-        #endregion events
+        #endregion window_events
 
         #region events_helpers
+
+        private void fillDataGrids()
+        {
+            log.Debug("-- fillDataGrids");
+            if (ENABLE_TESTING)
+            {
+                this.lpd = this.managerBusinessLayer.test_getDesactivated(0);
+                this.lpa = this.managerBusinessLayer.test_getActive(0);
+            }
+            else
+            {
+                this.lpd = this.managerBusinessLayer.desactivated;
+                this.lpd = this.managerBusinessLayer.active;
+            }
+            this.loadDatagrid(ref this.dataGridViewDesactivated, ref this.bindingSourceDesactivated,
+                              ref this.panelDesactivatedGrid, ref lpd, this.dataGridViewDesactivated_CellMouseClick);
+            this.loadDatagrid(ref this.dataGridViewActive, ref this.bindingSourceActive,
+                              ref this.panelActivatedGrid, ref lpa, this.dataGridViewActive_CellMouseClick);
+            // update allowed actions
+            updateToolStripButtons();
+        }
 
         /// <summary>
         /// This routine must be run after any click on the datagridview or after 
@@ -190,6 +192,8 @@ namespace UiForms
 
         #endregion form_helpers
 
+        #region buttons_events 
+
         private void openWithNotepadToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.managerBusinessLayer.openLogFiles();
@@ -220,6 +224,23 @@ namespace UiForms
             MessageBox.Show("TODO: Button Edit...");
         }
 
+        private void openHeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.managerBusinessLayer.openHelpPage();
+        }
+
+        private void toolStripComboBoxSelectGame_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            log.Debug("-- toolStripComboBoxSelectGame_SelectedIndexChanged");
+            log.Info("SELECTED GAME: " + this.toolStripComboBoxSelectGame.Text);
+            string selected = this.toolStripComboBoxSelectGame.Text;
+            this.managerBusinessLayer = new ProfileManagerBusinessLayer(selected);
+        }
+
+        #endregion buttons_events
+
+        #region tests
+
         private void buttonRunTest_Click(object sender, EventArgs e)
         {
             managerBusinessLayer.test_updateBl(this.testToRun, ref this.lpa, ref this.lpd);
@@ -239,17 +260,6 @@ namespace UiForms
             this.textBoxSelectedTest.Text = "Test <" + this.testToRun + "> ";
         }
 
-        private void openHeToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            this.managerBusinessLayer.openHelpPage();
-        }
-
-        private void toolStripComboBoxSelectGame_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            log.Debug("-- toolStripComboBoxSelectGame_SelectedIndexChanged");
-            log.Info("SELECTED GAME: " + this.toolStripComboBoxSelectGame.Text);
-            string selected = this.toolStripComboBoxSelectGame.Text;
-            this.managerBusinessLayer = new ProfileManagerBusinessLayer(selected);
-        }
+        #endregion tests
     }
 }

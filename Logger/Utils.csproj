@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{730E1BFD-DA2F-4ADD-B9E5-6173D5E1BCAF}</ProjectGuid>
+    <ProjectGuid>{CEDC3029-A30F-46D9-9738-98F6114EA896}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SSPErrors</RootNamespace>
-    <AssemblyName>SSPErrors</AssemblyName>
+    <RootNamespace>Utils</RootNamespace>
+    <AssemblyName>Utils</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -31,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Windows.Forms" />
@@ -42,15 +45,36 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Errors.cs" />
+    <Compile Include="CSharp.cs" />
     <Compile Include="CustomException.cs" />
+    <Compile Include="Errors.cs" />
+    <Compile Include="ILogger.cs" />
+    <Compile Include="Loggers\ConsoleLogger.cs" />
+    <Compile Include="Loggers\Log4NetLogger.cs" />
+    <Compile Include="Loggers\LogConfig.cs" />
+    <Compile Include="Loggers\LogLevel.cs" />
+    <Compile Include="Loggers\TrivialLog.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Logger\Logger.csproj">
-      <Project>{CEDC3029-A30F-46D9-9738-98F6114EA896}</Project>
-      <Name>Logger</Name>
-    </ProjectReference>
+    <Content Include="LogConfig.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Log4Net.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Logs\app_core.log">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Logs\app_ui.log">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

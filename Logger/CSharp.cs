@@ -1,23 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.IO;
-using Logger;
-using Logger.Loggers;
-using SPErrors;
+using Utils.Loggers;
 
-namespace ProfileManager.Objects
+namespace Utils
 {
-    public class Utils
+    public  class CSharp
     {
+        #region private
         private static readonly ILogger log = ConsoleLogger.getInstance();
+        #endregion private
 
-        #region csharp
-
+        #region consts 
         public const string TRUE = "TRUE";
         public const string FALSE = "FALSE";
+        #endregion consts 
 
         /// <summary>
         /// Converts a string value to boolean. "false" (upper and lower case), 
@@ -78,6 +78,12 @@ namespace ProfileManager.Objects
             return outStr;
         }
 
+        // TODO
+        public static string varName(string val)
+        {
+            return val;
+        }
+
         public static List<string> splitCsv(string csv)
         {
             List<string> elements = new List<string>();
@@ -132,8 +138,8 @@ namespace ProfileManager.Objects
             }
             catch (ArgumentException ex)
             {
-                log.Warn("sourceDirName or destDirName is a zero-length string, contains only white space, " + 
-                         "or contains one or more invalid characters. You can query for invalid characters with " + 
+                log.Warn("sourceDirName or destDirName is a zero-length string, contains only white space, " +
+                         "or contains one or more invalid characters. You can query for invalid characters with " +
                          " the GetInvalidPathChars() method.");
                 log.Warn("** Message:" + ex.Message + ", StackTrace:" + ex.StackTrace);
                 return Errors.ARGUMENT_EXCEPTION;
@@ -144,7 +150,5 @@ namespace ProfileManager.Objects
             }
             return Errors.ERR_UNKNOWN;
         }
-
-        #endregion csharp
     }
 }

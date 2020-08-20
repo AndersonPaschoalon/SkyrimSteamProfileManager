@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
-
 using ProfileManager.Objects;
+using Utils;
 
 namespace ProfileManager
 {
@@ -32,7 +32,7 @@ namespace ProfileManager
             }
             set
             {
-                this._profileName = Utils.alphaNumeric(value);
+                this._profileName = CSharp.alphaNumeric(value);
             }
         }
 

@@ -8,4 +8,4 @@ C:\Users\anderson_paschoalon\Workspace\Sandbox\OpenSource\Cs\SkyrimSteamProfileM
 C:\Users\anderson_paschoalon\Workspace\Sandbox\OpenSource\Cs\SkyrimSteamProfileManager\Logger\obj\Debug\Logger.csproj.CopyComplete
 C:\Users\anderson_paschoalon\Workspace\Sandbox\OpenSource\Cs\SkyrimSteamProfileManager\Logger\obj\Debug\Logger.dll
 C:\Users\anderson_paschoalon\Workspace\Sandbox\OpenSource\Cs\SkyrimSteamProfileManager\Logger\obj\Debug\Logger.pdb
-C:\Users\anderson_paschoalon\Workspace\Sandbox\OpenSource\Cs\SkyrimSteamProfileManager\Logger\obj\Debug\Logger.csprojAssemblyReference.cache
+C:\Users\anderson_paschoalon\Workspace\Sandbox\OpenSource\Cs\SkyrimSteamProfileManager\Logger\bin\Debug\LogConfig.xml

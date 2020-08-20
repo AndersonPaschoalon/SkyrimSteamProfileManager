@@ -260,9 +260,10 @@
             // labelActive
             // 
             this.labelActive.AutoSize = true;
+            this.labelActive.Dock = System.Windows.Forms.DockStyle.Fill;
             this.labelActive.Location = new System.Drawing.Point(30, 0);
             this.labelActive.Name = "labelActive";
-            this.labelActive.Size = new System.Drawing.Size(37, 13);
+            this.labelActive.Size = new System.Drawing.Size(225, 30);
             this.labelActive.TabIndex = 0;
             this.labelActive.Text = "Active";
             this.labelActive.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -270,9 +271,10 @@
             // labelDesactivated
             // 
             this.labelDesactivated.AutoSize = true;
+            this.labelDesactivated.Dock = System.Windows.Forms.DockStyle.Fill;
             this.labelDesactivated.Location = new System.Drawing.Point(288, 0);
             this.labelDesactivated.Name = "labelDesactivated";
-            this.labelDesactivated.Size = new System.Drawing.Size(70, 13);
+            this.labelDesactivated.Size = new System.Drawing.Size(225, 30);
             this.labelDesactivated.TabIndex = 1;
             this.labelDesactivated.Text = "Desactivated";
             this.labelDesactivated.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;

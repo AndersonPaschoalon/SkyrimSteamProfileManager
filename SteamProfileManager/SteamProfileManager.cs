@@ -5,13 +5,11 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using Microsoft.VisualBasic.FileIO;
 using ProfileManager.Objects;
 using ProfileManager.Enum;
-using SPErrors;
-using Logger;
-using Logger.Loggers;
-using Microsoft.VisualBasic.FileIO;
+using Utils;
+using Utils.Loggers;
 
 namespace ProfileManager
 {
@@ -22,11 +20,12 @@ namespace ProfileManager
     public class SteamProfileManager
     {
         // Consts
-        private const string ACTIVE_INTEGRITY_FILE_NAME = "active_profile.int";
+        //private const string ACTIVE_INTEGRITY_FILE_NAME = "active_profile.int";
 
         // readonly
-        private static ILogger log = ConsoleLogger.getInstance();
-        //private static Logger.ILogger log = Log4NetLogger.getInstance(Logger.Loggers.LogAppender.MANAGER);
+        private  readonly ILogger log;
+        //private static ILogger log = ConsoleLogger.getInstance();
+        //private static Logger.ILogger log = Log4NetLogger.getInstance(Logger.Loggers.LogAppender.APP_CORE);
 
         // state
         private PathsHelper paths;
@@ -37,6 +36,7 @@ namespace ProfileManager
 
         public SteamProfileManager(Game game)
         {
+            log = Log4NetLogger.getInstance(LogAppender.APP_CORE);
             log.Debug("-- Constructor for game " + game.ToString());
             log.Debug("-- load settings");
             this.config = SPConfig.loadConfig();
@@ -49,7 +49,7 @@ namespace ProfileManager
         {
             this.updateManagerState();
             Console.WriteLine("*********************************************");
-            Console.WriteLine("** STEAM PROFILE MANAGER");
+            Console.WriteLine("** STEAM PROFILE APP_CORE");
             Console.WriteLine("*********************************************");
             Console.WriteLine("applicationState:" + this.applicationState.ToString());
             Console.WriteLine("* Active profiles");
@@ -208,7 +208,7 @@ namespace ProfileManager
             }
             SPProfile newProfile = new SPProfile();
             newProfile.color = color;
-            newProfile.isActive = Utils.TRUE;
+            newProfile.isActive = Utils.CSharp.TRUE;
             newProfile.name = profileName;
 
             // Create integrity file 
@@ -272,7 +272,7 @@ namespace ProfileManager
             string srcDir = this.paths.steamBkpProfGame(profileName);
 
             // move steam folder
-            check = Utils.safeMove(srcDir, this.paths.steam);
+            check = CSharp.safeMove(srcDir, this.paths.steam);
             if (check != Errors.SUCCESS)
             {
                 log.Warn("-- Error moving " + srcDir + " -> " + this.paths.steam);
@@ -282,7 +282,7 @@ namespace ProfileManager
 
             // move appData folder
             srcDir = this.paths.appDataBkpProfGame(profileName);
-            check = Utils.safeMove(srcDir, this.paths.appData);
+            check = CSharp.safeMove(srcDir, this.paths.appData);
             if (check != Errors.SUCCESS)
             {
                 log.Warn("-- Error moving " + srcDir + " -> " + this.paths.appData);
@@ -293,7 +293,7 @@ namespace ProfileManager
 
             // move doc folder
             srcDir = this.paths.docsBkpProfGame(profileName);
-            check = Utils.safeMove(srcDir, this.paths.docs);
+            check = CSharp.safeMove(srcDir, this.paths.docs);
             if (check != Errors.SUCCESS)
             {
                 log.Warn("-- Error moving " + srcDir + " -> " + this.paths.docs);
@@ -305,7 +305,7 @@ namespace ProfileManager
             srcDir = this.paths.nmmInfoBkpProfGame(profileName);
             if (!this.paths.nmmInfo.Trim().Equals(""))
             {
-                check = Utils.safeMove(srcDir, this.paths.nmmInfo);
+                check = CSharp.safeMove(srcDir, this.paths.nmmInfo);
                 if (check != Errors.SUCCESS)
                 {
                     log.Warn("-- Error moving " + srcDir + " -> " + this.paths.nmmInfo);
@@ -318,7 +318,7 @@ namespace ProfileManager
             srcDir = this.paths.nmmModBkpProfGame(profileName);
             if (!this.paths.nmmMod.Trim().Equals(""))
             {
-                check = Utils.safeMove(srcDir, this.paths.nmmMod);
+                check = CSharp.safeMove(srcDir, this.paths.nmmMod);
                 if (check != Errors.SUCCESS)
                 {
                     log.Warn("-- Error moving " + srcDir + " -> " + this.paths.nmmMod);
@@ -332,7 +332,7 @@ namespace ProfileManager
             this.createIntegrityFile(profToActivate);
 
             log.Debug("STEP 5: update manager state...");
-            profToActivate.isActive = Utils.TRUE;
+            profToActivate.isActive = CSharp.TRUE;
             this.config.saveConfig();
             this.updateManagerState();
 
@@ -376,16 +376,16 @@ namespace ProfileManager
             this.createBackupProfilesFolder(profileName);
 
             // move directories to backup dir
-            Utils.safeMove(this.paths.steamGame, this.paths.steamBkpProf(profileName));
-            Utils.safeMove(this.paths.docsGame, this.paths.docsBkpProf(profileName));
-            Utils.safeMove(this.paths.appDataGame, this.paths.appDataBkpProf(profileName));
+            CSharp.safeMove(this.paths.steamGame, this.paths.steamBkpProf(profileName));
+            CSharp.safeMove(this.paths.docsGame, this.paths.docsBkpProf(profileName));
+            CSharp.safeMove(this.paths.appDataGame, this.paths.appDataBkpProf(profileName));
             if (this.paths.nmmInfo != "")
             {
-                Utils.safeMove(this.paths.nmmInfoGame, this.paths.nmmInfoBkpProf(profileName));
+                CSharp.safeMove(this.paths.nmmInfoGame, this.paths.nmmInfoBkpProf(profileName));
             }
             if (this.paths.nmmMod != "")
             {
-                Utils.safeMove(this.paths.nmmModGame, this.paths.nmmModBkpProf(profileName));
+                CSharp.safeMove(this.paths.nmmModGame, this.paths.nmmModBkpProf(profileName));
             }
 
             // set profile as desativated
@@ -393,7 +393,7 @@ namespace ProfileManager
             {
                 if (item.name.Trim() == profileName)
                 {
-                    item.isActive = Utils.FALSE;
+                    item.isActive = CSharp.FALSE;
                     break;
                 }
             }
@@ -566,7 +566,7 @@ namespace ProfileManager
 
         private string integrityFilePath()
         {
-            return this.paths.steamGame + "\\" + ACTIVE_INTEGRITY_FILE_NAME;
+            return this.paths.steamGame + "\\" + Consts.ACTIVE_INTEGRITY_FILE_NAME;
         }
 
         private void undoDesactiveActivation(int moveCounter, string profName)
@@ -588,7 +588,7 @@ namespace ProfileManager
                             {
                                 log.Info("-- undo NMM Info move");
                                 dirDst = this.paths.nmmInfoBkpProf(profName);
-                                Utils.safeMove(this.paths.nmmInfoGame, dirDst);
+                                CSharp.safeMove(this.paths.nmmInfoGame, dirDst);
                             }
                             break;
                         }
@@ -596,21 +596,21 @@ namespace ProfileManager
                         {
                             log.Info("-- undo My Documents move");
                             dirDst = this.paths.docsBkpProf(profName);
-                            Utils.safeMove(this.paths.docsGame, dirDst);
+                            CSharp.safeMove(this.paths.docsGame, dirDst);
                             break;
                         }
                     case 2:
                         {
                             log.Info("-- undo AppData move");
                             dirDst = this.paths.appDataBkpProf(profName);
-                            Utils.safeMove(this.paths.appDataGame, dirDst);
+                            CSharp.safeMove(this.paths.appDataGame, dirDst);
                             break;
                         }
                     case 1:
                         {
                             log.Info("-- undo Steam move");
                             dirDst = this.paths.steamBkpProf(profName);
-                            Utils.safeMove(this.paths.steam, dirDst);
+                            CSharp.safeMove(this.paths.steam, dirDst);
                             break;
                         }
                     default:
@@ -706,7 +706,7 @@ namespace ProfileManager
             try
             {
                 string content = File.ReadAllText(this.integrityFilePath());
-                List<string> integrityFileElements = Utils.splitCsv(content);
+                List<string> integrityFileElements = CSharp.splitCsv(content);
                 try
                 {
                     name = integrityFileElements[0].Trim();
@@ -980,7 +980,7 @@ namespace ProfileManager
                 return false;
             }
             string integrityFile = File.ReadAllText(this.integrityFilePath());
-            List<string> profData = Utils.splitCsv(integrityFile);
+            List<string> profData = CSharp.splitCsv(integrityFile);
             if (profData.Count < 2)
             {
                 log.Warn("Integrity file corrupted {" + integrityFile + "}");

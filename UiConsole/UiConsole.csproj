@@ -50,12 +50,12 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Logger\Logger.csproj">
+    <ProjectReference Include="..\Logger\Utils.csproj">
       <Project>{CEDC3029-A30F-46D9-9738-98F6114EA896}</Project>
-      <Name>Logger</Name>
+      <Name>Utils</Name>
     </ProjectReference>
     <ProjectReference Include="..\SteamProfileManager\ProfileManager.csproj">
-      <Project>{e2edf30e-8041-4c61-b499-b251e6054a64}</Project>
+      <Project>{E2EDF30E-8041-4C61-B499-B251E6054A64}</Project>
       <Name>ProfileManager</Name>
     </ProjectReference>
   </ItemGroup>

@@ -133,16 +133,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Logger\Logger.csproj">
-      <Project>{cedc3029-a30f-46d9-9738-98f6114ea896}</Project>
-      <Name>Logger</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ProfileManagerBL\ProfileManagerBL.csproj">
-      <Project>{F8EAEF56-A5C9-4163-94BA-3F0B702CC0FD}</Project>
-      <Name>ProfileManagerBL</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\15-tick.png" />
   </ItemGroup>
   <ItemGroup>
@@ -156,6 +146,16 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\15-engineering.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Logger\Utils.csproj">
+      <Project>{CEDC3029-A30F-46D9-9738-98F6114EA896}</Project>
+      <Name>Utils</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ProfileManagerBL\ProfileManagerBL.csproj">
+      <Project>{F8EAEF56-A5C9-4163-94BA-3F0B702CC0FD}</Project>
+      <Name>ProfileManagerBL</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

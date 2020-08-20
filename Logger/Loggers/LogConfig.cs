@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
-namespace Logger.Loggers
+namespace Utils.Loggers
 {
     [XmlRoot("LOG", IsNullable = false)]
     class LogConfig

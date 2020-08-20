@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ProfileManager.Enum;
-using SPErrors;
+using Utils;
 
 namespace ProfileManager.Objects
 {
@@ -16,20 +16,21 @@ namespace ProfileManager.Objects
     /// </summary>
     public class PathsHelper
     {
-        #region consts
+        //#region consts
         // settings file prefix and sufix
-        private const string SETTING_PREF = "Settings\\SPConfig";
-        private const string SETTING_SUFX = ".xml";
+        //private const string SETTING_PREF = "Settings\\SPConfig";
+        //private const string SETTING_SUFX = ".xml";
         // Games names used to build the Settings file
-        private const string SKYRIM = "Skyrim";
-        private const string SKYRIM_SE = "SkyrimSE";
-        #endregion
+        //private const string SKYRIM = "Skyrim";
+        //private const string SKYRIM_SE = "SkyrimSE";
+        //#endregion
 
         #region static_helpers
 
         public static string getConfigFileName()
         {
-            return "Settings\\SPConfigSkyrim.xml";
+            //return   "Settings\\SPConfigSkyrim.xml";
+            return getConfigFileName(Game.SKYRIM);
         }
 
         public static string getConfigFileName(Game game)
@@ -38,11 +39,11 @@ namespace ProfileManager.Objects
             {
                 case Game.SKYRIM:
                     {
-                        return SETTING_PREF + SKYRIM + SETTING_SUFX;
+                        return Consts.SKYRIM_CONFIG_FILE;
                     }
                 case Game.SKYRIM_SE:
                     {
-                        return SETTING_PREF + SKYRIM_SE + SETTING_SUFX;
+                        return Consts.SKYRIMSE_CONFIG_FILE;
                     }
                 default:
                     {
@@ -222,10 +223,10 @@ namespace ProfileManager.Objects
                 name = "NO_NAME";
             }
             // make sure is alphanumeric
-            Utils.alphaNumeric(name);
+            CSharp.alphaNumeric(name);
             //append to list of inUse Values
-            inUse.Add(SKYRIM);
-            inUse.Add(SKYRIM_SE);
+            inUse.Add(Consts.SKYRIM);
+            inUse.Add(Consts.SKYRIM_SE);
             inUse.Add(this._gameFolder);
             inUse.Add(this._backupFolder);
             // if value already exist, create a counter
@@ -273,8 +274,8 @@ namespace ProfileManager.Objects
             myDocs.Trim();
             nmmInfo.Trim();
             nmmMod.Trim();
-            gameFolder = Utils.alphaNumeric(gameFolder);
-            backupFolder = Utils.alphaNumeric(backupFolder);
+            gameFolder = CSharp.alphaNumeric(gameFolder);
+            backupFolder = CSharp.alphaNumeric(backupFolder);
 
             this._gameFolder = gameFolder;
             this._backupFolder = backupFolder;

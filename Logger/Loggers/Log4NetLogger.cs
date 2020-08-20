@@ -7,11 +7,11 @@ using System.Text;
 using System.Threading.Tasks;
 using log4net;
 
-namespace Logger.Loggers
+namespace Utils.Loggers
 {
     public enum LogAppender
     {
-        MANAGER,
+        APP_CORE,
         APP_UI
     }
 
@@ -19,17 +19,17 @@ namespace Logger.Loggers
     {
         private readonly LogAppender logAppender;
         // loggers
-        private static ILog loggerManager = LogManager.GetLogger("FileAppenderManager");
-        private static ILog loggerUi = LogManager.GetLogger("FileAppenderUi");
+        private static ILog loggerCore = LogManager.GetLogger("FileAppenderAppCore");
+        private static ILog loggerUi = LogManager.GetLogger("FileAppenderAppUi");
         // instances
         private static Log4NetLogger instanceUi = null;
         private static Log4NetLogger instanceManager = null;
         // loglevel
         private LogLevel level = LogLevel.DEBUG;
 
-        private Log4NetLogger(LogAppender app)
+        private Log4NetLogger(LogAppender appender)
         {
-            this.logAppender = app;
+            this.logAppender = appender;
         }
 
         public static Log4NetLogger getInstance(LogAppender appender)
@@ -42,11 +42,11 @@ namespace Logger.Loggers
                 }
                 return Log4NetLogger.instanceUi;
             }
-            else // LogAppender.MANAGER
+            else // LogAppender.APP_CORE
             {
                 if (Log4NetLogger.instanceManager == null)
                 {
-                    Log4NetLogger.instanceManager = new Log4NetLogger(LogAppender.MANAGER);
+                    Log4NetLogger.instanceManager = new Log4NetLogger(LogAppender.APP_CORE);
                 }
                 return Log4NetLogger.instanceManager;
             }
@@ -54,10 +54,10 @@ namespace Logger.Loggers
 
         public static void shutdown()
         {
-            if (loggerManager != null)
+            if (loggerCore != null)
             {
-                loggerManager.Info("Turning OFF loggerManager");
-                loggerManager = null;
+                loggerCore.Info("Turning OFF loggerCore");
+                loggerCore = null;
             }
             if (loggerUi != null)
             {
@@ -81,9 +81,9 @@ namespace Logger.Loggers
             {
                 Log4NetLogger.loggerUi.Debug(callerName + msg);
             }
-            else // LogAppender.MANAGER
+            else // LogAppender.APP_CORE
             {
-                Log4NetLogger.loggerManager.Debug(callerName + msg);
+                Log4NetLogger.loggerCore.Debug(callerName + msg);
             }
         }
 
@@ -100,9 +100,9 @@ namespace Logger.Loggers
             {
                 Log4NetLogger.loggerUi.Info(callerName + msg);
             }
-            else // LogAppender.MANAGER
+            else // LogAppender.APP_CORE
             {
-                Log4NetLogger.loggerManager.Info(callerName + msg);
+                Log4NetLogger.loggerCore.Info(callerName + msg);
             }
         }
 
@@ -119,9 +119,9 @@ namespace Logger.Loggers
             {
                 Log4NetLogger.loggerUi.Warn(callerName + msg);
             }
-            else // LogAppender.MANAGER
+            else // LogAppender.APP_CORE
             {
-                Log4NetLogger.loggerManager.Warn(callerName + msg);
+                Log4NetLogger.loggerCore.Warn(callerName + msg);
             }
         }
 
@@ -138,9 +138,9 @@ namespace Logger.Loggers
             {
                 Log4NetLogger.loggerUi.Error(callerName + msg);
             }
-            else // LogAppender.MANAGER
+            else // LogAppender.APP_CORE
             {
-                Log4NetLogger.loggerManager.Error(callerName + msg);
+                Log4NetLogger.loggerCore.Error(callerName + msg);
             }
         }
 

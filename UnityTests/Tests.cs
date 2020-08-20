@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 using System.Xml.Serialization;
 using ProfileManager;
 using ProfileManager.Objects;
-using Logger;
-using Logger.Loggers;
+using Utils;
+using Utils.Loggers;
 
 namespace Tester
 {
@@ -70,7 +70,7 @@ namespace Tester
         public static void testLogger()
         {
             ILogger logConsole = ConsoleLogger.getInstance();
-            ILogger logLog4net = Log4NetLogger.getInstance(LogAppender.MANAGER);
+            ILogger logLog4net = Log4NetLogger.getInstance(LogAppender.APP_CORE);
             ILogger logLog4netUi = Log4NetLogger.getInstance(LogAppender.APP_UI);
             ILogger logTlog = TrivialLog.getInstance("triviallogTest.log");
 

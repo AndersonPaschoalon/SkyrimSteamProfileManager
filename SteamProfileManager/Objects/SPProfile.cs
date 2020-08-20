@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
+using Utils;
 
 namespace ProfileManager.Objects
 {
@@ -25,11 +26,11 @@ namespace ProfileManager.Objects
         {
             get 
             {
-                return Utils.boolToStr(this._isActive);
+                return CSharp.boolToStr(this._isActive);
             }
             set
             {
-                this._isActive = Utils.strToBool(value);
+                this._isActive = CSharp.strToBool(value);
             }
         }
 

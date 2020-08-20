@@ -1,18 +1,13 @@
-﻿using ProfileManagerBL.ViewModel;
-using System;
+﻿using System;
 using System.Collections.Generic;
-//using System.Windows.Media;
-//using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ProfileManager;
-using Logger;
-using Logger.Loggers;
 using System.Drawing;
 using System.Windows.Forms;
 using System.Diagnostics;
-using ProfileManager.Enum;
+
+using ProfileManagerBL.ViewModel;
+using ProfileManager;
+using Utils;
+using Utils.Loggers;
 
 namespace ProfileManagerBL
 {
@@ -20,14 +15,12 @@ namespace ProfileManagerBL
     {
         private const string HELP_PAGE = "HelpPage.html";
         private readonly ILogger log;
-        private ProfileViewData checkedActiveProfile = null;
-        private ProfileViewData checkedDesactivatedProfile = null;
         private ProfileManager.SteamProfileManager manager;
         private ProfileManager.Enum.SPMState managerState;
 
         public ProfileManagerBusinessLayer(string game)
         {
-            this.log = Log4NetLogger.getInstance(LogAppender.MANAGER);
+            this.log = Log4NetLogger.getInstance(LogAppender.APP_CORE);
             this.manager = new SteamProfileManager(ViewGame.enumGame(game));
         }
 
@@ -166,7 +159,7 @@ namespace ProfileManagerBL
         public void openLogFiles()
         {
             List<string> logFiles = new List<string> 
-            {"manager.log","ui.log"};
+            {"Logs\\app_core.log","Logs\\app_ui.log"};
             foreach (var item in logFiles)
             {
                 try
@@ -441,7 +434,6 @@ namespace ProfileManagerBL
             return lp;
         }
 
-
         public void test_updateManager(int test)
         {
             // 0 - ACTIVE_AND_DESACTIVATED_PROFILES
@@ -509,7 +501,6 @@ namespace ProfileManagerBL
                     }
             }
         }
-
 
         public List<ProfileViewData> test_getDesactivated(int test)
         {
