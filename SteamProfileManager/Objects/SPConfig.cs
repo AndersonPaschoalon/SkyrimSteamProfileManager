@@ -24,29 +24,44 @@ namespace ProfileManager.Objects
         /// <returns></returns>
         public static SPConfig loadConfig()
         {
+            SPConfig configuration;
             ILogger logger = Log4NetLogger.getInstance(LogAppender.APP_CORE);
-            if (SPConfig.instance == null)
-            {
-                string configFile = PathsHelper.getConfigFileName();
-                logger.Debug("-- CurrentDirectory:" + Directory.GetCurrentDirectory());
-                try
-                {
-                    XmlSerializer serializer = new XmlSerializer(typeof(SPConfig));
 
-                    using (FileStream fs = File.OpenWrite(configFile))
-                    {
-                        SPConfig.instance = (SPConfig)serializer.Deserialize(fs);
-                    }
-                        //FileStream fs = new FileStream(configFile, FileMode.Open);
-                    
-                }
-                catch (Exception ex)
-                {
-                    logger.Error("Erro loading config file: " + configFile +
-                              ". Message:" + ex.Message + ", StackTrace:" + ex.StackTrace);
-                }
+            logger.Debug("-- reading condiguration file content");
+            string configFile = PathsHelper.getConfigFileName();
+            logger.Debug("-- CurrentDirectory:" + Directory.GetCurrentDirectory());
+            logger.Debug("-- Configuration file: " + configFile);
+            // usar string
+            XmlSerializer serializer = new XmlSerializer(typeof(SPConfig));
+            string xmlText = "";
+            if (File.Exists(configFile))
+            {
+                xmlText = File.ReadAllText(configFile);
             }
-            return SPConfig.instance;
+            else
+            {
+                logger.Error("COULD NOD LOAD CONFIGURATION FILE " + configFile);
+                return new SPConfig();
+            }
+            logger.Debug("xml configuration file: {" + xmlText  + "}");
+
+            // desserialize configuration file
+            logger.Debug("-- desserialize configuration file");
+            try
+            {
+                using (TextReader reader = new StringReader(xmlText))
+                {
+                    configuration = (SPConfig)serializer.Deserialize(reader);
+                    reader.Close();
+                }
+                return configuration;
+            }
+            catch (Exception ex)
+            {
+                logger.Error("*** COULD NOD PARSE CONFIGURATION FILE " + configFile);
+                logger.Error("*** Message:" + ex.Message + ", StackTrace:" + ex.StackTrace);
+                return new SPConfig();
+            }
         }
 
         /// <summary>
@@ -58,10 +73,13 @@ namespace ProfileManager.Objects
         {
             try
             {
-                using (FileStream spConfigFile = File.OpenWrite(filename))
+                XmlSerializer xmlSerializer = new XmlSerializer(this.GetType());
+                string newXml = "";
+                using (StringWriter textWriter = new StringWriter())
                 {
-                    XmlSerializer x = new XmlSerializer(this.GetType());
-                    x.Serialize(spConfigFile, this);
+                    xmlSerializer.Serialize(textWriter, this);
+                    newXml = textWriter.ToString();
+                    File.WriteAllText(filename, newXml);
                 }
                 return true;
             }

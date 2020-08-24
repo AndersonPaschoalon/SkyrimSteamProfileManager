@@ -17,6 +17,9 @@ namespace UiConsole
         static void Main(string[] args)
         {
             ILogger log = Log4NetLogger.getInstance(LogAppender.APP_UI);
+            log.Info("###############################################################################");
+            log.Info("# SteamProfileManager Console");
+            log.Info("###############################################################################");
 
             SteamProfileManager manager = new SteamProfileManager(Game.SKYRIM);
             bool quit = false;
@@ -136,7 +139,8 @@ namespace UiConsole
 
         private static void showState(SteamProfileManager manager)
         {
-            manager.showState();
+            SPMState s =  manager.showState();
+            Console.WriteLine("State: " + s.ToString());
         }
 
         // TestEnviroment\Test01\Docs

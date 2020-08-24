@@ -36,9 +36,9 @@ namespace UiForms
         {
             log = Log4NetLogger.getInstance(LogAppender.APP_UI);
             //log = ConsoleLogger.getInstance();
-            log.Debug("############################################################################");
+            log.Debug("###############################################################################");
             log.Debug("# INITIALIZE FormMain");
-            log.Debug("############################################################################");
+            log.Debug("###############################################################################");
             InitializeComponent();
             // enable testing panel
             this.panelTests.Visible = ENABLE_TESTING;

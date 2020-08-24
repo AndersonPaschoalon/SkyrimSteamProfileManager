@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Utils.Loggers
 {
-    enum LogLevel
+    public enum LogLevel
     {
         DEBUG = 0,
         INFO = 1,

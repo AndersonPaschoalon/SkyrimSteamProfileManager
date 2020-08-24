@@ -21,13 +21,14 @@ namespace Utils
             string errTitle = "Error " + errorCode + ": " + Errors.errMsg(errorCode);
             string errMsg = "";
             if (info == null) info = "";
-            if (!info.Trim().Equals(""))
+            errMsg = info + ". ";
+            if (ex != null)
             {
-                errMsg = info + ". " + ex.Message;
+                errMsg += ex.Message;
+                log.Error("** Message:" + ex.Message + ", StackTrace:" + ex.StackTrace);
             }
             log.Error("** " + errTitle);
             log.Error("** " + errMsg);
-            log.Error("** Message:" + ex.Message + ", StackTrace:" + ex.StackTrace);
             MessageBox.Show(errMsg, errTitle, MessageBoxButtons.OK, MessageBoxIcon.Error);
             log.Info("-- closing application");
             Application.Exit();

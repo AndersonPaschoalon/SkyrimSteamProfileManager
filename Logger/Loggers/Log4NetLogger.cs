@@ -30,6 +30,7 @@ namespace Utils.Loggers
         private Log4NetLogger(LogAppender appender)
         {
             this.logAppender = appender;
+            this.level = LogConfig.getLogLevel();
         }
 
         public static Log4NetLogger getInstance(LogAppender appender)
@@ -72,11 +73,9 @@ namespace Utils.Loggers
             if (this.level > LogLevel.DEBUG) return;
 
             StackTrace stackTrace = new StackTrace();
-            //string callerName = "[" + this.filterFileName(stackTrace.GetFrame(1).GetFileName()) +
-            //                    " "+ stackTrace.GetFrame(1).GetMethod().ReflectedType.FullName + 
-            //                    " " + stackTrace.GetFrame(1).GetFileLineNumber() + "]  ";
             string callerName = "[" + stackTrace.GetFrame(1).GetMethod().ReflectedType.FullName +
-                                " " + stackTrace.GetFrame(1).GetFileLineNumber() + "]  ";
+                                "." + stackTrace.GetFrame(1).GetMethod().Name +
+                                "()  " + stackTrace.GetFrame(1).GetFileLineNumber() + "]  ";
             if (this.logAppender == LogAppender.APP_UI)
             {
                 Log4NetLogger.loggerUi.Debug(callerName + msg);
@@ -91,11 +90,9 @@ namespace Utils.Loggers
         {
             if (this.level > LogLevel.INFO) return;
             StackTrace stackTrace = new StackTrace();
-            //String callerName = "[" + this.filterFileName(stackTrace.GetFrame(1).GetFileName()) +
-            //                    " " + stackTrace.GetFrame(1).GetMethod().ReflectedType.FullName +
-            //                    " " + stackTrace.GetFrame(1).GetFileLineNumber() + "]  ";
             string callerName = "[" + stackTrace.GetFrame(1).GetMethod().ReflectedType.FullName +
-                                " " + stackTrace.GetFrame(1).GetFileLineNumber() + "]  ";
+                                "." + stackTrace.GetFrame(1).GetMethod().Name +
+                                "()  " + stackTrace.GetFrame(1).GetFileLineNumber() + "]  ";
             if (this.logAppender == LogAppender.APP_UI)
             {
                 Log4NetLogger.loggerUi.Info(callerName + msg);
@@ -110,11 +107,9 @@ namespace Utils.Loggers
         {
             if (this.level > LogLevel.WARN) return;
             StackTrace stackTrace = new StackTrace();
-            //String callerName = "[" + this.filterFileName(stackTrace.GetFrame(1).GetFileName()) +
-            //                    " " + stackTrace.GetFrame(1).GetMethod().ReflectedType.FullName +
-            //                    " " + stackTrace.GetFrame(1).GetFileLineNumber() + "]  ";
             string callerName = "[" + stackTrace.GetFrame(1).GetMethod().ReflectedType.FullName +
-                                " " + stackTrace.GetFrame(1).GetFileLineNumber() + "]  ";
+                                "." + stackTrace.GetFrame(1).GetMethod().Name +
+                                "()  " + stackTrace.GetFrame(1).GetFileLineNumber() + "]  ";
             if (this.logAppender == LogAppender.APP_UI)
             {
                 Log4NetLogger.loggerUi.Warn(callerName + msg);
@@ -129,11 +124,9 @@ namespace Utils.Loggers
         {
             if (this.level > LogLevel.ERROR) return;
             StackTrace stackTrace = new StackTrace();
-            //String callerName = "[" + this.filterFileName(stackTrace.GetFrame(1).GetFileName()) +
-            //                    " " + stackTrace.GetFrame(1).GetMethod().ReflectedType.FullName +
-            //                    " " + stackTrace.GetFrame(1).GetFileLineNumber() + "]  ";
             string callerName = "[" + stackTrace.GetFrame(1).GetMethod().ReflectedType.FullName +
-                                " " + stackTrace.GetFrame(1).GetFileLineNumber() + "]  ";
+                                "." + stackTrace.GetFrame(1).GetMethod().Name +
+                                "()  " + stackTrace.GetFrame(1).GetFileLineNumber() + "]  ";
             if (this.logAppender == LogAppender.APP_UI)
             {
                 Log4NetLogger.loggerUi.Error(callerName + msg);
