@@ -53,20 +53,30 @@
     <Compile Include="ProfileData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Enum\SPMState.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="SteamProfileManager.cs" />
     <Compile Include="Objects\SPProfile.cs" />
     <Compile Include="Objects\SPSettings.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Settings\SPConfigSkyrim.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <None Include="Properties\SPConfigTemplate.xml" />
+    <None Include="Settings\SPConfigSkyrim.xml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Logger\Utils.csproj">
       <Project>{cedc3029-a30f-46d9-9738-98f6114ea896}</Project>
       <Name>Utils</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

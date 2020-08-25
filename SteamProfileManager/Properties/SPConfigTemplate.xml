@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<CONFIG game="{0}">
+    <SETTINGS steamPath="" documentsPath="" appDataPath="" 
+              nmmModPath="" nmmInfoPath=""  
+              gameFolder="{1}" backupFolder="{0}Backups" />
+    <PROFILES>
+    </PROFILES>
+</CONFIG>

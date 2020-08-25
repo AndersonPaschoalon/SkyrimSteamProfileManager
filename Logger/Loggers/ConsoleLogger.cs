@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -42,24 +43,40 @@ namespace Utils.Loggers
         public void Debug(string msg)
         {
             if (this.level > LogLevel.DEBUG) return;
-            this.Write(LV_DEBUG, msg);
+            StackTrace stackTrace = new StackTrace();
+            string callerName = "[" + stackTrace.GetFrame(1).GetMethod().ReflectedType.FullName +
+                                "." + stackTrace.GetFrame(1).GetMethod().Name +
+                                "()  " + stackTrace.GetFrame(1).GetFileLineNumber() + "]  ";
+            this.Write(LV_DEBUG, callerName + msg);
         }
 
         public void Info(string msg)
         {
             if (this.level > LogLevel.INFO) return;
-            this.Write(LV_INFO, msg);
+            StackTrace stackTrace = new StackTrace();
+            string callerName = "[" + stackTrace.GetFrame(1).GetMethod().ReflectedType.FullName +
+                                "." + stackTrace.GetFrame(1).GetMethod().Name +
+                                "()  " + stackTrace.GetFrame(1).GetFileLineNumber() + "]  ";
+            this.Write(LV_INFO, callerName + msg);
         }
 
         public void Warn(string msg)
         {
             if (this.level > LogLevel.WARN) return;
-            this.Write(LV_WARN, msg);
+            StackTrace stackTrace = new StackTrace();
+            string callerName = "[" + stackTrace.GetFrame(1).GetMethod().ReflectedType.FullName +
+                                "." + stackTrace.GetFrame(1).GetMethod().Name +
+                                "()  " + stackTrace.GetFrame(1).GetFileLineNumber() + "]  ";
+            this.Write(LV_WARN, callerName + msg);
         }
 
         public void Error(string msg)
         {
-            this.Write(LV_ERROR, msg);
+            StackTrace stackTrace = new StackTrace();
+            string callerName = "[" + stackTrace.GetFrame(1).GetMethod().ReflectedType.FullName +
+                                "." + stackTrace.GetFrame(1).GetMethod().Name +
+                                "()  " + stackTrace.GetFrame(1).GetFileLineNumber() + "]  ";
+            this.Write(LV_ERROR, callerName + msg);
         }
 
     }

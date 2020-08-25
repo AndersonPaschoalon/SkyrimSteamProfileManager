@@ -18,19 +18,37 @@ namespace ProfileManager.Objects
     {
         #region load/save
 
+        // TODO suporte para mais jogos no load
+
         /// <summary>
         /// Load configuration from default XML settings configuration file
         /// </summary>
         /// <returns></returns>
         public static SPConfig loadConfig()
         {
+            // remove
+            string gameFolder = "Skyrim";
+            string gameName = "Skyrim";
+            // vars
             SPConfig configuration;
             ILogger logger = Log4NetLogger.getInstance(LogAppender.APP_CORE);
-
-            logger.Debug("-- reading condiguration file content");
             string configFile = PathsHelper.getConfigFileName();
-            logger.Debug("-- CurrentDirectory:" + Directory.GetCurrentDirectory());
-            logger.Debug("-- Configuration file: " + configFile);
+            // create if does not exit
+            logger.Debug("CurrentDirectory:" + Directory.GetCurrentDirectory());
+            logger.Debug("Configuration file: " + configFile);
+            logger.Debug("Cheking if configuration file exists");
+            if (!File.Exists(configFile))
+            {
+                logger.Warn("config file does not exit!");
+                string xmlTemplate = ProfileManager.Properties.Resources.SPConfigTemplate;
+                logger.Debug("Creating config file from template: " + xmlTemplate);
+                string formattedConfigFile = String.Format(xmlTemplate, gameName, gameFolder);
+                logger.Debug("Formatted XML:" + formattedConfigFile);
+                File.WriteAllText(configFile, formattedConfigFile);
+                logger.Debug("Config XML written successefuly!");
+            }
+            // load content
+            logger.Debug("reading condiguration file content");
             // usar string
             XmlSerializer serializer = new XmlSerializer(typeof(SPConfig));
             string xmlText = "";

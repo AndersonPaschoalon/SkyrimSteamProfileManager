@@ -16,7 +16,9 @@ namespace ProfileManager.Objects
         // Games names
         public const string SKYRIM = "Skyrim";
         public const string SKYRIM_SE = "SkyrimSE";
-
+        // Game Folder
+        public const string DIR_SKYRIM = "Skyrim";
+        public const string DIR_SKYRIM_SE = "Skyrim SE";
 
         #region private 
         // settings file prefix and sufix

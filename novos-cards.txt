@@ -1,0 +1,32 @@
+Cards
+
+* Prover suporte para os métodos load e save da SPConfig para carregarem outros jogos além de Skyrim
+
+* SPProfile: Suporte para data de criação do perfil
+
+* Visual: exibir data de criação do perfil
+
+* corrigir bug de mover diretórios
+99   QUIT
+PATH: C:\Users\anderson_paschoalon\Workspace\Sandbox\OpenSource\Cs\SkyrimSteamProfileManager\UiConsole\bin\Debug
+40
+> exec_desactivateActiveProfile
+Profile Name:ABACAXI
+WARN    [Utils.CSharp.safeMove()  0]  An attempt was made to move a directory to a different volume. - or - destDirName already exists. See the Note in the Remarks section. - or - The sourceDirName and destDirName parameters refer to the same file or directory. - or - The directory or a file within it is being used by another process.
+WARN    [Utils.CSharp.safeMove()  0]  ** Message:Não é possível criar um arquivo já existente.
+, StackTrace:   em System.IO.__Error.WinIOError(Int32 errorCode, String maybeFullPath)
+   em System.IO.Directory.InternalMove(String sourceDirName, String destDirName, Boolean checkHost)
+   em System.IO.Directory.Move(String sourceDirName, String destDirName)
+   em Utils.CSharp.safeMove(String sourceDirName, String destDirName) na C:\Users\anderson_paschoalon\Workspace\Sandbox\OpenSource\Cs\SkyrimSteamProfileManager\Logger\CSharp.cs:linha 103
+ERROR   [Utils.CustomException.fatalError()  0]  ** Error 7: IO_EXCEPTION
+ERROR   [Utils.CustomException.fatalError()  0]  ** TestEnviroment\Test01\Steam\Commons\\Skyrim -> TestEnviroment\Test01\Steam\Commons\\SkyrimBackups\ABACAXI.
+
+* nos testes SPConfig não deve ser sobrescrito a cada build, e template default deve ser criado caso esse arquivo não exista
+
+* o arquivo de log não deve ser sobrescrito a cada execução
+
+
+
+
+
+

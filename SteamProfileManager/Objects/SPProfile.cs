@@ -16,11 +16,11 @@ namespace ProfileManager.Objects
             this.isActive = "TRUE";
         }
 
-        //  name={alphanumeric string}
+        //  name = {alphanumeric string}
         [XmlAttribute("name")]
         public string name;
 
-        // isActive={true/false}
+        // isActive = {true/false}
         [XmlAttribute("isActive")]
         public string isActive
         {
