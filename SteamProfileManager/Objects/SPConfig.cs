@@ -40,7 +40,7 @@ namespace ProfileManager.Objects
             if (!File.Exists(configFile))
             {
                 logger.Warn("config file does not exit!");
-                string xmlTemplate = ProfileManager.Properties.Resources.SPConfigTemplate;
+                string xmlTemplate = Properties.Resources.SPConfigTemplate;
                 logger.Debug("Creating config file from template: " + xmlTemplate);
                 string formattedConfigFile = String.Format(xmlTemplate, gameName, gameFolder);
                 logger.Debug("Formatted XML:" + formattedConfigFile);
@@ -137,7 +137,6 @@ namespace ProfileManager.Objects
 
         private readonly ILogger log = Log4NetLogger.getInstance(LogAppender.APP_CORE);
         private readonly string configFileName;
-        private static SPConfig instance = null;
 
         private SPConfig()
         {

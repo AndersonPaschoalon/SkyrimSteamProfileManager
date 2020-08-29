@@ -62,7 +62,7 @@ namespace ProfileManager
                 // TODO
                 //col = (Color)ColorConverter.ConvertFromString(hexCode);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // TODO
                 //col = (Color)ColorConverter.ConvertFromString("#66FFF5");

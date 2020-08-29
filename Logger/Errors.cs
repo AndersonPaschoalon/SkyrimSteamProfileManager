@@ -21,6 +21,7 @@ namespace Utils
         public const int IO_EXCEPTION = 007;
         public const int DIRECTORY_NOT_FOUND = 008;
         public const int PATH_TOO_LONG = 009;
+        public const int ERR_MOVING_DIRECTORIES = 010;
         // PROFILES OPERATION ERRORS
         public const int ERR_INACTIVE_PROFILE_DOES_NOT_EXIST = 100;
         public const int ERR_INACTIVE_PROFILE_CORRUPETED = 101;

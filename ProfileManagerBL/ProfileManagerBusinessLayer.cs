@@ -113,12 +113,7 @@ namespace ProfileManagerBL
                     {
                         // in case of a inactive profile, returns a profile for visualization.
                         this._inactive = new List<ProfileViewData>();
-                        Color darkGray = Color.FromName("DarkGray");
-                        ProfileViewData inactiveProfileView = new ProfileViewData();
-                        inactiveProfileView.name = "~INACTIVE";
-                        inactiveProfileView.color = darkGray;
-                        inactiveProfileView.state = ProfileType.INACTIVE;
-                        this._inactive.Add(inactiveProfileView);
+                        this._inactive.Add(ProfileViewData.getInactive());
                     }
                     return this._inactive;
                 }
@@ -150,7 +145,7 @@ namespace ProfileManagerBL
             {
                 System.Diagnostics.Process.Start(htmlPage);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 System.Diagnostics.Process.Start("Chrome", Uri.EscapeDataString(htmlPage));
             }
@@ -166,7 +161,7 @@ namespace ProfileManagerBL
                 {
                     Process.Start(item);
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     Process.Start("notepad.exe", item);
                 }
@@ -399,7 +394,6 @@ namespace ProfileManagerBL
                         // 3 - INACTIVE_PROFILE 
                         managerState = ProfileManager.Enum.SPMState.INACTIVE_PROFILE;
                         return this.active;
-                        break;
                     }
                 case 4:
                     {

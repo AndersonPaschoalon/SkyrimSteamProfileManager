@@ -16,5 +16,15 @@ namespace ProfileManagerBL.ViewModel
 
         public Color color{get; set;}
 
+        public static ProfileViewData getInactive()
+        {
+            Color darkGray = Color.FromName("DarkGray");
+            ProfileViewData inactiveProfileView = new ProfileViewData();
+            inactiveProfileView.name = "~INACTIVE";
+            inactiveProfileView.color = darkGray;
+            inactiveProfileView.state = ProfileType.INACTIVE;
+            return inactiveProfileView;
+        }
+
     }
 }

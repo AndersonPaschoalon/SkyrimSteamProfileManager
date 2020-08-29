@@ -154,11 +154,6 @@ namespace UiConsole
             string newAppDataPath = readOption("AppDataPath");
             string nmmInfoPath = readOption("nmmInfoPath");
             string nmmModPath = readOption("nmmModPath");
-            bool isSteamOk = false;
-            bool isDocOk = false; 
-            bool isAppdataOk = false; 
-            bool isNmmInfoOk = false;
-            bool isNmmModOk = false;
             Console.WriteLine("    Steam: " + newSteamPath);
             Console.WriteLine("Documents: " + newDocumentsPath);
             Console.WriteLine("  AppData: " + newAppDataPath);
@@ -168,8 +163,7 @@ namespace UiConsole
             string confirmOption = readOption("Confirm Option?y/n");
             if (confirmOption.Trim().ToUpper() == "Y")
             {
-                manager.updateSettings(newSteamPath, newDocumentsPath, newAppDataPath, nmmInfoPath, nmmModPath,
-                                       out isSteamOk, out isDocOk, out isAppdataOk, out isNmmInfoOk, out isNmmModOk);
+                manager.updateSettings(newSteamPath, newDocumentsPath, newAppDataPath, nmmInfoPath, nmmModPath);
 
             }
             else
@@ -189,17 +183,11 @@ namespace UiConsole
             Console.WriteLine("  AppData: " + opts[2]);
             Console.WriteLine(" NMM Info: " + opts[3]);
             Console.WriteLine("  NMM Mod: " + opts[4]);
-            bool isSteamOk = false;
-            bool isDocOk = false;
-            bool isAppdataOk = false;
-            bool isNmmInfoOk = false;
-            bool isNmmModOk = false;
             Console.WriteLine("---------------------------------");
             string confirmOption = readOption("Confirm Option?y/n");
             if (confirmOption.Trim().ToUpper() == "Y")
             {
-                manager.updateSettings(opts[0], opts[1], opts[2], opts[3], opts[4],
-                           out isSteamOk, out isDocOk, out isAppdataOk, out isNmmInfoOk, out isNmmModOk);
+                manager.updateSettings(opts[0], opts[1], opts[2], opts[3], opts[4]);
             }
             else
             {
@@ -212,21 +200,15 @@ namespace UiConsole
         private static void updateConfigCsvDefault(SteamProfileManager manager)
         {
             Console.WriteLine("> updateConfigCsvDefault");
-            //List<string> opts = splitCsv(readOption("Steam,Docs,AppData,nmmInfo,nmmMod:"));
+            //List<string> opts = csvToList(readOption("Steam,Docs,AppData,nmmInfo,nmmMod:"));
             List<string> opts = splitCsv(@"TestEnviroment\Test01\Steam\Commons\,TestEnviroment\Test01\Docs,TestEnviroment\Test01\AppData,TestEnviroment\Test01\NMM\nmmInfo,TestEnviroment\Test01\NMM\nmmMod");
             Console.WriteLine("    Steam: " + opts[0]);
             Console.WriteLine("Documents: " + opts[1]);
             Console.WriteLine("  AppData: " + opts[2]);
             Console.WriteLine(" NMM Info: " + opts[3]);
             Console.WriteLine("  NMM Mod: " + opts[4]);
-            bool isSteamOk = false;
-            bool isDocOk = false;
-            bool isAppdataOk = false;
-            bool isNmmInfoOk = false;
-            bool isNmmModOk = false;
             Console.WriteLine("---------------------------------");
-            manager.updateSettings(opts[0], opts[1], opts[2], opts[3], opts[4],
-                       out isSteamOk, out isDocOk, out isAppdataOk, out isNmmInfoOk, out isNmmModOk);
+            manager.updateSettings(opts[0], opts[1], opts[2], opts[3], opts[4]);
         }
 
         private static void exec_activateInactiveProfile(SteamProfileManager manager)

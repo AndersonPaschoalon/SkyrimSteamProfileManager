@@ -19,15 +19,10 @@ namespace ProfileManager
      */
     public class SteamProfileManager
     {
-        // Consts
-        //private const string ACTIVE_INTEGRITY_FILE_NAME = "active_profile.int";
-
         // readonly
         private  readonly ILogger log;
-        //private static ILogger log = ConsoleLogger.getInstance();
-        //private static Logger.ILogger log = Log4NetLogger.getInstance(Logger.Loggers.LogAppender.APP_CORE);
 
-        // state
+        // app state
         private PathsHelper paths;
         private SPConfig config;
         private SPMState applicationState = SPMState.NOT_CONFIGURED;
@@ -51,22 +46,22 @@ namespace ProfileManager
         public SPMState showState()
         {
             this.updateManagerState();
-            Console.WriteLine("*********************************************");
-            Console.WriteLine("** STEAM PROFILE APP_CORE");
-            Console.WriteLine("*********************************************");
-            Console.WriteLine("applicationState:" + this.applicationState.ToString());
-            Console.WriteLine("* Active profiles");
+            Console.WriteLine("###############################################################################");
+            Console.WriteLine("# STEAM PROFILE APP_CORE");
+            Console.WriteLine("###############################################################################");
+
+            Console.WriteLine("# Active profiles");
             if (this.activeProfile != null)
             {
                 Console.WriteLine("  name:" + this.activeProfile.name + ", color:" + this.activeProfile.color);
             }
-            Console.WriteLine("* Desactivated profiles [Count:" + this.listDesactivated.Count + "]");
+            Console.WriteLine("# Desactivated profiles [Count:" + this.listDesactivated.Count + "]");
             foreach (var item in this.listDesactivated)
             {
                 Console.WriteLine("  name:" + item.name + ", color:" + item.color);
 
             }
-            Console.WriteLine("* configuration file");
+            Console.WriteLine("# configuration file");
             string textConfig = "";
             string configPath = paths.getConfigFilePath();
             if (File.Exists(configPath))
@@ -78,6 +73,7 @@ namespace ProfileManager
             {
                 Console.WriteLine("** ERROR!! CONFIGURATION FILE NOT FOUND!!");
             }
+            Console.WriteLine("# APPLICATION STATE:" + this.applicationState.ToString());
             return this.applicationState;
         }
 
@@ -93,85 +89,52 @@ namespace ProfileManager
         /// <param name="nmmModPath"></param>
         /// <returns></returns>
         public int updateSettings(string newSteamPath, string newDocumentsPath, string newAppDataPath, 
-                                  string nmmInfoPath, string nmmModPath, out bool isSteamOk, 
-                                  out bool isDocOk, out bool isAppdataOk, out bool isNmmInfoOk,
-                                  out bool isNmmModOk)
+                                  string nmmInfoPath, string nmmModPath)
         {
             log.Debug("-- updateSettings() ");
-            int outVal = Errors.SUCCESS;
-            isSteamOk = true;
-            isDocOk = true;
-            isAppdataOk = true;
-            isNmmInfoOk = true;
-            isNmmModOk = true;
 
-            // check if settings are valid
-            if (newSteamPath == null || newSteamPath.Trim().Equals(""))
-            {
-                outVal = Errors.ERR_INVALID_SETTINGS;
-                isSteamOk = false;
-            }
-            if (newDocumentsPath == null || newDocumentsPath.Trim().Equals(""))
-            {
-                outVal = Errors.ERR_INVALID_SETTINGS;
-                isDocOk = false;
-            }
-            if (newAppDataPath == null || newAppDataPath.Trim().Equals(""))
-            {
-                outVal = Errors.ERR_INVALID_SETTINGS;
-                isAppdataOk = false;
-            }
-            if (nmmInfoPath == null)
-            {
-                outVal = Errors.ERR_INVALID_SETTINGS;
-                isNmmInfoOk = false;
-            }
-            if (nmmModPath == null)
-            {
-                outVal = Errors.ERR_INVALID_SETTINGS;
-                isNmmModOk = false;
-            }
-            if (outVal != Errors.SUCCESS)
-            {
-                return outVal;
-            }
+            string[] mandatoryPaths = {
+                newSteamPath,
+                newDocumentsPath,
+                newAppDataPath
+            };
+            string[] optionalPaths = {
+                nmmInfoPath,
+                nmmModPath
+            };
 
-            // check if paths do exist
-            if (!this.checkDir(newSteamPath))
+            // check if any optional is not null (this should not be null)
+            bool optionalNotNull = CSharp.checkNotNull(optionalPaths);
+            if (!optionalNotNull)
             {
-                isSteamOk = false;
-                outVal = Errors.ERR_PATH_NOT_EXIST;
+                log.Warn("OPTIONAL FIELDS ARE NULL");
+                return Errors.ERR_INVALID_SETTINGS;
             }
-            if (!this.checkDir(newDocumentsPath))
+            // check if any optional is not empty
+            bool optionalNotEmpty = CSharp.checkNotEmpty(optionalPaths);
+            if (optionalNotEmpty)
             {
-                isDocOk = false;
-                outVal = Errors.ERR_PATH_NOT_EXIST;
-            }
-            if (!this.checkDir(newAppDataPath))
-            {
-                isAppdataOk = false;
-                outVal = Errors.ERR_PATH_NOT_EXIST;
-            }
-            // optional settings
-            if (!nmmInfoPath.Trim().Equals(""))
-            {
-                if (!this.checkDir(nmmInfoPath))
+                // once they are not empty, they become mandatory
+                foreach (var item in optionalPaths)
                 {
-                    isNmmInfoOk = false;
-                    outVal = Errors.ERR_PATH_NOT_EXIST;
+                    mandatoryPaths.Append(item);
                 }
+                log.Debug("mandatoryPaths: " + CSharp.arrayToCsv(mandatoryPaths));
             }
-            if (!nmmModPath.Trim().Equals(""))
+            else
             {
-                if (!this.checkDir(nmmModPath))
-                {
-                    isNmmModOk = false;
-                    outVal = Errors.ERR_PATH_NOT_EXIST;
-                }
+                log.Info("Optional are EMPTY");
             }
-            if (outVal != Errors.SUCCESS)
+            // check if mandatory are valid directories
+            string errString = "";
+            if (!CSharp.checkDirs(mandatoryPaths, out errString))
             {
-                return outVal;
+                log.Warn("** ONE OF THE MANDATORY PATHS DOES NOT EXIST! ERR:" + errString);
+                return Errors.ERR_INVALID_SETTINGS;
+            }
+            else
+            {
+                log.Debug("all mandatory paths are ok");
             }
 
             // Settings are OK. update settings 
@@ -286,66 +249,32 @@ namespace ProfileManager
             }
 
             log.Debug("STEP 3: moving folders from backup to root dir...");
-            int moveCounter = 0;
-            int check = Errors.SUCCESS;
-            string srcDir = this.paths.steamBkpProfGame(profileName);
-
-            // move steam folder
-            check = CSharp.safeMove(srcDir, this.paths.steam);
-            if (check != Errors.SUCCESS)
+            string[] sourceDirs = { 
+                    this.paths.steamBkpProfGame(profileName),      // steam
+                    this.paths.appDataBkpProfGame(profileName),    // appdata
+                    this.paths.docsBkpProfGame(profileName),       // docs
+                    this.paths.nmmInfoBkpProfGame(profileName),    //
+                    this.paths.nmmModBkpProfGame(profileName)      //
+            };
+            string[] destinationDirs = {
+                this.paths.steam,
+                this.paths.appData,
+                this.paths.docs,
+                this.paths.nmmInfo,
+                this.paths.nmmMod
+            };
+            string errMsg = "";
+            string errSrcDir = "";
+            string errDstDir = "";
+            bool sucess = CSharp.stackMv(sourceDirs, destinationDirs, true, LogMethod.LOGGER, 
+                                         out errMsg, out errSrcDir, out errDstDir);
+            if (!sucess)
             {
-                log.Warn("-- Error moving " + srcDir + " -> " + this.paths.steam);
-                return check;
+                log.Error("** errMsg: " + errMsg);
+                log.Error("** errSrcDir:" + errSrcDir);
+                log.Error("** errDstDir: " + errDstDir);
+                return Errors.ERR_MOVING_DIRECTORIES;
             }
-            moveCounter++;
-
-            // move appData folder
-            srcDir = this.paths.appDataBkpProfGame(profileName);
-            check = CSharp.safeMove(srcDir, this.paths.appData);
-            if (check != Errors.SUCCESS)
-            {
-                log.Warn("-- Error moving " + srcDir + " -> " + this.paths.appData);
-                this.undoDesactiveActivation(moveCounter, profileName);
-                return check;
-            }
-            moveCounter++;
-
-            // move doc folder
-            srcDir = this.paths.docsBkpProfGame(profileName);
-            check = CSharp.safeMove(srcDir, this.paths.docs);
-            if (check != Errors.SUCCESS)
-            {
-                log.Warn("-- Error moving " + srcDir + " -> " + this.paths.docs);
-                this.undoDesactiveActivation(moveCounter, profileName);
-                return check;
-            }
-            moveCounter++;
-
-            srcDir = this.paths.nmmInfoBkpProfGame(profileName);
-            if (!this.paths.nmmInfo.Trim().Equals(""))
-            {
-                check = CSharp.safeMove(srcDir, this.paths.nmmInfo);
-                if (check != Errors.SUCCESS)
-                {
-                    log.Warn("-- Error moving " + srcDir + " -> " + this.paths.nmmInfo);
-                    this.undoDesactiveActivation(moveCounter, profileName);
-                    return check;
-                }
-            }
-            moveCounter++;
-
-            srcDir = this.paths.nmmModBkpProfGame(profileName);
-            if (!this.paths.nmmMod.Trim().Equals(""))
-            {
-                check = CSharp.safeMove(srcDir, this.paths.nmmMod);
-                if (check != Errors.SUCCESS)
-                {
-                    log.Warn("-- Error moving " + srcDir + " -> " + this.paths.nmmMod);
-                    this.undoDesactiveActivation(moveCounter, profileName);
-                    return check;
-                }
-            }
-            moveCounter++;
 
             log.Debug("STEP 4: create integrity file...");
             this.createIntegrityFile(profToActivate);
@@ -390,53 +319,37 @@ namespace ProfileManager
             log.Debug("-- integrity file OK! " + id + ", " + name + ", " + color);
 
             // delete integrity file
-            this.deleteIntegrityFile();
+            // this.deleteIntegrityFile();
 
             // create backup dir if does not exit
             this.createBackupProfilesFolder(profileName);
 
-            // move directories to backup dir
-            int mvError = 0;
-            log.Debug("-- moving installation to backup directories...");
-            log.Debug(this.paths.steamGame + " -> " + this.paths.steamBkpProf(profileName));
-            mvError = CSharp.safeMove(this.paths.steamGame, this.paths.steamBkpProf(profileName));
-            if (mvError != Errors.SUCCESS)
+            // move directories to backup dir   sourceDirs
+            string[] destinationDirs = {
+                    this.paths.steamBkpProf(profileName),      // steam
+                    this.paths.appDataBkpProf(profileName),    // appdata
+                    this.paths.docsBkpProf(profileName),       // docs
+                    this.paths.nmmInfoBkpProf(profileName),    //
+                    this.paths.nmmModBkpProf(profileName)      //
+            };
+            string[] sourceDirs = {
+                this.paths.steamGame,
+                this.paths.appDataGame,
+                this.paths.docsGame,
+                this.paths.nmmInfoGame,
+                this.paths.nmmModGame
+            };
+            string errMsg = "";
+            string errSrcDir = "";
+            string errDstDir = "";
+            bool sucess = CSharp.stackMv(sourceDirs, destinationDirs, true, LogMethod.LOGGER,
+                                         out errMsg, out errSrcDir, out errDstDir);
+            if (!sucess)
             {
-                CustomException.fatalError(mvError, this.paths.steamGame + " -> " + this.paths.steamBkpProf(profileName), null);
-            }
-
-            log.Debug(this.paths.docsGame + " -> " + this.paths.docsBkpProf(profileName));
-            mvError = CSharp.safeMove(this.paths.docsGame, this.paths.docsBkpProf(profileName));
-            if (mvError != Errors.SUCCESS)
-            {
-                CustomException.fatalError(mvError, this.paths.docsGame + " -> " + this.paths.docsBkpProf(profileName), null);
-            }
-
-            log.Debug(this.paths.appDataGame + " -> " + this.paths.appDataBkpProf(profileName));
-            mvError = CSharp.safeMove(this.paths.appDataGame, this.paths.appDataBkpProf(profileName));
-            if (mvError != Errors.SUCCESS)
-            {
-                CustomException.fatalError(mvError, this.paths.appDataGame + " -> " + this.paths.appDataBkpProf(profileName), null);
-            }
-
-            log.Debug(this.paths.nmmInfoGame + " -> " + this.paths.nmmInfoBkpProf(profileName));
-            if (this.paths.nmmInfo != "")
-            {
-                mvError = CSharp.safeMove(this.paths.nmmInfoGame, this.paths.nmmInfoBkpProf(profileName));
-                if (mvError != Errors.SUCCESS)
-                {
-                    CustomException.fatalError(mvError, this.paths.nmmInfoGame + " -> " + this.paths.nmmInfoBkpProf(profileName), null);
-                }
-            }
-
-            log.Debug(this.paths.nmmModGame + " -> " + this.paths.nmmModBkpProf(profileName));
-            if (this.paths.nmmMod != "")
-            {
-                mvError = CSharp.safeMove(this.paths.nmmModGame, this.paths.nmmModBkpProf(profileName));
-                if (mvError != Errors.SUCCESS)
-                {
-                    CustomException.fatalError(mvError, this.paths.nmmModGame + " -> " + this.paths.nmmModBkpProf(profileName), null);
-                }
+                log.Error("** errMsg: " + errMsg);
+                log.Error("** errSrcDir:" + errSrcDir);
+                log.Error("** errDstDir: " + errDstDir);
+                return Errors.ERR_MOVING_DIRECTORIES;
             }
 
             // set profile as desativated
@@ -603,15 +516,15 @@ namespace ProfileManager
 
         #region utils 
 
-        private bool checkDir(string dir)
-        {
-            if (!Directory.Exists(dir))
-            {
-                log.Warn("Directory " + dir + " does not exist.");
-                return false;
-            }
-            return true;
-        }
+        //private bool checkDir(string dir)
+        //{
+        //    if (!Directory.Exists(dir))
+        //    {
+        //        log.Warn("Directory " + dir + " does not exist.");
+        //        return false;
+        //    }
+        //    return true;
+        //}
 
         #endregion utils 
 
@@ -761,7 +674,7 @@ namespace ProfileManager
             try
             {
                 string content = File.ReadAllText(this.integrityFilePath());
-                List<string> integrityFileElements = CSharp.splitCsv(content);
+                List<string> integrityFileElements = CSharp.csvToList(content);
                 try
                 {
                     name = integrityFileElements[0].Trim();
@@ -792,7 +705,7 @@ namespace ProfileManager
         /// <param name="desactivatedProfilesOk"></param>
         /// <returns></returns>
         private SPMState discoverApplicationState(out SPProfile activeProfileOk,
-                                               out List<SPProfile> desactivatedProfilesOk)
+                                                  out List<SPProfile> desactivatedProfilesOk)
         {
             activeProfileOk = null;
             desactivatedProfilesOk = new List<SPProfile>();
@@ -806,7 +719,7 @@ namespace ProfileManager
             else
             {
                 // check current instalations
-                if (!this.checkDir(this.paths.steamGame))
+                if (!Directory.Exists(this.paths.steamGame))
                 {
                     isInstalled = false;
                 }
@@ -942,29 +855,18 @@ namespace ProfileManager
                 log.Warn("Invalid SP settings, settings must be initialized before used");
                 return false;
             }
-            else if (!this.checkDir(this.config.settings.appDataPath))
+            else if (!Directory.Exists(this.config.settings.appDataPath))
             {
                 return false;
             }
-            else if (!this.checkDir(this.config.settings.documentsPath))
+            else if (!Directory.Exists(this.config.settings.documentsPath))
             {
                 return false;
             }
-            else if (!this.checkDir(this.config.settings.steamPath))
+            else if (!Directory.Exists(this.config.settings.steamPath))
             {
                 return false;
             }
-            //string currDir = Directory.GetCurrentDirectory().Trim();
-            // TODO
-//            if (currDir == this.config.settings.appDataPathGame() ||
-//                currDir == this.config.settings.documentsPathGame() ||
-//                currDir == this.config.settings.appDataPathGame() ||
-//                currDir == this.config.settings.nmmInfoPathGame() ||
-//                currDir == this.config.settings.nmmModPathGame())
-//            {
-//                log.Error("INVALID CONFIGURATION PATH!!!!");
-//                return false;
-//            }
             else if (this.config.listProfiles == null)
             {
                 log.Error("List of profiles must exist");
@@ -1003,8 +905,6 @@ namespace ProfileManager
             }
         }
 
-
-
         /// <summary>
         /// Check all settings of a specified ACTIVE profile. If some settings are inconsistent 
         /// with an active profile, returns false.
@@ -1016,97 +916,75 @@ namespace ProfileManager
             // check object 
             if (!prof.isProfileActive())
             {
-                log.Warn("Object property isActive is set as false or invalid");
+                log.Warn("* Object property isActive is set as false or invalid");
                 return false;
             }
-            //TODO
-            // checar configuração
-            //           if (!this.checkDir(this.config.settings.appDataPathGame()) ||
-            //               !this.checkDir(this.config.settings.documentsPathGame()) ||
-            //               !this.checkDir(this.config.settings.steamPathGame()))
-            //           {
-            //               log.Warn("A game directory does not exist. appDataPathGame:{" + this.config.settings.appDataPathGame() + "}" +
-            //                        ", documentsPathGame:{" + this.config.settings.documentsPathGame() + "}" +
-            //                        ", steamPathGame:{" + this.config.settings.steamPathGame() + "}");
-            //               return false;
-            //           }
+            // check integrity file
             if (!File.Exists(this.integrityFilePath()))
             {
-                log.Warn("Integrity file of active profile does not exist");
+                log.Warn("* Integrity file of active profile does not exist");
                 return false;
 
             }
             string integrityFile = File.ReadAllText(this.integrityFilePath());
-            List<string> profData = CSharp.splitCsv(integrityFile);
+            List<string> profData = CSharp.csvToList(integrityFile);
             if (profData.Count < 2)
             {
-                log.Warn("Integrity file corrupted {" + integrityFile + "}");
+                log.Warn("* Integrity file CORRUPTED {" + integrityFile + "}");
+                log.Info("-- Profile " + prof.name + " is not ACTIVE");
                 return false;
             }
             if (prof.name.Trim() != profData[0].Trim())
             {
-                log.Warn("Names do not match");
+                log.Warn("* Names from integrity file [" + profData[0] + "] and profile [" + prof.name + "] do not match");
+                log.Info("-- Profile " + prof.name + " is not ACTIVE");
                 return false;
             }
             if (prof.color.Trim() != profData[1].Trim())
             {
-                log.Warn("Colors do not match");
-                return false;
+                log.Warn("* Colors do not match! prof.color:" + prof.color.Trim() + ",  (integrity file)profData[1]:" + profData[1].Trim());
             }
             return true;
         }
 
         /// <summary>
-        /// Chekc all settings of a Desactivated profile. If some settings are inconsistent
+        /// Check all settings of a Desactivated profile. If some settings are inconsistent
         /// with an desactivated profile, returns true.
         /// </summary>
         /// <param name="prof"></param>
         /// <returns></returns>
         private bool checkDesactivatedProfile(SPProfile prof)
         {
+            log.Debug("checkDesactivatedProfile:" + prof.name);
             if (prof.isProfileActive())
             {
                 // profile is set as activated
                 return false;
             }
-            // root\backupDir\ProfName\gameFolder
-// TODO
-//            string desactivatedPathBase = this.backupRoot + "\\" + prof.name + "\\" + config.settings.gameFolder;
-//            string steamDesPath = this.config.settings.steamPath + desactivatedPathBase;
-//            string docsDesPath = this.config.settings.documentsPath + desactivatedPathBase;
-//            string appDirDesPath = this.config.settings.appDataPath + desactivatedPathBase;
-//            string nmmInfoDesPath = this.config.settings.nmmInfoPath + desactivatedPathBase;
-//            string nmmModsDesPath = this.config.settings.nmmModPath + desactivatedPathBase;
-//
-//           // check mandatory paths
-//           if (!this.checkDir(steamDesPath))
-//           {
-//               return false;
-//           }
-//           if (!this.checkDir(docsDesPath))
-//           {
-//               return false;
-//           }
-//           if (!this.checkDir(appDirDesPath))
-//           {
-//               return false;
-//           }
-//
-//            // optional: check if is defined
-//            if (!this.config.settings.nmmInfoPath.Trim().Equals(""))
-//            {
-//                if (!this.checkDir(nmmInfoDesPath))
-//                {
-//                    return false;
-//                }
-//            }
-//            if (!this.config.settings.nmmModPath.Trim().Equals(""))
-//            {
-//                if (!this.checkDir(nmmModsDesPath))
-//                {
-//                    return false;
-//                }
-//            }
+            string profName = prof.name;
+            string[] dirsToCheck = {
+                this.paths.steamBkpProf(profName),
+                this.paths.steamBkpProfGame(profName),
+                this.paths.docsBkpProf(profName),
+                this.paths.docsBkpProfGame(profName),
+                this.paths.appDataBkpProf(profName),
+                this.paths.appDataBkpProfGame(profName),
+            };
+            if (!this.paths.nmmModBkpProf(profName).Trim().Equals(""))
+            {
+                dirsToCheck.Append(this.paths.nmmInfoBkpProf(profName));
+                dirsToCheck.Append(this.paths.nmmInfoBkpProfGame(profName));
+                dirsToCheck.Append(this.paths.nmmModBkpProf(profName));
+                dirsToCheck.Append(this.paths.nmmModBkpProfGame(profName));
+            }
+            log.Debug("checking desactivated paths");
+            string errDir = "";
+            bool checkDir = CSharp.checkDirs(dirsToCheck, out errDir);
+            if (!checkDir)
+            {
+                log.Error("** DIRECTORY NOT FOUND: " + errDir);
+                return false;
+            }
 
             log.Debug("profile " + prof.name + " is ok");
             return true;

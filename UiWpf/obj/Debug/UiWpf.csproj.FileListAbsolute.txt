@@ -34,7 +34,6 @@ C:\Users\anderson_paschoalon\Workspace\Sandbox\OpenSource\Cs\SkyrimSteamProfileM
 C:\Users\anderson_paschoalon\Workspace\Sandbox\OpenSource\Cs\SkyrimSteamProfileManager\UiWpf\obj\Debug\UiWpf.pdb
 C:\Users\anderson_paschoalon\Workspace\Sandbox\OpenSource\Cs\SkyrimSteamProfileManager\UiWpf\bin\Debug\Logs\app_core.log
 C:\Users\anderson_paschoalon\Workspace\Sandbox\OpenSource\Cs\SkyrimSteamProfileManager\UiWpf\bin\Debug\Logs\app_ui.log
-C:\Users\anderson_paschoalon\Workspace\Sandbox\OpenSource\Cs\SkyrimSteamProfileManager\UiWpf\bin\Debug\Settings\SPConfigSkyrim.xml
 C:\Users\anderson_paschoalon\Workspace\Sandbox\OpenSource\Cs\SkyrimSteamProfileManager\UiWpf\bin\Debug\Utils.dll
 C:\Users\anderson_paschoalon\Workspace\Sandbox\OpenSource\Cs\SkyrimSteamProfileManager\UiWpf\bin\Debug\Utils.pdb
 C:\Users\anderson_paschoalon\Workspace\Sandbox\OpenSource\Cs\SkyrimSteamProfileManager\UiWpf\bin\Debug\Utils.dll.config
