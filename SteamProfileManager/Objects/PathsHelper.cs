@@ -110,7 +110,7 @@ namespace ProfileManager.Objects
             {
                 return Errors.ERR_APPDATABKP_DIRRECTORY_MISSING;
             }
-            if (!this.nmmInfoEmpty)
+            if (!this.optionalAreSet())
             {
                 if (!Directory.Exists(this.nmmInfo))
                 {
@@ -120,9 +120,6 @@ namespace ProfileManager.Objects
                 {
                     return Errors.ERR_NMMINFOBKP_DIRRECTORY_MISSING;
                 }
-            }
-            if (!this.nmmModEmpty)
-            {
                 if (!Directory.Exists(this.nmmMod))
                 {
                     return Errors.ERR_NMMMOD_DIRRECTORY_MISSING;
@@ -207,6 +204,16 @@ namespace ProfileManager.Objects
             return (this.nmmModEmpty) ? "" : this._nmmModBackup + "\\" + prof + "\\" + this._gameFolder; 
         }
         public bool nmmModEmpty { get; private set; }
+
+        // optional are set
+        public bool optionalAreSet()
+        {
+            if (!nmmInfoEmpty || !nmmModEmpty)
+            {
+                return true;
+            }
+            return false;
+        }
 
         /// <summary>
         /// Returns a valid profile name.

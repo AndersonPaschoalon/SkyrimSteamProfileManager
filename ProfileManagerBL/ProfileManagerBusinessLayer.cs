@@ -185,7 +185,7 @@ namespace ProfileManagerBL
         {
         }
 
-        public void action_activateInactive()
+        public void action_activateInactive(ProfileViewData p)
         {
         }
 

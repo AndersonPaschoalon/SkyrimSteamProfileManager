@@ -32,6 +32,7 @@ namespace ProfileManager
         public SteamProfileManager(Game game)
         {
             log = Log4NetLogger.getInstance(LogAppender.APP_CORE);
+            CSharp.setLogger(Log4NetLogger.getInstance(LogAppender.APP_CORE));
             log.Info("###############################################################################");
             log.Info("# SteamProfileManager Core: " + game.ToString());
             log.Info("###############################################################################");
@@ -365,7 +366,7 @@ namespace ProfileManager
             // save settings
             this.config.saveConfig();
             
-            return Errors.ERR_UNKNOWN;
+            return Errors.SUCCESS;
         }
 
         /// <summary>
@@ -458,16 +459,12 @@ namespace ProfileManager
                     log.Info("-- renaming " + this.paths.appDataBkpProf(profNameOld) + " -> " + profNameNew);
                     FileSystem.RenameDirectory(this.paths.appDataBkpProf(profNameOld), profNameNew);
 
-                    // nmm Info
-                    if (!this.paths.nmmInfoEmpty)
+                    if (!this.paths.optionalAreSet())
                     {
+                        // nmm Info
                         log.Info("-- renaming " + this.paths.nmmInfoBkpProf(profNameOld) + " -> " + profNameNew);
                         FileSystem.RenameDirectory(this.paths.nmmInfoBkpProf(profNameOld), profNameNew);
-                    }
-
-                    // nmm Mod
-                    if (!this.paths.nmmModEmpty)
-                    {
+                        // nmm Mod
                         log.Info("-- renaming " + this.paths.nmmModBkpProf(profNameOld) + " -> " + profNameNew);
                         FileSystem.RenameDirectory(this.paths.nmmModBkpProf(profNameOld), profNameNew);
                     }
@@ -593,12 +590,12 @@ namespace ProfileManager
             Directory.CreateDirectory(this.paths.steamBkp);
             Directory.CreateDirectory(this.paths.docsBkp);
             Directory.CreateDirectory(this.paths.appDataBkp);
-            if (!this.paths.nmmInfoBkp.Trim().Equals(""))
+            if (this.paths.optionalAreSet())
             {
+                log.Debug("optional fields are set");
+                log.Debug("creating directory this.paths.nmmInfoBkp:" + this.paths.nmmInfoBkp);
                 Directory.CreateDirectory(this.paths.nmmInfoBkp);
-            }
-            if (!this.paths.nmmMod.Trim().Equals(""))
-            {
+                log.Debug("creating directory this.paths.nmmMod:" + this.paths.nmmMod);
                 Directory.CreateDirectory(this.paths.nmmMod);
             }
         }
@@ -608,27 +605,16 @@ namespace ProfileManager
             Directory.CreateDirectory(this.paths.steamBkpProf(profName));
             Directory.CreateDirectory(this.paths.docsBkpProf(profName));
             Directory.CreateDirectory(this.paths.appDataBkpProf(profName));
-            if (!this.paths.nmmInfoBkp.Trim().Equals(""))
+            if (this.paths.optionalAreSet())
             {
+                log.Debug("optional fields are set");
+                log.Debug("creating directory this.paths.nmmInfoBkpProf(profName):" + 
+                          this.paths.nmmInfoBkpProf(profName));
                 Directory.CreateDirectory(this.paths.nmmInfoBkpProf(profName));
-            }
-            if (!this.paths.nmmMod.Trim().Equals(""))
-            {
+                log.Debug("creating directory this.paths.nmmModBkpProf(profName):" + 
+                          this.paths.nmmModBkpProf(profName));
                 Directory.CreateDirectory(this.paths.nmmModBkpProf(profName));
             }
-        }
-
-        private int countProfiles()
-        {
-            try
-            {
-                return this.config.listProfiles.profiles.Count;
-            }
-            catch (Exception ex)
-            {
-                log.Warn("No profile. Message:" + ex.Message + ", StackTrace:" + ex.StackTrace);
-            }
-            return 0;
         }
 
         /// <summary>
@@ -970,7 +956,7 @@ namespace ProfileManager
                 this.paths.appDataBkpProf(profName),
                 this.paths.appDataBkpProfGame(profName),
             };
-            if (!this.paths.nmmModBkpProf(profName).Trim().Equals(""))
+            if (!this.paths.optionalAreSet())
             {
                 dirsToCheck.Append(this.paths.nmmInfoBkpProf(profName));
                 dirsToCheck.Append(this.paths.nmmInfoBkpProfGame(profName));

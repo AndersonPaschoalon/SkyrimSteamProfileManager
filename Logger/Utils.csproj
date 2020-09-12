@@ -58,9 +58,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Utils.logConfig.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <Content Include="Utils.logConfig.xml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App.config">

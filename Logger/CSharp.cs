@@ -32,7 +32,7 @@ namespace Utils
 
         #region logger
 
-        public void setLogger(ILogger newLogger)
+        public static void setLogger(ILogger newLogger)
         {
             if (newLogger != null)
             {

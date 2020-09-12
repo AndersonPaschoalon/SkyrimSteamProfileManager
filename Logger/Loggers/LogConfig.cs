@@ -30,7 +30,7 @@ namespace Utils.Loggers
             {
                 string createText = "<?xml version=\"1.0\" encoding=\"utf - 8\" ?>" +
                                     Environment.NewLine +
-                                    "< LOG loglevel = \"DEBUG\" />" +
+                                    "<LOG loglevel = \"DEBUG\" />" +
                                     Environment.NewLine;
                 File.WriteAllText(LOG_CONFIG, createText, Encoding.UTF8);
                 readText = File.ReadAllText(LOG_CONFIG);
