@@ -216,7 +216,7 @@ namespace UiConsole
             Console.WriteLine("> exec_activateInactiveProfile");
             string profName = readOption("Profile Name");
             string hexColor = "#8332A8";
-            manager.activateInactiveProfile(profName, hexColor);
+            manager.activateInactiveProfile(profName, hexColor, "15/08/2020");
         }
 
         private static void exec_activateDesactivatedProfile(SteamProfileManager manager)

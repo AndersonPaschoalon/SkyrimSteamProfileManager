@@ -43,6 +43,7 @@ namespace Tester
         {
             testHeader("SPConfig.xml");
 
+            /*
             string configFile = "SPConfig_Test.xml";
             XmlSerializer serializer = new XmlSerializer(typeof(SPConfig));
             FileStream fs = new FileStream(configFile, FileMode.Open);
@@ -58,11 +59,11 @@ namespace Tester
 
             SPProfile testProf = new SPProfile();
             testProf.color = "AZUL";
-            testProf.isActive = "TRUE";
+            testProf.isReady = "TRUE";
             testProf.name = "Test_Serialization_back_to_file";
             config.listProfiles.profiles.Add(testProf);
             config.saveConfig("saveConfigTest_SPConfig_Test.xml");
-
+            */
             countAcc++;
         }
 

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ProfileManager
 {
-    interface IProfielManager
+    interface IProfileManager
     {
 
         int updateSettings(string newSteamPath, string newDocumentsPath, string newAppDataPath,
@@ -25,6 +25,7 @@ namespace ProfileManager
 
         int switchProfiles(string active, string desactivated);
 
+        int killAllSteam();
 
     }
 }

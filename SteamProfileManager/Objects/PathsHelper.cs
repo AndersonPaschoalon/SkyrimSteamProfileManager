@@ -16,40 +16,11 @@ namespace ProfileManager.Objects
     /// </summary>
     public class PathsHelper
     {
-        //#region consts
-        // settings file prefix and sufix
-        //private const string SETTING_PREF = "Settings\\SPConfig";
-        //private const string SETTING_SUFX = ".xml";
-        // Games names used to build the Settings file
-        //private const string SKYRIM = "Skyrim";
-        //private const string SKYRIM_SE = "SkyrimSE";
-        //#endregion
-
         #region static_helpers
 
         public static string getConfigFileName()
         {
-            //return   "Settings\\SPConfigSkyrim.xml";
-            return getConfigFileName(Game.SKYRIM);
-        }
-
-        public static string getConfigFileName(Game game)
-        {
-            switch (game)
-            {
-                case Game.SKYRIM:
-                    {
-                        return Consts.SKYRIM_CONFIG_FILE;
-                    }
-                case Game.SKYRIM_SE:
-                    {
-                        return Consts.SKYRIMSE_CONFIG_FILE;
-                    }
-                default:
-                    {
-                        throw new Exception("INVALID GAME SELECTED, CONFIG FILE DOES NOT EXIST!: " + game);
-                    }
-            }
+            return Consts.CONFIG_FILE;
         }
 
         public static string validPath(string path)
@@ -132,11 +103,126 @@ namespace ProfileManager.Objects
             return Errors.SUCCESS;
         }
 
-        // Config file
-        public string getConfigFilePath()
+        #region integrity_files 
+
+        // active integrity helpers
+        public string activeIntegrityFilePath()
         {
-            return PathsHelper.getConfigFileName(this._game);
+            return this.steamGame + "\\" + Consts.INTEGRITY_FILE_NAME;
         }
+
+        public bool activeIntegrityFile()
+        {
+            string intFile = this.activeIntegrityFilePath();
+            if (File.Exists(intFile))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public string activeIntegrityFileContent()
+        {
+            if (this.activeIntegrityFile())
+            {
+                string intFile = this.activeIntegrityFilePath();
+                string integrityFileContent = File.ReadAllText(intFile);
+                return integrityFileContent;
+            }
+            return "";
+        }
+
+        public List<string> activeIntegrityFileItems()
+        {
+            string content = this.activeIntegrityFileContent();
+            return CSharp.csvToList(content);
+        }
+
+        public bool updateActiveIntegrityFile(SPProfile prof, out string errMsg, out string errPath)
+        {
+            string content = prof.name + "," + prof.color + "," + prof.creationDate;
+            string filePath = this.activeIntegrityFilePath();
+            try
+            {
+                File.WriteAllText(filePath, content);
+                errMsg = "SUCCESS";
+                errPath = "";
+                return true;
+            }
+            catch (Exception ex)
+            {
+                errMsg = ex.Message;
+                errPath = filePath;
+                return false;
+            }
+        }
+
+        public bool deleteActiveIntegrityFile()
+        {
+            try
+            {
+                File.Delete(this.activeIntegrityFilePath());
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        // desactivated integrity file helpers
+        public string desactivatedIntegrityFilePath(string prof)
+        {
+            return this.steamBkpProfGame(prof) + "\\" + Consts.INTEGRITY_FILE_NAME;
+        }
+
+        public bool desactivatedIntegrityFile(string prof)
+        {
+            string intFile = this.desactivatedIntegrityFilePath(prof);
+            if (File.Exists(intFile))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public string desactivatedIntegrityFileContent(string prof)
+        {
+            if (this.desactivatedIntegrityFile(prof))
+            {
+                string intFile = this.desactivatedIntegrityFilePath(prof);
+                string integrityFileContent = File.ReadAllText(intFile);
+                return integrityFileContent;
+            }
+            return "";
+        }
+
+        public List<string> desactivatedIntegrityFileItems(string prof)
+        {
+            string content = this.desactivatedIntegrityFileContent(prof);
+            return CSharp.csvToList(content);
+        }
+
+        public bool updateDesactivatedIntegrityFile(SPProfile prof, out string errMsg, out string errPath)
+        {
+            string content = prof.name + "," + prof.color + "," + prof.creationDate;
+            string filePath = this.desactivatedIntegrityFilePath(prof.name);
+            try
+            {
+                File.WriteAllText(filePath, content);
+                errMsg = "SUCCESS";
+                errPath = "";
+                return true;
+            }
+            catch (Exception ex)
+            {
+                errMsg = ex.Message;
+                errPath = filePath;
+                return false;
+            }
+        }
+
+        #endregion integrity_files 
 
         // steam
         public string steam { get { return this._steam; } }
@@ -324,6 +410,4 @@ namespace ProfileManager.Objects
 
         #endregion private 
     }
-
-
 }

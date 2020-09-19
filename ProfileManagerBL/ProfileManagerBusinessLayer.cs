@@ -179,26 +179,32 @@ namespace ProfileManagerBL
         #region bl_actions
         public void action_updateSettings(SettingsViewData s)
         {
+            manager.updateSettings(s.steam, s.docs, s.appData, s.nmmInfo, s.nmmMod);
         }
 
-        public void action_updateProfile(ProfileViewData p)
+        public int action_updateProfile(ProfileViewData pUpdated, ProfileViewData pOld)
         {
+            return manager.editProfile(pOld.name, pUpdated.name, pUpdated.colorHex);
         }
 
-        public void action_activateInactive(ProfileViewData p)
+        public int action_activateInactive(ProfileViewData p)
         {
+            return manager.activateInactiveProfile(p.name, p.colorHex, p.creatingDate);
         }
 
-        public void action_activateDesactivated()
+        public int action_activateDesactivated(ProfileViewData p)
         {
+            return manager.activateDesactivatedProfile(p.name);
         }
 
-        public void action_desactivateProfile()
+        public int action_desactivateProfile(ProfileViewData p)
         {
+            return manager.desactivateActiveProfile(p.name);
         }
 
-        public void action_switchProfiles()
+        public int action_switchProfiles(ProfileViewData ap, ProfileViewData dp)
         {
+            return manager.switchProfile(ap.name, dp.name);
         }
 
         #endregion bl_actions

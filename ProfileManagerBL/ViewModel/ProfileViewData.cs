@@ -16,6 +16,10 @@ namespace ProfileManagerBL.ViewModel
 
         public Color color{get; set;}
 
+        // TODO INTEGRAR ESSES ELEMENTOS
+        public string colorHex { get; set; }
+        public string creatingDate { get; set; }
+
         public static ProfileViewData getInactive()
         {
             Color darkGray = Color.FromName("DarkGray");

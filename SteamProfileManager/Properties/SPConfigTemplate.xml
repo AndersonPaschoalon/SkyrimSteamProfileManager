@@ -1,8 +1,19 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<CONFIG game="{0}">
-    <SETTINGS steamPath="" documentsPath="" appDataPath="" 
-              nmmModPath="" nmmInfoPath=""  
-              gameFolder="{1}" backupFolder="{0}Backups" />
-    <PROFILES>
-    </PROFILES>
+<CONFIG xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <SETTINGS game="Skyrim"
+            steamPath=""
+            documentsPath=""
+            appDataPath=""
+            nmmModPath=""
+            nmmInfoPath=""
+            gameFolder="Skyrim"
+            backupFolder="SkyrimBackups" />
+  <SETTINGS game="Skyrim SE"
+            steamPath=""
+            documentsPath=""
+            appDataPath=""
+            nmmModPath=""
+            nmmInfoPath=""
+            gameFolder="Skyrim SE"
+            backupFolder="SkyrimSEBackups" />
 </CONFIG>
