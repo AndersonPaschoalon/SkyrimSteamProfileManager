@@ -56,7 +56,43 @@ namespace Utils
             return true;
         }
 
+        public static bool checkNotEmpty(List<string> strs)
+        {
+            foreach (var item in strs)
+            {
+                if (item == null || item.Trim().Equals(""))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
         public static bool checkNotNull(object[] objs)
+        {
+            foreach (var item in objs)
+            {
+                if (item == null)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        public static bool checkNotNull(List<string> objs)
+        {
+            foreach (var item in objs)
+            {
+                if (item == null)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        public static bool checkNotNull(List<object> objs)
         {
             foreach (var item in objs)
             {
@@ -357,6 +393,11 @@ namespace Utils
 
         /// <summary>
         /// Execute a sequence of dirMv operations. if any fail, it will undo all operations executed.
+        /// This command will fail on the follow situations:
+        /// (1) If the lenght of the source or destination array do not match
+        /// (2) If any of the sources are repeated
+        /// (3) If any of the sources matches with any of the destinations
+        /// 
         /// </summary>
         /// <param name="sources"></param>
         /// <param name="destinations"></param>
@@ -382,6 +423,70 @@ namespace Utils
                 errDstDir = "";
                 return false;
             }
+            // before moving, check if the src and dst exist and dont match
+            for (int i = 0; i < sources.Length; i++)
+            {
+                string currentItem = sources[i];
+                //-- check if there is any repeated element on the src list of elements
+                for (int j = 0; j < sources.Length; j++)
+                {
+                    if (i == j)
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        if (currentItem.Trim() == sources[j].Trim())
+                        {
+                            errMsg = "Error: item[" + i + "] == item[" + j + "] " +
+                                currentItem + "::" + sources[j];
+                            errDstDir = "";
+                            errSrcDir = currentItem;
+                            log.Warn(errMsg);
+                            return false;
+                        }
+                    }
+                }
+                //-- check if there is any element on the sources list exit on the destination list
+                for (int j = 0; j < destinations.Length; j++)
+                {
+                    if (currentItem.Trim() == destinations[j].Trim())
+                    {
+                        errMsg = "Error: item[" + i + "] == item[" + j + "] " +
+                            currentItem + "::" + sources[j];
+                        errDstDir = "";
+                        errSrcDir = currentItem;
+                        log.Warn(errMsg);
+                        return false;
+                    }
+                }
+            }
+            //-- check if all src and dst dirs do exit
+            foreach (var item in sources)
+            {
+                if (!Directory.Exists(item))
+                {
+                    errMsg = "Source directory does not exit {" +
+                        item + "}";
+                    errDstDir = "";
+                    errSrcDir = item;
+                    log.Warn("ERROR: " + errMsg);
+                    return false;
+                }
+            }
+            foreach (var item in destinations)
+            {
+                if (!Directory.Exists(item))
+                {
+                    errMsg = "Destination directory does not exit {" +
+                        item + "}";
+                    errDstDir = item;
+                    errSrcDir = "";
+                    log.Warn("ERROR: " + errMsg);
+                    return false;
+                }
+            }
+            // Move the directories
             Stack<string> dirStackSrc = new Stack<string>();
             Stack<string> dirStackDst = new Stack<string>();
             for (int i = 0; i < sources.Length; i++)
@@ -392,10 +497,7 @@ namespace Utils
                     {
                         log.Debug("mv -r \"" + sources[i] + "\" \"" + destinations[i] + "\"");
                     }
-                    else if (logMethod == LogMethod.CONSOLE)
-                    {
-                        Console.WriteLine("mv -r \"" + sources[i] + "\" \"" + destinations[i] + "\"");
-                    }
+                    Console.WriteLine("mv -r \"" + sources[i] + "\" \"" + destinations[i] + "\"");
                     
                     if (!sources[i].Trim().Equals("") && !destinations[i].Trim().Equals(""))
                     {
@@ -503,6 +605,188 @@ namespace Utils
             }
             errDir = "";
             return true;
+        }
+
+        /// <summary>
+        /// Check if a list of directories exist. If one of them does not exist, it is returned
+        /// as out parameter and the method returns false.
+        /// </summary>
+        /// <param name="dirs"></param>
+        /// <param name="errDir"></param>
+        /// <returns></returns>
+        public static bool checkDirs(List<string> dirs, out string errDir)
+        {
+            foreach (var item in dirs)
+            {
+                if (!Directory.Exists(item))
+                {
+                    errDir = item;
+                    return false;
+                }
+            }
+            errDir = "";
+            return true;
+        }
+
+
+        /// <summary>
+        /// Safely rename a directory.
+        /// </summary>
+        /// <param name="dirPath"></param>
+        /// <param name="newDirName"></param>
+        /// <param name="errMsg"></param>
+        /// <returns></returns>
+        public static bool dirRename(string dirPath, string newDirName, out string errMsg)
+        {
+            try
+            {
+                FileSystem.RenameDirectory(dirPath, newDirName);
+                errMsg = "";
+            }
+            catch (Exception ex)
+            {
+                log.Warn("Message:" + ex.Message + ", StackTrace:" + ex.StackTrace);
+                errMsg = ex.Message;
+                return false;
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// This function is used to rowback a directory renamed to its original name, but using 
+        /// the same parameters as passed to the method dirRename(). 
+        /// Ex:
+        /// dirRename("C:\Dir\Folder1", "Folder2", out err) : C:\Dir\Folder1 => C:\Dir\Folder2
+        /// undoRename("C:\Dir\Folder1", "Folder2");        : C:\Dir\Folder2 => C:\Dir\Folder1 
+        /// </summary>
+        /// <param name="dirPath"></param>
+        /// <param name="newDirName"></param>
+        /// <returns></returns>
+        public static bool undoRename(string dirPath, string newDirName)
+        {
+            // pegar o dir path e dividir em duas strings: dirPath1->C:\Dir\  dirPath2->Folder1
+            // concatenar dirPath1 com newDirName
+            // aplicar dirRename(dirPath1 + newDirName, dirPath2);
+            char[] charSeparators = new char[] { '\\' };
+            string[] dirPathVec = dirPath.Split(charSeparators, StringSplitOptions.RemoveEmptyEntries);
+            string dirPath2 = dirPathVec[dirPathVec.Length - 1];
+            string dirPath1 = "";
+            for (int i = 0; i < dirPathVec.Length - 1; i++)
+            {
+                if (i == 0)
+                {
+                    dirPath1 = dirPathVec[0];
+                }
+                else
+                {
+                    dirPath1 = "\\" + dirPathVec[i];
+                }
+            }
+            bool ret = dirRename(dirPath1 + "\\" + newDirName, dirPath2, out string errMsg);
+            if (ret == false)
+            {
+                log.Error("** ERROR @ CSharp.undoRename() errMsg:" + errMsg);
+            }
+            return ret;
+        }
+
+
+        public static bool stackRename(string[] dirNames, string[] newNames, out string errMsg, out string errDir, out string errName)
+        {
+            if (dirNames == null || newNames == null)
+            {
+                errMsg = "NULL VECTOR ERROR";
+                errDir = "";
+                errName = "";
+                log.Warn(errMsg);
+                return false;
+            }
+            if (dirNames.Length != newNames.Length)
+            {
+                errMsg = "SOURCE and DESTINATION stack sizes do not match! dirNames:" + dirNames.Length +
+                         ", newNames:" + newNames.Length;
+                errDir = "";
+                errName = "";
+                log.Warn(errMsg);
+                return false;
+            }
+            // -- check if any element is null or empty
+            foreach (var item in dirNames)
+            {
+                if (item == null || item.Trim().Equals(""))
+                {
+                    errDir = item;
+                    errName = "";
+                    errMsg = "Directory is EMPTY";
+                    log.Warn(errMsg);
+                    return false;
+                }
+            }
+            foreach (var item in newNames)
+            {
+                if (item == null || item.Trim().Equals(""))
+                {
+                    errDir = "";
+                    errName = item;
+                    errMsg = "New directory name is EMPTY";
+                    log.Warn(errMsg);
+                    return false;
+                }
+            }
+            // -- check if all dirNames dirs do exit
+            foreach (var item in dirNames)
+            {
+                if (!Directory.Exists(item))
+                {
+                    errMsg = "Directory does not exit {" +
+                        item + "}";
+                    errDir = item;
+                    errName = "";
+                    log.Warn("ERROR: " + errMsg);
+                    return false;
+                }
+            }
+
+            // RENAME the directories
+            Stack<string> dirStackSrc = new Stack<string>();
+            Stack<string> dirStackDst = new Stack<string>();
+            for (int i = 0; i < dirNames.Length; i++)
+            {
+
+                log.Debug("rename: " + dirNames[i] + " => " + newNames[i]);
+                Console.WriteLine("rename: " + dirNames[i] + " => " + newNames[i]);
+                string renameMsg = "";
+                bool ret = dirRename(dirNames[i], newNames[i], out renameMsg); 
+                if (ret == false)
+                {
+                    errMsg = "ERROR ON stackRename() -> renameMsg:" + renameMsg;
+                    errDir = dirNames[i];
+                    errName = newNames[i];
+                    log.Warn(errMsg);
+                    while (dirStackSrc.Count > 0)
+                    {
+                        undoRename(dirStackSrc.Pop(), dirStackDst.Pop());
+                    }
+                    return false;
+                }
+                dirStackSrc.Push(dirNames[i]);
+                dirStackDst.Push(newNames[i]);
+            }
+            errDir = "";
+            errName = "";
+            errMsg = "SUCCESS!";
+            return true;
+        }
+
+        public static bool stackRename(List<string> dirNames,
+                                       List<string> newNames, 
+                                       out string errMsg, 
+                                       out string errDir, 
+                                       out string errName)
+        {
+            string[] arrDirNames = dirNames.ToArray();
+            string[] arrNewNames = newNames.ToArray();
+            return stackRename(arrDirNames, arrNewNames, out errMsg, out errDir, out errName);
         }
 
         #endregion fileSystemOperations

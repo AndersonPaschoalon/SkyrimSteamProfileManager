@@ -18,17 +18,12 @@ namespace ProfileManager.Objects
     {
         #region load/save
 
-        // TODO suporte para mais jogos no load
-
         /// <summary>
         /// Load configuration from default XML settings configuration file
         /// </summary>
         /// <returns></returns>
         public static SPConfig loadConfig()
         {
-            // remove
-            string gameFolder = "Skyrim";
-            string gameName = "Skyrim";
             // vars
             SPConfig configuration;
             ILogger logger = Log4NetLogger.getInstance(LogAppender.APP_CORE);
@@ -42,9 +37,8 @@ namespace ProfileManager.Objects
                 logger.Warn("config file does not exit!");
                 string xmlTemplate = Properties.Resources.SPConfigTemplate;
                 logger.Debug("Creating config file from template: " + xmlTemplate);
-                string formattedConfigFile = String.Format(xmlTemplate, gameName, gameFolder);
-                logger.Debug("Formatted XML:" + formattedConfigFile);
-                File.WriteAllText(configFile, formattedConfigFile);
+                logger.Debug("Formatted XML:" + xmlTemplate);
+                File.WriteAllText(configFile, xmlTemplate);
                 logger.Debug("Config XML written successefuly!");
             }
             // load content
@@ -115,37 +109,45 @@ namespace ProfileManager.Objects
         /// <returns></returns>
         public bool saveConfig()
         {
-            return this.saveConfig(this.configFileName);
+            string configFile = PathsHelper.getConfigFileName();
+            return this.saveConfig(configFile);
         }
+
+        public SPSettings selectSettings(string game)
+        {
+            foreach (var item in listSettings)
+            {
+                if (item.game.Trim() == game.Trim())
+                {
+                    return item;
+                }
+            }
+            return null;
+        }
+
+        public bool updateSettings(string game, SPSettings gameSetting)
+        {
+            for (int i = 0; i < listSettings.Count; i++)
+            {
+                if (listSettings[i].game.Trim() == game.Trim())
+                {
+                    listSettings[i] = gameSetting;
+                    return true;
+                }
+            }
+            return false;
+        }
+
 
         #endregion load/save
 
-        #region xml
-
-        [XmlAttribute("game")]
-        public string game { get; set; }
-
         [XmlElement("SETTINGS")]
-        public SPSettings settings { get; set; }
-
-        [XmlElement("PROFILES")]
-        public SPProfileList listProfiles { get; set; }
-
-        #endregion xml
-
-        #region private 
+        public List<SPSettings> listSettings { get; set; }
 
         private readonly ILogger log = Log4NetLogger.getInstance(LogAppender.APP_CORE);
-        private readonly string configFileName;
 
         private SPConfig()
         {
-            this.settings = new SPSettings();
-            this.listProfiles = new SPProfileList();
-            this.game = "";
-            this.configFileName = PathsHelper.getConfigFileName();
         }
-
-        #endregion private
     }
 }
