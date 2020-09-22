@@ -7,7 +7,8 @@
             nmmModPath="TestEnviroment\Test01\NMM\nmmInfo" 
             nmmInfoPath="TestEnviroment\Test01\NMM\nmmInfo" 
             gameFolder="Skyrim" 
-            backupFolder="SkyrimBackups" />
+            backupFolder="SkyrimBackups"
+            dateFormat="yyyy/MM/dd"/>
   <SETTINGS game="Skyrim SE"
             steamPath="TestEnviroment\Test02\Steam\Commons\"
             documentsPath="TestEnviroment\Test02\Docs"
@@ -15,7 +16,8 @@
             nmmModPath="TestEnviroment\Test02\NMM\nmmInfo"
             nmmInfoPath="TestEnviroment\Test02\NMM\nmmInfo"
             gameFolder="Skyrim SE"
-            backupFolder="SkyrimSEBackups" />  
+            backupFolder="SkyrimSEBackups" 
+            dateFormat="yyyy/MM/dd"/>  
 <!--
   <SETTINGS game="{0}"
             steamPath=""

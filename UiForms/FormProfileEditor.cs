@@ -8,11 +8,12 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace UiForms
+namespace Spear
 {
     public partial class FormProfileEditor : Form
     {
         private bool cancel;
+
 
         public string getName()
         {

@@ -1,4 +1,4 @@
-﻿namespace UiForms
+﻿namespace Spear
 {
     partial class FormMain
     {
@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.configureToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -43,6 +44,7 @@
             this.toolStripButtonDesactivate = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonSwitch = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonEdit = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonReload = new System.Windows.Forms.ToolStripButton();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.panel1 = new System.Windows.Forms.Panel();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
@@ -57,7 +59,7 @@
             this.buttonSelectTest = new System.Windows.Forms.Button();
             this.textBoxSelectedTest = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
+            this.progressBarAction = new System.Windows.Forms.ProgressBar();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
@@ -141,7 +143,8 @@
             this.toolStripButtonActivate,
             this.toolStripButtonDesactivate,
             this.toolStripButtonSwitch,
-            this.toolStripButtonEdit});
+            this.toolStripButtonEdit,
+            this.toolStripButtonReload});
             this.toolStrip1.Location = new System.Drawing.Point(0, 24);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(800, 25);
@@ -168,7 +171,7 @@
             // toolStripButtonActivate
             // 
             this.toolStripButtonActivate.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonActivate.Image = global::UiForms.Properties.Resources._15_tick;
+            this.toolStripButtonActivate.Image = global::Spear.Properties.Resources._15_tick;
             this.toolStripButtonActivate.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonActivate.Name = "toolStripButtonActivate";
             this.toolStripButtonActivate.Size = new System.Drawing.Size(23, 22);
@@ -178,7 +181,7 @@
             // toolStripButtonDesactivate
             // 
             this.toolStripButtonDesactivate.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonDesactivate.Image = global::UiForms.Properties.Resources._15_cancel;
+            this.toolStripButtonDesactivate.Image = global::Spear.Properties.Resources._15_cancel;
             this.toolStripButtonDesactivate.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonDesactivate.Name = "toolStripButtonDesactivate";
             this.toolStripButtonDesactivate.Size = new System.Drawing.Size(23, 22);
@@ -188,7 +191,7 @@
             // toolStripButtonSwitch
             // 
             this.toolStripButtonSwitch.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonSwitch.Image = global::UiForms.Properties.Resources._15_2arrow;
+            this.toolStripButtonSwitch.Image = global::Spear.Properties.Resources._15_2arrow;
             this.toolStripButtonSwitch.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonSwitch.Name = "toolStripButtonSwitch";
             this.toolStripButtonSwitch.Size = new System.Drawing.Size(23, 22);
@@ -198,12 +201,22 @@
             // toolStripButtonEdit
             // 
             this.toolStripButtonEdit.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonEdit.Image = global::UiForms.Properties.Resources._15_edit;
+            this.toolStripButtonEdit.Image = global::Spear.Properties.Resources._15_edit;
             this.toolStripButtonEdit.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonEdit.Name = "toolStripButtonEdit";
             this.toolStripButtonEdit.Size = new System.Drawing.Size(23, 22);
             this.toolStripButtonEdit.Text = "EDIT Profiles";
             this.toolStripButtonEdit.Click += new System.EventHandler(this.toolStripButtonEdit_Click);
+            // 
+            // toolStripButtonReload
+            // 
+            this.toolStripButtonReload.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonReload.Image = global::Spear.Properties.Resources._15_reload;
+            this.toolStripButtonReload.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonReload.Name = "toolStripButtonReload";
+            this.toolStripButtonReload.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonReload.Text = "RELOAD Profiles";
+            this.toolStripButtonReload.Click += new System.EventHandler(this.toolStripButtonReload_Click);
             // 
             // tableLayoutPanel1
             // 
@@ -213,6 +226,7 @@
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 55F));
             this.tableLayoutPanel1.Controls.Add(this.panel1, 1, 1);
             this.tableLayoutPanel1.Controls.Add(this.panelTests, 0, 1);
+            this.tableLayoutPanel1.Controls.Add(this.progressBarAction, 1, 0);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 49);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -361,6 +375,16 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "TEST PANEL";
             // 
+            // progressBarAction
+            // 
+            this.progressBarAction.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.progressBarAction.Location = new System.Drawing.Point(115, 3);
+            this.progressBarAction.Name = "progressBarAction";
+            this.progressBarAction.Size = new System.Drawing.Size(544, 4);
+            this.progressBarAction.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
+            this.progressBarAction.TabIndex = 3;
+            this.progressBarAction.Visible = false;
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -370,8 +394,9 @@
             this.Controls.Add(this.tableLayoutPanel1);
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.menuStrip1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormMain";
-            this.Text = "FormMain";
+            this.Text = "SPEAR -- Steam ProfilE mAnageR";
             this.Load += new System.EventHandler(this.FormMain_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
@@ -418,10 +443,11 @@
         private System.Windows.Forms.Button buttonRunTest;
         private System.Windows.Forms.Button buttonSelectTest;
         private System.Windows.Forms.Label label1;
-        private System.ComponentModel.BackgroundWorker backgroundWorker1;
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem openHeToolStripMenuItem;
         private System.Windows.Forms.ToolStripComboBox toolStripComboBoxSelectGame;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripButton toolStripButtonReload;
+        private System.Windows.Forms.ProgressBar progressBarAction;
     }
 }

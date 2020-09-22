@@ -5,8 +5,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
-//using Logger;
-//using Logger.Loggers;
 using ProfileManager.Enum;
 using Utils;
 using Utils.Loggers;

@@ -13,7 +13,7 @@ using Utils.Loggers;
 using ProfileManagerBL;
 using ProfileManagerBL.ViewModel;
 
-namespace UiForms
+namespace Spear
 {
     public partial class FormMain : Form
     {
@@ -29,7 +29,8 @@ namespace UiForms
         private DataGridView dataGridViewDesactivated = new DataGridView();
         private BindingSource bindingSourceDesactivated = new BindingSource();
         // Tests
-        private const bool ENABLE_TESTING = true;
+        //private const bool ENABLE_TESTING = true;
+        private const bool ENABLE_TESTING = false;
         private int testToRun = 0;
 
         public FormMain()
@@ -91,15 +92,20 @@ namespace UiForms
             }
             else
             {
-                this.lpd = this.managerBusinessLayer.desactivated;
-                this.lpd = this.managerBusinessLayer.active;
+                this.managerBusinessLayer.reloadProfiles();
+                this.lpd = this.managerBusinessLayer.getDesactivatedProfiles();
+                this.lpa = this.managerBusinessLayer.getActiveProfiles();
             }
+            // update allowed actions
+            this.bindingSourceActive.DataSource = this.lpa;
+            this.bindingSourceDesactivated.DataSource = this.lpd;
             this.loadDatagrid(ref this.dataGridViewDesactivated, ref this.bindingSourceDesactivated,
                               ref this.panelDesactivatedGrid, ref lpd, this.dataGridViewDesactivated_CellMouseClick);
             this.loadDatagrid(ref this.dataGridViewActive, ref this.bindingSourceActive,
                               ref this.panelActivatedGrid, ref lpa, this.dataGridViewActive_CellMouseClick);
-            // update allowed actions
-            updateToolStripButtons();
+            this.updateToolStripButtons();
+
+
         }
 
         /// <summary>
@@ -110,8 +116,17 @@ namespace UiForms
         {
             log.Debug("-- updateToolStripButtons");
             Thread.Sleep(100);
-            //EnabledOp enabled = managerBusinessLayer.allowedOperations;
-            EnabledOp enabled = managerBusinessLayer.test_getAllowed(this.testToRun);
+            EnabledOp enabled;
+            if (ENABLE_TESTING)
+            {
+                enabled = managerBusinessLayer.test_getAllowed(this.testToRun);
+            }
+            else
+            {
+                enabled = managerBusinessLayer.allowedOperations();
+            }
+                //EnabledOp enabled = managerBusinessLayer.allowedOperations;
+               
             // enable/disable allowed operations
             log.Debug("allowed operations >> Activate:" + enabled.activateProfile +
                       ", Desactivate:" + enabled.desactivateProfile +
@@ -121,8 +136,20 @@ namespace UiForms
             this.toolStripButtonDesactivate.Enabled = enabled.desactivateProfile;
             this.toolStripButtonSwitch.Enabled = enabled.switchProfile;
             this.toolStripButtonEdit.Enabled = enabled.editProfile;
+            this.toolStripButtonReload.Enabled = true;
+            this.progressBarAction.Visible = false;
         }
 
+
+        private void actionBeforeStartDisableAllActions()
+        {
+            this.progressBarAction.Visible = true;
+            this.toolStripButtonActivate.Enabled = false;
+            this.toolStripButtonDesactivate.Enabled = false;
+            this.toolStripButtonSwitch.Enabled = false;
+            this.toolStripButtonEdit.Enabled = false;
+            this.toolStripButtonReload.Enabled = false;
+        }
         #endregion events_helpers
 
         #region form_helpers
@@ -190,6 +217,49 @@ namespace UiForms
             }
         }
 
+        private void postActionUpdate()
+        {
+            // reload form state
+            this.managerBusinessLayer.reloadProfiles();
+            this.lpd = this.managerBusinessLayer.getDesactivatedProfiles();
+            this.lpa = this.managerBusinessLayer.getActiveProfiles();
+            this.updateToolStripButtons();
+            this.bindingSourceActive.DataSource = this.lpa;
+            this.bindingSourceDesactivated.DataSource = this.lpd;
+        }
+
+        private static ProfileViewData getSelected(List<ProfileViewData> list)
+        {
+            foreach (var item in list)
+            {
+                if (item.isChecked == true)
+                {
+                    return item;
+                }
+            }
+            return null;
+        }
+
+        private static ProfileViewData getSelected(List<ProfileViewData> list1,
+            List<ProfileViewData> list2)
+        {
+            foreach (var item in list1)
+            {
+                if (item.isChecked == true)
+                {
+                    return item;
+                }
+            }
+            foreach (var item in list2)
+            {
+                if (item.isChecked == true)
+                {
+                    return item;
+                }
+            }
+            return null;
+        }
+
         #endregion form_helpers
 
         #region buttons_events 
@@ -206,22 +276,96 @@ namespace UiForms
 
         private void toolStripButtonActivate_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("TODO: Button Activate...");
+            this.actionBeforeStartDisableAllActions();
+            // * EXECUTE ACTION
+            int ret = 0;
+            ProfileViewData pvd = getSelected(this.lpa, this.lpd);
+            if (pvd != null)
+            {
+                if (pvd.state == ProfileType.INACTIVE)
+                {
+                    FormProfileEditor editor = new FormProfileEditor();
+                    editor.ShowDialog();
+                    if (!editor.wasCancelled())
+                    {
+                        ProfileViewData newProf = new ProfileViewData();
+                        
+                        newProf.name = editor.getName();
+                        newProf.color = editor.getColor();
+                        string creatinDate = "";
+                        try
+                        {
+                            creatinDate = DateTime.Now.ToString(this.managerBusinessLayer.dateFormat());
+                        }
+                        catch (Exception ex)
+                        {
+                            creatinDate = DateTime.Now.ToString("yyyy/MM/dd");
+                        }
+                        newProf.creatingDate = creatinDate;
+                        // TODO: ERROR MSG
+                        ret = this.managerBusinessLayer.action_activateInactive(newProf);
+                    }
+                    else
+                    {
+                        // TODO log
+                    }
+                }
+                else // ProfileType.DESACTIVATED
+                {
+                    // TODO: ERROR MSG
+                    ret = this.managerBusinessLayer.action_activateDesactivated(pvd);
+                }
+            }
+            // * POST ACTION FORM UPDATE
+            this.postActionUpdate();
         }
 
         private void toolStripButtonDesactivate_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("TODO: Button Desactivate...");
+            this.actionBeforeStartDisableAllActions();
+            ProfileViewData pvd = getSelected(this.lpa);
+            // TODO: ERROR MSG
+            int ret = this.managerBusinessLayer.action_desactivateProfile(pvd);
+            // * POST ACTION FORM UPDATE
+            this.postActionUpdate();
         }
 
         private void toolStripButtonSwitch_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("TODO: Button Switch...");
+            this.actionBeforeStartDisableAllActions();
+            ProfileViewData pvdAc = getSelected(this.lpa);
+            ProfileViewData pvdDe = getSelected(this.lpd);
+            // TODO: ERROR MSG
+            int ret = this.managerBusinessLayer.action_switchProfiles(pvdAc, pvdDe);
+            // * POST ACTION FORM UPDATE
+            this.postActionUpdate();
         }
 
         private void toolStripButtonEdit_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("TODO: Button Edit...");
+            this.actionBeforeStartDisableAllActions();
+            ProfileViewData pvd = getSelected(this.lpa, this.lpd);
+            ProfileViewData newProf = new ProfileViewData();
+            FormProfileEditor editor = new FormProfileEditor();
+            editor.ShowDialog();
+            if (!editor.wasCancelled())
+            {
+                newProf.name = editor.getName();
+                newProf.color = editor.getColor();
+                if (pvd != null)
+                {
+                    // TODO: ERROR MSG
+                    int ret = this.managerBusinessLayer.action_updateProfile(newProf, pvd);
+                }
+                // * POST ACTION FORM UPDATE
+                this.postActionUpdate();
+            }
+            else
+            {
+                // TODO LOG
+            }
+            // * POST ACTION FORM UPDATE
+            this.postActionUpdate();
         }
 
         private void openHeToolStripMenuItem_Click(object sender, EventArgs e)
@@ -261,5 +405,13 @@ namespace UiForms
         }
 
         #endregion tests
+
+        private void toolStripButtonReload_Click(object sender, EventArgs e)
+        {
+            this.actionBeforeStartDisableAllActions();
+            this.managerBusinessLayer.reloadProfiles();
+            Thread.Sleep(300);
+            this.updateToolStripButtons();
+        }
     }
 }

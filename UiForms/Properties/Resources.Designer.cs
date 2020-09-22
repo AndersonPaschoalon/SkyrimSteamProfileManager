@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace UiForms.Properties {
+namespace Spear.Properties {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace UiForms.Properties {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("UiForms.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Spear.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -103,6 +103,16 @@ namespace UiForms.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap _15_reload {
+            get {
+                object obj = ResourceManager.GetObject("_15_reload", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap _15_tick {
             get {
                 object obj = ResourceManager.GetObject("_15_tick", resourceCulture);
@@ -116,6 +126,26 @@ namespace UiForms.Properties {
         public static System.Drawing.Bitmap arrow1_40529 {
             get {
                 object obj = ResourceManager.GetObject("arrow1_40529", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        public static System.Drawing.Icon spear {
+            get {
+                object obj = ResourceManager.GetObject("spear", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap spearbmp {
+            get {
+                object obj = ResourceManager.GetObject("spearbmp", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

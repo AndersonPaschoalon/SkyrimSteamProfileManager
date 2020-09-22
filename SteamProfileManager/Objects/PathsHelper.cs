@@ -224,6 +224,7 @@ namespace ProfileManager.Objects
 
         #endregion integrity_files 
 
+        #region steam 
         // steam
         public string steam { get { return this._steam; } }
         public string steamGame { get { return this._steamGame; } }
@@ -236,6 +237,10 @@ namespace ProfileManager.Objects
         { 
             return this._steamBackup + "\\" + prof + "\\" + this._gameFolder; 
         }
+
+        #endregion steam 
+
+        #region appData
 
         // appData
         public string appData { get { return this._appData; } }
@@ -250,6 +255,10 @@ namespace ProfileManager.Objects
             return this._appDirBackup + "\\" + prof + "\\" + this._gameFolder; 
         }
 
+        #endregion appData
+
+        #region documents
+
         // docs
         public string docs { get { return this._docs; } }
         public string docsGame { get { return this._docsGame; } }
@@ -262,6 +271,10 @@ namespace ProfileManager.Objects
         { 
             return this._docsBackup + "\\" + prof + "\\" + this._gameFolder; 
         }
+
+        #endregion documents
+
+        #region NMM
 
         // nmmInfo
         public string nmmInfo { get { return this._nmmInfo; } }
@@ -300,6 +313,8 @@ namespace ProfileManager.Objects
             }
             return false;
         }
+
+        #endregion NMM
 
         /// <summary>
         /// Returns a valid profile name.

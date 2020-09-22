@@ -1,4 +1,4 @@
-﻿namespace UiForms
+﻿namespace Spear
 {
     partial class FormProfileEditor
     {

@@ -4,11 +4,24 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ProfileManager.Objects;
 
 namespace ProfileManagerBL.ViewModel
 {
     public class ProfileViewData
     {
+        public ProfileViewData()
+        {
+        }
+
+        public ProfileViewData(SPProfile prof, ProfileType profType)
+        {
+            this.name = prof.name;
+            this.color = Color.FromName("Blue");
+            this.creatingDate = prof.creationDate;
+            this.state = profType;
+        }
+
         public bool isChecked { get; set; }
         public ProfileType state{ get; set; }
 
@@ -16,19 +29,27 @@ namespace ProfileManagerBL.ViewModel
 
         public Color color{get; set;}
 
-        // TODO INTEGRAR ESSES ELEMENTOS
-        public string colorHex { get; set; }
-        public string creatingDate { get; set; }
-
-        public static ProfileViewData getInactive()
-        {
-            Color darkGray = Color.FromName("DarkGray");
-            ProfileViewData inactiveProfileView = new ProfileViewData();
-            inactiveProfileView.name = "~INACTIVE";
-            inactiveProfileView.color = darkGray;
-            inactiveProfileView.state = ProfileType.INACTIVE;
-            return inactiveProfileView;
+        public string colorHex { 
+            get
+            {
+                return ColorTranslator.ToHtml(this.color);
+            }
+            set 
+            {
+                try
+                {
+                    this.color = ColorTranslator.FromHtml(value);
+                }
+                catch (Exception ex)
+                {
+                    this.color = Color.FromName("Blue");
+                }
+                
+            } 
         }
+
+
+        public string creatingDate { get; set; }
 
     }
 }

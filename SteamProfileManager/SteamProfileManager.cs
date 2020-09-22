@@ -10,6 +10,7 @@ using ProfileManager.Objects;
 using ProfileManager.Enum;
 using Utils;
 using Utils.Loggers;
+using System.Security.Permissions;
 
 namespace ProfileManager
 {
@@ -20,7 +21,7 @@ namespace ProfileManager
     public class SteamProfileManager
     {
         // readonly
-        private  readonly ILogger log;
+        private readonly ILogger log;
         private readonly Game theGame;
 
         // app state
@@ -59,6 +60,11 @@ namespace ProfileManager
         }
 
         #region interface_methods
+
+        public string dateFormat()
+        {
+            return this.settings.dateFormat;
+        }
 
         /// <summary>
         /// This method is used to configure the application for the first time, or to update the configuration.
@@ -559,6 +565,59 @@ namespace ProfileManager
             return this.applicationState;
         }
 
+        public SPMState reloadState()
+        {
+            this.updateManagerState();
+            log.Debug("###############################################################################");
+            log.Debug("# STEAM PROFILE APP_CORE");
+            log.Debug("###############################################################################");
+
+            log.Debug("# Active profiles");
+            if (this.activeProfile != null)
+            {
+                log.Debug("  name:" + this.activeProfile.name + ", color:" + this.activeProfile.color);
+            }
+            log.Debug("# Desactivated profiles [Count:" + this.listDesactivated.Count + "]");
+            foreach (var item in this.listDesactivated)
+            {
+                log.Debug("  name:" + item.name + ", color:" + item.color + ", creationDate:" + item.creationDate);
+            }
+            log.Debug("# configuration file");
+            string textConfig = "";
+            string configPath = PathsHelper.getConfigFileName();
+            if (File.Exists(configPath))
+            {
+                textConfig = File.ReadAllText(configPath);
+                log.Debug(textConfig);
+            }
+            else
+            {
+                log.Debug("** ERROR!! CONFIGURATION FILE NOT FOUND!!");
+            }
+            log.Debug("# APPLICATION STATE:" + this.applicationState.ToString());
+            return this.applicationState;
+        }
+
+
+        /// <summary>
+        /// Kill all steam processes. Requires elevation to execute.
+        /// </summary>
+        /// <returns></returns>
+        [PrincipalPermission(SecurityAction.Demand, Role = @"BUILTIN\Administrators")]
+        public void killAllSteam()
+        {
+            // batch commands
+            // taskkill / f / im Steam.exe
+            // taskkill / f / im SteamService.exe
+            // taskkill / f / im steamwebhelper.exe
+            string killSteam = "taskkill /f /im Steam.exe";
+            string killSteamService = "taskkill /f /im SteamService.exe";
+            string killSteamHelper = "taskkill /f /im steamwebhelper.exe";
+            System.Diagnostics.Process.Start("CMD.exe", killSteam);
+            System.Diagnostics.Process.Start("CMD.exe", killSteamService);
+            System.Diagnostics.Process.Start("CMD.exe", killSteamHelper);
+        }
+
         #endregion interface_methods
 
         #region app_state
@@ -580,6 +639,33 @@ namespace ProfileManager
             return this.activeProfile;
         }
 
+        public SPProfile getInactiveProfile()
+        {
+            if ((this.applicationState == SPMState.NO_PROFILE) ||
+                (this.applicationState == SPMState.NOT_CONFIGURED) ||
+                (this.applicationState == SPMState.ACTIVE_ONLY) ||
+                (this.applicationState == SPMState.ACTIVE_AND_DESACTIVATED_PROFILES))
+            {
+                return null;
+            }
+            else if (this.applicationState == SPMState.DESACTIVATED_ONLY) 
+            {
+                bool isInstalled = Directory.Exists(this.paths.steamGame);
+                if (!isInstalled)
+                {
+                    return null;
+                }
+                else
+                {
+                    return new SPProfile();
+                }
+            }
+            else // (this.applicationState == SPMState.INACTIVE_PROFILE)
+            {
+                return new SPProfile();
+            }
+        }
+
         /// <summary>
         /// returns the application state
         /// </summary>
@@ -590,7 +676,6 @@ namespace ProfileManager
         }
 
         #endregion app_state
-
 
         #region private_methos
 

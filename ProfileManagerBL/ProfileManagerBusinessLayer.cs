@@ -6,6 +6,8 @@ using System.Diagnostics;
 
 using ProfileManagerBL.ViewModel;
 using ProfileManager;
+using ProfileManager.Objects;
+using ProfileManager.Enum;
 using Utils;
 using Utils.Loggers;
 
@@ -16,125 +18,151 @@ namespace ProfileManagerBL
         private const string HELP_PAGE = "HelpPage.html";
         private readonly ILogger log;
         private ProfileManager.SteamProfileManager manager;
-        private ProfileManager.Enum.SPMState managerState;
 
         public ProfileManagerBusinessLayer(string game)
         {
             this.log = Log4NetLogger.getInstance(LogAppender.APP_CORE);
             this.manager = new SteamProfileManager(ViewGame.enumGame(game));
+            //this.managerState = this.manager.getState();
         }
 
         #region bl_helpers
 
-        public EnabledOp allowedOperations 
+        private List<ProfileViewData> activated { get; set;}
+
+        private List<ProfileViewData> desactivated { get; set;}
+
+        private List<ProfileViewData> inactive { get; set;}
+
+        public void reloadProfiles()
         {
-            get
+            this.inactive = new List<ProfileViewData>();
+            this.activated = new List<ProfileViewData>();
+            this.manager.reloadState();
+            SPProfile profIn = this.manager.getInactiveProfile();
+            SPProfile profAc = this.manager.getActiveProfile();
+            if (profIn != null)
             {
-                
-                int nIn = this.countCheckedInactive();
-                int nAc = this.countCheckedActive();
-                int nDe = this.countCheckedDesactivated();
-                ProfileManager.Enum.SPMState state = this.manager.showState();
-                EnabledOp eop = new EnabledOp();
-                switch (state)
+                this.inactive.Add(new ProfileViewData(profIn, ProfileType.INACTIVE));
+            }
+            if (profAc != null)
+            {
+                this.activated.Add(new ProfileViewData(profAc, ProfileType.ACTIVE));
+            }
+            List<SPProfile> listDes = this.manager.getDesactivatedProfiles();
+            List<ProfileViewData> ldp = new List<ProfileViewData>();
+            if (listDes != null)
+            {
+                foreach (var item in listDes)
                 {
-                    case ProfileManager.Enum.SPMState.NO_PROFILE:
-                        {
-                            return eop;
-                        }
-                    case ProfileManager.Enum.SPMState.NOT_CONFIGURED:
-                        {
-                            return eop;
-                        }
-                    case ProfileManager.Enum.SPMState.INACTIVE_PROFILE:
-                        // configuration and activation operation is permited
-                        {
-                            if (nIn == 1)
-                            {
-                                eop.activateProfile = true;
-                            }
-                            return eop;
-                        }
-                    case ProfileManager.Enum.SPMState.DESACTIVATED_ONLY:
-                        // configuration and activation operations are permited
-                        {
-                            if (nDe == 1)
-                            {
-                                eop.activateProfile = true;
-                                eop.editProfile = true;
-                            }
-                            return eop;
-                        }
-                    case ProfileManager.Enum.SPMState.ACTIVE_ONLY:
-                        // configuration and desactivation operations are permited
-                        {
-                            if (nAc == 1)
-                            {
-                                eop.desactivateProfile = true;
-                                eop.editProfile = true;
-                            }
-                            return eop;
-                        }
-                    case ProfileManager.Enum.SPMState.ACTIVE_AND_DESACTIVATED_PROFILES:
-                        // configuration, desactivation and switch operations are permited
-                        {
-                            if (nAc == 1 && nDe <= 0)
-                            {
-                                eop.desactivateProfile = true;
-                                eop.editProfile = true;
-                            }
-                            else if (nAc == 1 && nDe == 1)
-                            {
-                                eop.switchProfile = true;
-                            }
-                            else if (nAc <= 0 && nDe == 1)
-                            {
-                                eop.editProfile = true;
-                            }
-                            return eop;
-                        }
-                    default:
-                        {
-                            return eop;
-                        }
+                    ldp.Add(new ProfileViewData(item, ProfileType.DESACTIVATED));
                 }
+            }
+            this.desactivated = ldp;
+        }
+
+        public List<ProfileViewData> getActiveProfiles()
+        {
+            if (this.manager.getApplicationState() == SPMState.INACTIVE_PROFILE)
+            {
+                return this.inactive;
+            }
+            else
+            {
+                return this.activated;
             }
         }
 
-        private List<ProfileViewData> _active;
-        private List<ProfileViewData> _desactivated;
-        private List<ProfileViewData> _inactive = null;
-        public List<ProfileViewData> active {
-            get
+        public List<ProfileViewData> getDesactivatedProfiles()
+        {
+            return this.desactivated;
+        }
+
+        public string dateFormat()
+        {
+            return this.manager.dateFormat();
+        }
+
+        public EnabledOp allowedOperations()
+        {
+            int nIn = this.countCheckedInactive();
+            int nAc = this.countCheckedActive();
+            int nDe = this.countCheckedDesactivated();
+            ProfileManager.Enum.SPMState state = this.manager.getApplicationState();
+            EnabledOp eop = new EnabledOp(); // return obj
+            switch (state)
             {
-                if (this.managerState == ProfileManager.Enum.SPMState.INACTIVE_PROFILE)
-                {
-                    if (this._inactive == null)
+                case ProfileManager.Enum.SPMState.NO_PROFILE:
                     {
-                        // in case of a inactive profile, returns a profile for visualization.
-                        this._inactive = new List<ProfileViewData>();
-                        this._inactive.Add(ProfileViewData.getInactive());
+                        log.Debug("No Profile, No Operations Allowed");
+                        return eop;
                     }
-                    return this._inactive;
-                }
-                this._inactive = null;
-                return this._active;
-            }
-            private set
-            {
-                this._active = value;
-            }
-        }
+                case ProfileManager.Enum.SPMState.NOT_CONFIGURED:
+                    {
+                        log.Debug("Not Configured, No Operations Allowed");
+                        return eop;
+                    }
+                case ProfileManager.Enum.SPMState.INACTIVE_PROFILE:
+                    // configuration and activation operation is permited
+                    {
+                        log.Debug("INACTIVE_PROFILE, activation is permited if selected");
+                        if (nIn == 1)
+                        {
+                            log.Debug("One INACTIVE selected");
+                            eop.activateProfile = true;
+                        }
+                        return eop;
+                    }
+                case ProfileManager.Enum.SPMState.DESACTIVATED_ONLY:
+                    // configuration and activation operations are permited
+                    {
+                        log.Debug("DESACTIVATED_ONLY edit and activation is permited if ONE is selected");
+                        if (nDe == 1)
+                        {
+                            log.Debug("one is selected");
+                            eop.activateProfile = true;
+                            eop.editProfile = true;
+                        }
+                        return eop;
+                    }
+                case ProfileManager.Enum.SPMState.ACTIVE_ONLY:
+                    // configuration and desactivation operations are permited
+                    {
+                        log.Debug("ACTIVE_ONLY if one is selected desactivation and edit is permited");
+                        if (nAc == 1)
+                        {
+                            eop.desactivateProfile = true;
+                            eop.editProfile = true;
+                        }
+                        return eop;
+                    }
+                case ProfileManager.Enum.SPMState.ACTIVE_AND_DESACTIVATED_PROFILES:
+                    // configuration, desactivation and switch operations are permited
+                    {
+                        log.Debug("ACTIVE_AND_DESACTIVATED_PROFILES edit, switch, desactive and edit permited");
+                        if (nAc == 1 && nDe <= 0)
+                        {
+                            log.Debug("active selected: edit, desactive");
+                            eop.desactivateProfile = true;
+                            eop.editProfile = true;
+                        }
+                        else if (nAc == 1 && nDe == 1)
+                        {
+                            log.Debug("active+desactivated selected: switch");
+                            eop.switchProfile = true;
+                        }
+                        else if (nAc <= 0 && nDe == 1)
+                        {
 
-        public List<ProfileViewData> desactivated 
-        {
-            get
-            {
-                return this._desactivated;
-            }
-            private set
-            {
-                this._desactivated = value;
+                            log.Debug("desactivated selected: edit, active");
+                            eop.editProfile = true;
+                        }
+                        return eop;
+                    }
+                default:
+                    {
+                        return eop;
+                    }
             }
         }
 
@@ -179,7 +207,7 @@ namespace ProfileManagerBL
         #region bl_actions
         public void action_updateSettings(SettingsViewData s)
         {
-            manager.updateSettings(s.steam, s.docs, s.appData, s.nmmInfo, s.nmmMod);
+            this.manager.updateSettings(s.steam, s.docs, s.appData, s.nmmInfo, s.nmmMod);
         }
 
         public int action_updateProfile(ProfileViewData pUpdated, ProfileViewData pOld)
@@ -226,8 +254,6 @@ namespace ProfileManagerBL
             log.Debug("4 - ACTIVE_ONLY ");
             log.Debug("5 - DESACTIVATED_ONLY ");
             log.Debug("6 - ACTIVE_AND_DESACTIVATED_PROFILES ");
-
-
             int nIn = this.countCheckedInactive();
             int nAc = this.countCheckedActive();
             int nDe = this.countCheckedDesactivated();
@@ -373,7 +399,7 @@ namespace ProfileManagerBL
             // 7 - 
 
             List<ProfileViewData> lp = new List<ProfileViewData>();
-
+            SPMState managerState = this.manager.getApplicationState();
             switch (test)
             {
                 case 0:
@@ -399,7 +425,7 @@ namespace ProfileManagerBL
                     {
                         // 3 - INACTIVE_PROFILE 
                         managerState = ProfileManager.Enum.SPMState.INACTIVE_PROFILE;
-                        return this.active;
+                        return this.activated;
                     }
                 case 4:
                     {
@@ -430,7 +456,7 @@ namespace ProfileManagerBL
                         break;
                     }
             }
-            this.active = lp;
+            this.activated = lp;
             return lp;
         }
 
@@ -444,6 +470,7 @@ namespace ProfileManagerBL
             // 5 - DESACTIVATED_ONLY 
             // 6 - ACTIVE_AND_DESACTIVATED_PROFILES 
             // 7 - 
+            SPMState managerState = this.manager.getApplicationState();
             switch (test)
             {
                 case 0:
@@ -505,7 +532,7 @@ namespace ProfileManagerBL
         public List<ProfileViewData> test_getDesactivated(int test)
         {
             List<ProfileViewData> lp = new List<ProfileViewData>();
-
+            SPMState managerState = this.manager.getApplicationState();
             switch (test)
             {
                 case 0:
@@ -657,11 +684,14 @@ namespace ProfileManagerBL
         private int countCheckedInactive()
         {
             int i = 0;
-            foreach (var item in this.active)
+            if (this.inactive != null)
             {
-                if (item.isChecked == true && item.state == ProfileType.INACTIVE)
+                foreach (var item in this.inactive)
                 {
-                    i++;
+                    if (item.isChecked == true && item.state == ProfileType.INACTIVE)
+                    {
+                        i++;
+                    }
                 }
             }
             return i;
@@ -670,24 +700,31 @@ namespace ProfileManagerBL
         private int countCheckedActive()
         {
             int i = 0;
-            foreach (var item in this.active)
+            if (this.activated != null)
             {
-                if (item.isChecked == true && item.state == ProfileType.ACTIVE)
+                foreach (var item in this.activated)
                 {
-                    i++;
+                    if (item.isChecked == true && item.state == ProfileType.ACTIVE)
+                    {
+                        i++;
+                    }
                 }
             }
+
             return i;
         }
 
         private int countCheckedDesactivated()
         {
             int i = 0;
-            foreach (var item in this.desactivated)
+            if (this.desactivated != null)
             {
-                if (item.isChecked == true && item.state == ProfileType.DESACTIVATED)
+                foreach (var item in this.desactivated)
                 {
-                    i++;
+                    if (item.isChecked == true && item.state == ProfileType.DESACTIVATED)
+                    {
+                        i++;
+                    }
                 }
             }
             return i;

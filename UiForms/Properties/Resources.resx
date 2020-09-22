@@ -121,6 +121,12 @@
   <data name="arrow1_40529" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\arrow1_40529.ico;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="spear" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\spear.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="spearbmp" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\spearbmp.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="_15_2arrow" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\15-2arrow.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -132,6 +138,9 @@
   </data>
   <data name="_15_engineering" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\15-engineering.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="_15_reload" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\15-reload.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="_15_tick" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\15-tick.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>

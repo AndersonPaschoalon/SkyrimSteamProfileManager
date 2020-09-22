@@ -7,7 +7,8 @@
             nmmModPath=""
             nmmInfoPath=""
             gameFolder="Skyrim"
-            backupFolder="SkyrimBackups" />
+            backupFolder="SkyrimBackups"
+            dateFormat="yyyy/MM/dd" />
   <SETTINGS game="Skyrim SE"
             steamPath=""
             documentsPath=""
@@ -15,5 +16,6 @@
             nmmModPath=""
             nmmInfoPath=""
             gameFolder="Skyrim SE"
-            backupFolder="SkyrimSEBackups" />
+            backupFolder="SkyrimSEBackups" 
+            dateFormat="yyyy/MM/dd" />
 </CONFIG>

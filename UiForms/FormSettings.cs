@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace UiForms
+namespace Spear
 {
     public partial class FormSettings : Form
     {

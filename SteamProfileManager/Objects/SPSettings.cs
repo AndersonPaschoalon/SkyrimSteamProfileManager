@@ -43,5 +43,10 @@ namespace ProfileManager.Objects
         [XmlAttribute("backupFolder")]
         public string backupFolder { get; set; }
 
+        [XmlAttribute("dateFormat")]
+        public string dateFormat { get; set; }
+
+
+
     }
 }

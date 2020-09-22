@@ -95,7 +95,11 @@ namespace UiConsole
                             exec_editProfile(manager);
                             break;
                         }
-
+                    case "70":
+                        {
+                            exec_killAll(manager);
+                            break;
+                        }
                     case "99":
                         {
                             quit = true;
@@ -132,6 +136,7 @@ namespace UiConsole
             Console.WriteLine("40   desactivateActiveProfile");
             Console.WriteLine("50   switchProfile");
             Console.WriteLine("60   editProfile");
+            Console.WriteLine("70   killAllSteam");
 
             Console.WriteLine("99   QUIT");
             Console.WriteLine("PATH: " + Directory.GetCurrentDirectory());
@@ -248,6 +253,12 @@ namespace UiConsole
             string newp = readOption("New Profile Name");
             string newc = readOption("New Color");
             manager.editProfile(oldp, newp, newc);
+        }
+
+        private static void exec_killAll(SteamProfileManager manager)
+        {
+            Console.WriteLine("> exec_killAll");
+            manager.killAllSteam();
         }
 
         private static string readOption(string optionName)
