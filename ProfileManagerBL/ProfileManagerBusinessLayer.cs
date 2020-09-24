@@ -10,6 +10,7 @@ using ProfileManager.Objects;
 using ProfileManager.Enum;
 using Utils;
 using Utils.Loggers;
+using System.Threading.Tasks;
 
 namespace ProfileManagerBL
 {
@@ -202,37 +203,119 @@ namespace ProfileManagerBL
             return se;
         }
 
+        public static string listProfileViewToString(List<ProfileViewData> lprof)
+        {
+            string str = "(List<ProfileViewData> [\n";
+            foreach (var item in lprof)
+            {
+                str += "    name:" + item.name +
+                       ", isChecked:" + item.isChecked +
+                       ", state:" + item.state +
+                       ", colorHex:" + item.colorHex +
+                       ", creatingDate:" + item.creatingDate + "\n";
+            }
+            str += "]";
+            return str;
+        }
+
         #endregion bl_helpers
 
         #region bl_actions
-        public void action_updateSettings(SettingsViewData s)
+        public int action_updateSettings(SettingsViewData s)
         {
-            this.manager.updateSettings(s.steam, s.docs, s.appData, s.nmmInfo, s.nmmMod);
+            int ret = Errors.SUCCESS;
+            try
+            {
+                this.manager.updateSettings(s.steam, s.docs, s.appData, s.nmmInfo, s.nmmMod);
+                this.manager.reloadState();
+            }
+            catch (Exception ex)
+            {
+                log.Error("** EXCEPTION Message:" + ex.Message + ", StackTrace:" + ex.StackTrace);
+                return Errors.ERR_UNKNOWN;
+            }
+            return ret;
         }
 
-        public int action_updateProfile(ProfileViewData pUpdated, ProfileViewData pOld)
+        public int action_updateProfile(ProfileViewData pUpdated, ProfileViewData pOld, out string errMsg)
         {
-            return manager.editProfile(pOld.name, pUpdated.name, pUpdated.colorHex);
+            int ret = Errors.SUCCESS;
+            try
+            {
+                ret = manager.editProfile(pOld.name, pUpdated.name, pUpdated.colorHex,out errMsg);
+            }
+            catch (Exception ex)
+            {
+                log.Error("** EXCEPTION Message:" + ex.Message + ", StackTrace:" + ex.StackTrace);
+                errMsg = ex.Message;
+                return Errors.ERR_UNKNOWN;
+            }
+            return ret;
         }
 
         public int action_activateInactive(ProfileViewData p)
         {
-            return manager.activateInactiveProfile(p.name, p.colorHex, p.creatingDate);
+            int ret = Errors.SUCCESS;
+            try
+            {
+                ret = manager.activateInactiveProfile(p.name, p.colorHex, p.creatingDate);
+                this.manager.reloadState();
+            }
+            catch (Exception ex)
+            {
+                log.Error("** EXCEPTION Message:" + ex.Message + ", StackTrace:" + ex.StackTrace);
+                return Errors.ERR_UNKNOWN;
+            }
+            return ret;
         }
 
         public int action_activateDesactivated(ProfileViewData p)
         {
-            return manager.activateDesactivatedProfile(p.name);
+            int ret = Errors.SUCCESS;
+            try
+            {
+                ret = manager.activateDesactivatedProfile(p.name);
+                this.manager.reloadState();
+            }
+            catch (Exception ex)
+            {
+                log.Error("** EXCEPTION Message:" + ex.Message + ", StackTrace:" + ex.StackTrace);
+                return Errors.ERR_UNKNOWN;
+            }
+            return ret;
         }
 
         public int action_desactivateProfile(ProfileViewData p)
         {
-            return manager.desactivateActiveProfile(p.name);
+            int ret = Errors.SUCCESS;
+            try
+            {
+                ret = manager.desactivateActiveProfile(p.name);
+                this.manager.reloadState();
+            }
+            catch (Exception ex)
+            {
+                log.Error("** EXCEPTION Message:" + ex.Message + ", StackTrace:" + ex.StackTrace);
+                return Errors.ERR_UNKNOWN;
+            }
+            return ret;
+
         }
 
         public int action_switchProfiles(ProfileViewData ap, ProfileViewData dp)
         {
-            return manager.switchProfile(ap.name, dp.name);
+            int ret = Errors.SUCCESS;
+            try
+            {
+                ret = manager.switchProfile(ap.name, dp.name);
+                this.manager.reloadState();
+            }
+            catch (Exception ex)
+            {
+                log.Error("** EXCEPTION Message:" + ex.Message + ", StackTrace:" + ex.StackTrace);
+                return Errors.ERR_UNKNOWN;
+            }
+            return ret;
         }
 
         #endregion bl_actions

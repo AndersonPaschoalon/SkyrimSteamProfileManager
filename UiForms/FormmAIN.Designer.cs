@@ -59,7 +59,6 @@
             this.buttonSelectTest = new System.Windows.Forms.Button();
             this.textBoxSelectedTest = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.progressBarAction = new System.Windows.Forms.ProgressBar();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
@@ -226,7 +225,6 @@
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 55F));
             this.tableLayoutPanel1.Controls.Add(this.panel1, 1, 1);
             this.tableLayoutPanel1.Controls.Add(this.panelTests, 0, 1);
-            this.tableLayoutPanel1.Controls.Add(this.progressBarAction, 1, 0);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 49);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -375,16 +373,6 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "TEST PANEL";
             // 
-            // progressBarAction
-            // 
-            this.progressBarAction.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.progressBarAction.Location = new System.Drawing.Point(115, 3);
-            this.progressBarAction.Name = "progressBarAction";
-            this.progressBarAction.Size = new System.Drawing.Size(544, 4);
-            this.progressBarAction.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
-            this.progressBarAction.TabIndex = 3;
-            this.progressBarAction.Visible = false;
-            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -448,6 +436,5 @@
         private System.Windows.Forms.ToolStripComboBox toolStripComboBoxSelectGame;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripButton toolStripButtonReload;
-        private System.Windows.Forms.ProgressBar progressBarAction;
     }
 }

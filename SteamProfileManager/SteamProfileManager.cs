@@ -23,7 +23,6 @@ namespace ProfileManager
         // readonly
         private readonly ILogger log;
         private readonly Game theGame;
-
         // app state
         private PathsHelper paths; // helper for generating the right names of the paths
         private SPSettings settings;
@@ -424,7 +423,7 @@ namespace ProfileManager
         /// <param name="profNameNew"></param>
         /// <param name="color"></param>
         /// <returns></returns>
-        public int editProfile(string profNameOld, string profNameNew, string colorNew)
+        public int editProfile(string profNameOld, string profNameNew, string colorNew, out string errMsgRet)
         {
             log.Debug("## manager.editProfile() #######################################################");
             log.Debug("# editProfile() profNameOld:" + profNameOld + ", profNameNew:" + profNameNew);
@@ -444,8 +443,11 @@ namespace ProfileManager
                 (this.applicationState != SPMState.DESACTIVATED_ONLY))
             {
                 log.Warn("-- invalid state for requested operation editProfile. State:" + this.applicationState);
+                errMsgRet = "Invalid state for Edit operation. State:" + this.applicationState;
                 return Errors.ERR_INVALID_STATE_FOR_REQUESTED_OPERATION;
             }
+
+            profNameNew = this.safeNewName(profNameNew);
             int profileType = 0;
             profNameOld.Trim();
             SPProfile prof = this.searchProfile(profNameOld, 0, out profileType); // any profile
@@ -464,12 +466,14 @@ namespace ProfileManager
                     {
                         log.Debug("Success Updating integrity file");
                         log.Info("New Integrity File:{" + paths.activeIntegrityFileContent() + "}");
+                        errMsgRet = "SUCCESS";
                         return Errors.SUCCESS;
                     }
                     else
                     {
                         log.Error("** CANNOT UPDATE ACTIVE INTEGRITY FILE");
                         log.Error("** errMsg:" + errMsg + ", errPath:" + errPath);
+                        errMsgRet = "SUCCESS";
                         return Errors.ERR_CANNOT_CREATE_INTEGRITY_FILE;
                     }
                 }
@@ -511,6 +515,7 @@ namespace ProfileManager
                         {
                             log.Error("** CANNOT UPDATE ACTIVE INTEGRITY FILE");
                             log.Error("** errMsg:" + errMsg + ", errPath:" + errPath);
+                            errMsgRet = errMsg;
                             return Errors.ERR_CANNOT_CREATE_INTEGRITY_FILE;
                         }
                     }
@@ -518,13 +523,16 @@ namespace ProfileManager
                     {
                         log.Error("** ERROR RENAMING DIRECTORIES errMsg:" + errMsg +
                             ", errDir:" + errDir + ", errName:" + errName);
+                        errMsgRet = errMsg;
                         return Errors.ERR_MOVING_DIRECTORIES;
                     }
                 }
                 this.updateManagerState();
+                errMsgRet = "SUCCESS";
                 return Errors.SUCCESS;
             }
             log.Warn("-- invalid profile name profNameOld:" + profNameOld);
+            errMsgRet = "SUCCESS";
             return Errors.ERR_INVALID_PROFILE_NAME;
         }
 
@@ -789,7 +797,7 @@ namespace ProfileManager
             this.updateManagerState();
             if (option == 1)
             {
-                if (this.activeProfile.name == profName)
+                if (this.activeProfile != null && this.activeProfile.name == profName)
                 {
                     profType = 1;
                     return activeProfile;
@@ -810,7 +818,7 @@ namespace ProfileManager
             }
             else
             {
-                if (this.activeProfile.name == profName)
+                if (this.activeProfile != null && this.activeProfile.name == profName)
                 {
                     profType = 1;
                     return activeProfile;
@@ -827,6 +835,23 @@ namespace ProfileManager
             }
             profType = 0;
             return null;
+        }
+
+        private string safeNewName(string newName)
+        {
+            List<SPProfile> profilesInUse = this.getDesactivatedProfiles();
+            profilesInUse.Add(this.getActiveProfile());
+            List<string> profNamesInUse = new List<string>();
+            foreach (var item in profilesInUse)
+            {
+                if (item != null)
+                {
+                    profNamesInUse.Add(item.name);
+                }
+            }
+            string safeNewName = this.paths.safeNewProfileName(newName, profNamesInUse);
+            log.Debug("safeNewName:" + safeNewName);
+            return safeNewName;
         }
 
         #endregion aux 

@@ -252,7 +252,9 @@ namespace UiConsole
             string oldp = readOption("Old Profile");
             string newp = readOption("New Profile Name");
             string newc = readOption("New Color");
-            manager.editProfile(oldp, newp, newc);
+            string errMsg = "";
+            manager.editProfile(oldp, newp, newc, out errMsg);
+            Console.WriteLine("Msg:" + errMsg);
         }
 
         private static void exec_killAll(SteamProfileManager manager)

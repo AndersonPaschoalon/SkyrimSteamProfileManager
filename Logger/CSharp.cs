@@ -174,7 +174,6 @@ namespace Utils
 
         #region parsingHelpers
 
-
         public static string listToCsv(List<string> list)
         {
             if (list == null) return "";
@@ -215,7 +214,6 @@ namespace Utils
             return outStr;
         }
 
-
         public static List<string> csvToList(string csv)
         {
             List<string> elements = new List<string>();
@@ -226,6 +224,11 @@ namespace Utils
                 elements.Add(a);
             }
             return elements;
+        }
+
+        public static string drawingColorToHex(System.Drawing.Color c)
+        {
+            return "#" + c.R.ToString("X2") + c.G.ToString("X2") + c.B.ToString("X2");
         }
 
         #endregion parsingHelpers
@@ -640,6 +643,20 @@ namespace Utils
         {
             try
             {
+                string dirToCreate = CSharp.parentDir(dirPath) + newDirName;
+                if (Directory.Exists(dirToCreate))
+                {
+                    //check if directory is empty
+                    if (CSharp.isDirectoryEmpty(dirToCreate))
+                    {
+                        Directory.Delete(dirToCreate);
+                    }
+                    else
+                    {
+                        errMsg = "Directory to create " + newDirName + " already exist.";
+                        return false;
+                    }
+                }
                 FileSystem.RenameDirectory(dirPath, newDirName);
                 errMsg = "";
             }
@@ -759,7 +776,7 @@ namespace Utils
                 bool ret = dirRename(dirNames[i], newNames[i], out renameMsg); 
                 if (ret == false)
                 {
-                    errMsg = "ERROR ON stackRename() -> renameMsg:" + renameMsg;
+                    errMsg = renameMsg;
                     errDir = dirNames[i];
                     errName = newNames[i];
                     log.Warn(errMsg);
@@ -787,6 +804,37 @@ namespace Utils
             string[] arrDirNames = dirNames.ToArray();
             string[] arrNewNames = newNames.ToArray();
             return stackRename(arrDirNames, arrNewNames, out errMsg, out errDir, out errName);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="currentDir"></param>
+        /// <returns></returns>
+        public static string parentDir(string currentDir)
+        {
+            char[] charvec = { '\\' };
+            string newDir = currentDir.TrimEnd(charvec);
+            string[] vecStr = newDir.Split('\\');
+            string str = "";
+            for (int i = 0; i < vecStr.Length - 1; i++)
+            {
+                if (i > 0)
+                {
+                    str += "\\" + vecStr[i];
+                }
+                else
+                {
+                    str += vecStr[i];
+                }
+            }
+            str += "\\";
+            return str;
+        }
+
+        public static bool isDirectoryEmpty(string path)
+        {
+            return !Directory.EnumerateFileSystemEntries(path).Any();
         }
 
         #endregion fileSystemOperations

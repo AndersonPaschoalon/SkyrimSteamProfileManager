@@ -95,6 +95,8 @@ namespace Spear
                 this.managerBusinessLayer.reloadProfiles();
                 this.lpd = this.managerBusinessLayer.getDesactivatedProfiles();
                 this.lpa = this.managerBusinessLayer.getActiveProfiles();
+                log.Debug("fillDataGrids >> lpd:" + ProfileManagerBusinessLayer.listProfileViewToString(this.lpd));
+                log.Debug("fillDataGrids >> lpa:" + ProfileManagerBusinessLayer.listProfileViewToString(this.lpa));
             }
             // update allowed actions
             this.bindingSourceActive.DataSource = this.lpa;
@@ -137,13 +139,11 @@ namespace Spear
             this.toolStripButtonSwitch.Enabled = enabled.switchProfile;
             this.toolStripButtonEdit.Enabled = enabled.editProfile;
             this.toolStripButtonReload.Enabled = true;
-            this.progressBarAction.Visible = false;
         }
 
 
         private void actionBeforeStartDisableAllActions()
         {
-            this.progressBarAction.Visible = true;
             this.toolStripButtonActivate.Enabled = false;
             this.toolStripButtonDesactivate.Enabled = false;
             this.toolStripButtonSwitch.Enabled = false;
@@ -200,6 +200,8 @@ namespace Spear
 
             panel.Controls.Add(dgv);
             this.AutoSize = true;
+            dgv.Update();
+            dgv.Refresh();
         }
 
         private void datagridRadioBtnColClickHandler(DataGridViewCellEventArgs e, ref DataGridView dgv, int col)
@@ -226,6 +228,10 @@ namespace Spear
             this.updateToolStripButtons();
             this.bindingSourceActive.DataSource = this.lpa;
             this.bindingSourceDesactivated.DataSource = this.lpd;
+            this.dataGridViewActive.Update();
+            this.dataGridViewActive.Refresh();
+            this.dataGridViewDesactivated.Update();
+            this.dataGridViewDesactivated.Refresh();
         }
 
         private static ProfileViewData getSelected(List<ProfileViewData> list)
@@ -258,6 +264,20 @@ namespace Spear
                 }
             }
             return null;
+        }
+
+        private void analyzeReturn(int retval, string errMsg)
+        {
+            if (retval == Errors.SUCCESS)
+            {
+                return;
+            }
+            else
+            {
+                string msg = Errors.errMsg(retval) + ". " + errMsg;
+                log.Debug("ERROR " + retval + " => " + msg + ", errMsg:" + errMsg);
+                MessageBox.Show(msg, "ERROR " + retval, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         #endregion form_helpers
@@ -302,48 +322,56 @@ namespace Spear
                             creatinDate = DateTime.Now.ToString("yyyy/MM/dd");
                         }
                         newProf.creatingDate = creatinDate;
-                        // TODO: ERROR MSG
                         ret = this.managerBusinessLayer.action_activateInactive(newProf);
+                        this.analyzeReturn(ret, "");
                     }
                     else
                     {
-                        // TODO log
+                        log.Debug("** EDIT ACTION WAS CANCELLED");
                     }
                 }
                 else // ProfileType.DESACTIVATED
                 {
-                    // TODO: ERROR MSG
                     ret = this.managerBusinessLayer.action_activateDesactivated(pvd);
+                    this.analyzeReturn(ret, "");
                 }
             }
             // * POST ACTION FORM UPDATE
             this.postActionUpdate();
+            this.updateToolStripButtons();
         }
 
         private void toolStripButtonDesactivate_Click(object sender, EventArgs e)
         {
             this.actionBeforeStartDisableAllActions();
             ProfileViewData pvd = getSelected(this.lpa);
-            // TODO: ERROR MSG
             int ret = this.managerBusinessLayer.action_desactivateProfile(pvd);
+            this.analyzeReturn(ret, "");
             // * POST ACTION FORM UPDATE
             this.postActionUpdate();
+            this.updateToolStripButtons();
         }
 
         private void toolStripButtonSwitch_Click(object sender, EventArgs e)
         {
+            int ret = Errors.SUCCESS;
             this.actionBeforeStartDisableAllActions();
             ProfileViewData pvdAc = getSelected(this.lpa);
             ProfileViewData pvdDe = getSelected(this.lpd);
-            // TODO: ERROR MSG
-            int ret = this.managerBusinessLayer.action_switchProfiles(pvdAc, pvdDe);
+            ret = this.managerBusinessLayer.action_switchProfiles(pvdAc, pvdDe);
+            this.analyzeReturn(ret, "");
             // * POST ACTION FORM UPDATE
             this.postActionUpdate();
+            this.updateToolStripButtons();
         }
 
         private void toolStripButtonEdit_Click(object sender, EventArgs e)
         {
+            int ret = Errors.SUCCESS;
+            log.Debug("-- toolStripButtonEdit_Click()");
             this.actionBeforeStartDisableAllActions();
+            log.Debug("lpa: " + ProfileManagerBusinessLayer.listProfileViewToString(this.lpa));
+            log.Debug("lpd: " + ProfileManagerBusinessLayer.listProfileViewToString(this.lpd));
             ProfileViewData pvd = getSelected(this.lpa, this.lpd);
             ProfileViewData newProf = new ProfileViewData();
             FormProfileEditor editor = new FormProfileEditor();
@@ -354,18 +382,18 @@ namespace Spear
                 newProf.color = editor.getColor();
                 if (pvd != null)
                 {
-                    // TODO: ERROR MSG
-                    int ret = this.managerBusinessLayer.action_updateProfile(newProf, pvd);
+                    string errMsg = "";
+                    ret = this.managerBusinessLayer.action_updateProfile(newProf, pvd, out errMsg);
+                    this.analyzeReturn(ret, errMsg);
                 }
                 // * POST ACTION FORM UPDATE
                 this.postActionUpdate();
+                this.updateToolStripButtons();
             }
             else
             {
-                // TODO LOG
+                log.Debug("** Edit process was CANCELLED!");
             }
-            // * POST ACTION FORM UPDATE
-            this.postActionUpdate();
         }
 
         private void openHeToolStripMenuItem_Click(object sender, EventArgs e)
@@ -409,8 +437,9 @@ namespace Spear
         private void toolStripButtonReload_Click(object sender, EventArgs e)
         {
             this.actionBeforeStartDisableAllActions();
-            this.managerBusinessLayer.reloadProfiles();
+            //this.managerBusinessLayer.reloadProfiles();
             Thread.Sleep(300);
+            this.postActionUpdate();
             this.updateToolStripButtons();
         }
     }
