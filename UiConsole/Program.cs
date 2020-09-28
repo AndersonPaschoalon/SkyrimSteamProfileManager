@@ -21,7 +21,7 @@ namespace UiConsole
             log.Info("# SteamProfileManager Console");
             log.Info("###############################################################################");
 
-            SteamProfileManager manager = new SteamProfileManager(Game.SKYRIM);
+            SteamProfileManager manager = new SteamProfileManager("Skyrim");
             bool quit = false;
             while (true)
             {

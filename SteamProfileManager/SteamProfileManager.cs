@@ -22,29 +22,36 @@ namespace ProfileManager
     {
         // readonly
         private readonly ILogger log;
-        private readonly Game theGame;
+        private readonly string theGame;
         // app state
-        private PathsHelper paths; // helper for generating the right names of the paths
+        private PathsHelper paths;                  // helper for generating the right names of the paths
         private SPSettings settings;
         private SPMState applicationState = SPMState.NOT_CONFIGURED;
-        private SPProfile activeProfile;           // current active profile (if exist)
-        private List<SPProfile> listDesactivated;  // list of desactivated profiles
+        private SPProfile activeProfile;            // current active profile (if exist)
+        private List<SPProfile> listDesactivated;   // list of desactivated profiles
 
-        public SteamProfileManager(Game game)
+        public SteamProfileManager(string gameName)
         {
             log = Log4NetLogger.getInstance(LogAppender.APP_CORE);
             CSharp.setLogger(Log4NetLogger.getInstance(LogAppender.APP_CORE));
             log.Info("###############################################################################");
-            log.Info("# SteamProfileManager Core: " + game.ToString());
+            log.Info("# SteamProfileManager Core: " + gameName);
             log.Info("###############################################################################");
             log.Info("");
             log.Debug("-- load settings");
+
+            List<string> ll = SPConfig.listGames();
+            foreach (var item in ll)
+            {
+                Console.WriteLine(">>>>" + item);
+            }
+
             SPConfig config = SPConfig.loadConfig();
             if (config != null)
             {
-                log.Debug("-- config.selectSettings() game:" + GameToStr.str(game));
-                this.settings = config.selectSettings(GameToStr.str(game));
-                this.theGame = game;
+                log.Debug("-- config.selectSettings() game:" + gameName);
+                this.settings = config.selectSettings(gameName);
+                this.theGame = gameName;
                 this.paths = new PathsHelper(this.theGame, this.settings);
             }
             else
@@ -141,7 +148,7 @@ namespace ProfileManager
 
             // save settings
             SPConfig config = SPConfig.loadConfig();
-            config.updateSettings(GameToStr.str(this.theGame), this.settings);
+            config.updateSettings(this.theGame, this.settings);
             config.saveConfig();
 
             // update app state

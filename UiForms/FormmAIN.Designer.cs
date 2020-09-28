@@ -1,4 +1,6 @@
-﻿namespace Spear
+﻿using ProfileManager.Objects;
+
+namespace Spear
 {
     partial class FormMain
     {
@@ -92,7 +94,7 @@
             // configureToolStripMenuItem
             // 
             this.configureToolStripMenuItem.Name = "configureToolStripMenuItem";
-            this.configureToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
+            this.configureToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.configureToolStripMenuItem.Text = "Configure";
             this.configureToolStripMenuItem.Click += new System.EventHandler(this.configureToolStripMenuItem_Click);
             // 
@@ -102,7 +104,7 @@
             this.openWithNotepadToolStripMenuItem,
             this.exportAszipToolStripMenuItem});
             this.logsToolStripMenuItem.Name = "logsToolStripMenuItem";
-            this.logsToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
+            this.logsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.logsToolStripMenuItem.Text = "Logs";
             // 
             // openWithNotepadToolStripMenuItem
@@ -114,6 +116,7 @@
             // 
             // exportAszipToolStripMenuItem
             // 
+            this.exportAszipToolStripMenuItem.Enabled = false;
             this.exportAszipToolStripMenuItem.Name = "exportAszipToolStripMenuItem";
             this.exportAszipToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.exportAszipToolStripMenuItem.Text = "Export as .zip";
@@ -154,10 +157,8 @@
             // 
             this.toolStripComboBoxSelectGame.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.toolStripComboBoxSelectGame.Items.AddRange(new object[] {
-            "Skyrim",
-            "Skyrim SE",
-            "Morrowind",
-            "Age of Mitology"});
+            "Could not find a part of the path \'C:\\Users\\anderson_paschoalon\\Workspace\\Sandbox" +
+                "\\Personal\\SteamProfileManager\\Settings\\SPConfig.xml\'."});
             this.toolStripComboBoxSelectGame.Name = "toolStripComboBoxSelectGame";
             this.toolStripComboBoxSelectGame.Size = new System.Drawing.Size(121, 25);
             this.toolStripComboBoxSelectGame.SelectedIndexChanged += new System.EventHandler(this.toolStripComboBoxSelectGame_SelectedIndexChanged);

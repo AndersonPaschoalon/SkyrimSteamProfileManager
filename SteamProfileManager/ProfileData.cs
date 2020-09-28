@@ -14,10 +14,6 @@ namespace ProfileManager
         private string _profileName;
         private Color _color;
 
-        //public ProfileData(string name, string color)
-        //{ 
-        //}
-
         public ProfileData(string name, Color color)
         {
             this.color = color;
@@ -53,24 +49,6 @@ namespace ProfileManager
             Color c = this._color;
             return "#" + c.R.ToString("X2") + c.G.ToString("X2") + c.B.ToString("X2");
         }
-
-        public void setColor(string hexCode)
-        {
-            Color col;
-            try
-            {
-                // TODO
-                //col = (Color)ColorConverter.ConvertFromString(hexCode);
-            }
-            catch (Exception)
-            {
-                // TODO
-                //col = (Color)ColorConverter.ConvertFromString("#66FFF5");
-            }
-            // TODO
-            //this._color = col;
-        }
-
 
     }
 }

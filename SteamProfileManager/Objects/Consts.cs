@@ -14,18 +14,11 @@ namespace ProfileManager.Objects
         //  configuration files
         public const string CONFIG_FILE = "Settings\\SPConfig.xml";
         // Games names
-        public const string SKYRIM = "Skyrim";
-        public const string SKYRIM_SE = "SkyrimSE";
-        public const string MORROWIND = "Morrowind";
-        public const string AGE_OF_MITOLOGY = "Age of Mitology";
+        public const string GAME_DEFAULT = "Skyrim";
         // Inictive profile Inits
         public const string INACTIVE_NAME = "~INACTIVE";
         public const string INACTIVE_COLOR = "#D3D3D3";
         public const string INACTIVE_CREATION = "-";
-        // Game Folder
-        public const string DIR_SKYRIM = "Skyrim";
-        public const string DIR_SKYRIM_SE = "Skyrim SE";
-
 
     }
 }

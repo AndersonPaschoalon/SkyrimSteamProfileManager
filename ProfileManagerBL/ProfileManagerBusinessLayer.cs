@@ -23,8 +23,14 @@ namespace ProfileManagerBL
         public ProfileManagerBusinessLayer(string game)
         {
             this.log = Log4NetLogger.getInstance(LogAppender.APP_CORE);
-            this.manager = new SteamProfileManager(ViewGame.enumGame(game));
-            //this.managerState = this.manager.getState();
+            log.Debug("SELECTED GAME: " + game);
+            List<string> listGames = SPConfig.listGames();
+            if (!listGames.Contains(game))
+            {
+                log.Warn("** ERROR!! Provided game " + game + " dont exit in the Settings file!");
+                game = Consts.GAME_DEFAULT;
+            }
+            this.manager = new SteamProfileManager(game);
         }
 
         #region bl_helpers

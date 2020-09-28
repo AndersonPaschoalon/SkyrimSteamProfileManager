@@ -162,6 +162,10 @@
       <Project>{F8EAEF56-A5C9-4163-94BA-3F0B702CC0FD}</Project>
       <Name>ProfileManagerBL</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SteamProfileManager\ProfileManager.csproj">
+      <Project>{E2EDF30E-8041-4C61-B499-B251E6054A64}</Project>
+      <Name>ProfileManager</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\spear.ico" />

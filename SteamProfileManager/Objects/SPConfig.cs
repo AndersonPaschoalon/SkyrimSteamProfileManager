@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using System.Xml.Serialization;
 using ProfileManager.Enum;
 using Utils;
@@ -15,6 +16,52 @@ namespace ProfileManager.Objects
     public class SPConfig
     {
         #region load/save
+
+        /// <summary>
+        /// Return a list of configured games
+        /// </summary>
+        /// <returns></returns>
+        public static List<string> listGames()
+        {
+            SPConfig config = SPConfig.loadConfig();
+            List<string> listGamesStr = new List<string>();
+            List<SPSettings> listSettings = config.listSettings;
+            if (listSettings != null)
+            {
+                foreach (var item in listSettings)
+                {
+                    string gamaStr = item.game.Trim();
+                    listGamesStr.Add(gamaStr);
+                }
+            }
+            return listGamesStr;
+        }
+
+        public static string[] arrayGames()
+        {
+            List<string> lg;
+            try
+            {
+                lg = SPConfig.listGames();
+                if (lg.Count < 1)
+                {
+                    MessageBox.Show("Error! Invalid number of Games on Settings File! The file might be corrupted!",
+                                    "**Error**",
+                                    MessageBoxButtons.OK,
+                                    MessageBoxIcon.Error);
+                    string[] arrayError = { "SETTINGS ERROR!" };
+                    return arrayError;
+                }
+                string[] arrayGames = lg.ToArray();
+                return arrayGames;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                string[] arrayError = { "SETTINGS ERROR!" };
+                return arrayError;
+            }
+        }
 
         /// <summary>
         /// Load configuration from default XML settings configuration file
@@ -135,6 +182,7 @@ namespace ProfileManager.Objects
             }
             return false;
         }
+
 
 
         #endregion load/save

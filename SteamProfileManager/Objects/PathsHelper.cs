@@ -38,10 +38,15 @@ namespace ProfileManager.Objects
 
         #endregion static_helpers
 
-        public PathsHelper(Game game, SPSettings settings)
+        public PathsHelper(string gameName, SPSettings settings)
         {
-            this._game = game;
+            this._game = gameName;
             this.update(settings);
+        }
+
+        public string gamename()
+        {
+            return this._game;
         }
 
         /// <summary>
@@ -333,8 +338,14 @@ namespace ProfileManager.Objects
             // make sure is alphanumeric
             CSharp.alphaNumeric(name);
             //append to list of inUse Values
-            inUse.Add(Consts.SKYRIM);
-            inUse.Add(Consts.SKYRIM_SE);
+            List<string> lg = SPConfig.listGames();
+            if (lg != null)
+            {
+                foreach (var item in lg)
+                {
+                    inUse.Add(item);
+                }
+            }
             inUse.Add(this._gameFolder);
             inUse.Add(this._backupFolder);
             // if value already exist, create a counter
@@ -350,7 +361,7 @@ namespace ProfileManager.Objects
 
         #region private 
 
-        private Game _game;
+        private string _game;
         private string _gameFolder = "";
         private string _backupFolder = "";
 

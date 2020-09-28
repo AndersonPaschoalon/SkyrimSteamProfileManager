@@ -7,6 +7,7 @@ using ProfileManager.Enum;
 
 namespace ProfileManagerBL.ViewModel
 {
+    /*
     public class ViewGame
     {
         public const string SKYRIM = "Skyrim";
@@ -48,4 +49,5 @@ namespace ProfileManagerBL.ViewModel
             return theGame;
         }
     }
+    */
 }
