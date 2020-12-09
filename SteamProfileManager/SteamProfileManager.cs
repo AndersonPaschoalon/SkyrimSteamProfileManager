@@ -929,8 +929,8 @@ namespace ProfileManager
             log.Debug("Desactivated Profiles [Count:" + this.listDesactivated.Count + "]");
             foreach (var item in this.listDesactivated)
             {
-                log.Debug("  name:" + item.name + 
-                          ", isActive:" + item.isReady);
+                log.Debug("  name:" + item.name +
+                          ", isReady:" + item.isReady);
             }
         }
 

@@ -12,6 +12,8 @@ using Utils;
 using Utils.Loggers;
 using ProfileManagerBL;
 using ProfileManagerBL.ViewModel;
+using System.IO;
+using System.IO.Compression;
 
 namespace Spear
 {
@@ -57,7 +59,8 @@ namespace Spear
             settings.ShowDialog();
             if (settings.saveSettings)
             {
-                this.managerBusinessLayer.action_updateSettings(settings.settings);
+                //this.managerBusinessLayer.action_updateSettings(settings.settings);
+                this.managerBusinessLayer.action_updateSettings(settings.getSettings());
             }
         }
 
@@ -127,7 +130,6 @@ namespace Spear
             {
                 enabled = managerBusinessLayer.allowedOperations();
             }
-                //EnabledOp enabled = managerBusinessLayer.allowedOperations;
                
             // enable/disable allowed operations
             log.Debug("allowed operations >> Activate:" + enabled.activateProfile +
@@ -291,7 +293,12 @@ namespace Spear
 
         private void exportAszipToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("TODO: In Development...");
+            // not working!
+            string startPath = @".\Logs\";
+            string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            string zipPath = desktopPath + "\\logs.zip";
+            ZipFile.CreateFromDirectory(startPath, zipPath);
+            MessageBox.Show("Zip logs.zip savad on the Destop!");
         }
 
         private void toolStripButtonActivate_Click(object sender, EventArgs e)
@@ -437,10 +444,13 @@ namespace Spear
         private void toolStripButtonReload_Click(object sender, EventArgs e)
         {
             this.actionBeforeStartDisableAllActions();
-            //this.managerBusinessLayer.reloadProfiles();
             Thread.Sleep(300);
             this.postActionUpdate();
             this.updateToolStripButtons();
+        }
+
+        private void toolStripComboBoxSelectGame_Click(object sender, EventArgs e)
+        {
         }
     }
 }

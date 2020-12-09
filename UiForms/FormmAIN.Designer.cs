@@ -116,10 +116,10 @@ namespace Spear
             // 
             // exportAszipToolStripMenuItem
             // 
-            this.exportAszipToolStripMenuItem.Enabled = false;
             this.exportAszipToolStripMenuItem.Name = "exportAszipToolStripMenuItem";
             this.exportAszipToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.exportAszipToolStripMenuItem.Text = "Export as .zip";
+            this.exportAszipToolStripMenuItem.Visible = false;
             this.exportAszipToolStripMenuItem.Click += new System.EventHandler(this.exportAszipToolStripMenuItem_Click);
             // 
             // helpToolStripMenuItem1
@@ -157,11 +157,12 @@ namespace Spear
             // 
             this.toolStripComboBoxSelectGame.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.toolStripComboBoxSelectGame.Items.AddRange(new object[] {
-            "Could not find a part of the path \'C:\\Users\\anderson_paschoalon\\Workspace\\Sandbox" +
-                "\\Personal\\SteamProfileManager\\Settings\\SPConfig.xml\'."});
+            "Skyrim",
+            "Skyrim SE"});
             this.toolStripComboBoxSelectGame.Name = "toolStripComboBoxSelectGame";
             this.toolStripComboBoxSelectGame.Size = new System.Drawing.Size(121, 25);
             this.toolStripComboBoxSelectGame.SelectedIndexChanged += new System.EventHandler(this.toolStripComboBoxSelectGame_SelectedIndexChanged);
+            this.toolStripComboBoxSelectGame.Click += new System.EventHandler(this.toolStripComboBoxSelectGame_Click);
             // 
             // toolStripSeparator1
             // 

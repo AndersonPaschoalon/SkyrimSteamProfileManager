@@ -8,6 +8,15 @@ namespace ProfileManagerBL.ViewModel
 {
     public class SettingsViewData
     {
+        public SettingsViewData()
+        {
+            this.steam = "";
+            this.docs = "";
+            this.appData = "";
+            this.nmmInfo = "";
+            this.nmmMod = "";
+        }
+
         public string steam { get; set; }
         public string docs { get; set; }
         public string appData { get; set; }

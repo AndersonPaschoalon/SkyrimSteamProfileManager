@@ -30,26 +30,24 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormSettings));
             this.groupBoxSteam = new System.Windows.Forms.GroupBox();
-            this.textBox3 = new System.Windows.Forms.TextBox();
+            this.textBoxAppData = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.buttonAppData = new System.Windows.Forms.Button();
-            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.textBoxDocs = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.buttonDocs = new System.Windows.Forms.Button();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.textBoxSteam = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.buttonSteam = new System.Windows.Forms.Button();
             this.groupBoxNMM = new System.Windows.Forms.GroupBox();
-            this.textBox5 = new System.Windows.Forms.TextBox();
+            this.textBoxNmmMod = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.buttonNmmMod = new System.Windows.Forms.Button();
-            this.textBox4 = new System.Windows.Forms.TextBox();
+            this.textBoxNmmInfo = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.buttonNmmInfo = new System.Windows.Forms.Button();
             this.buttonSave = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
-            this.radioButtonDefault = new System.Windows.Forms.RadioButton();
-            this.radioButton2 = new System.Windows.Forms.RadioButton();
             this.tabSettingsMain = new System.Windows.Forms.TabControl();
             this.tabConfiguration = new System.Windows.Forms.TabPage();
             this.tabLogs = new System.Windows.Forms.TabPage();
@@ -63,6 +61,9 @@
             this.radioDebug = new System.Windows.Forms.RadioButton();
             this.radioWarn = new System.Windows.Forms.RadioButton();
             this.radioInfo = new System.Windows.Forms.RadioButton();
+            this.buttonDefSteam = new System.Windows.Forms.Button();
+            this.buttonDefDocs = new System.Windows.Forms.Button();
+            this.buttonDefApp = new System.Windows.Forms.Button();
             this.groupBoxSteam.SuspendLayout();
             this.groupBoxNMM.SuspendLayout();
             this.tabSettingsMain.SuspendLayout();
@@ -74,29 +75,32 @@
             // 
             // groupBoxSteam
             // 
-            this.groupBoxSteam.Controls.Add(this.textBox3);
+            this.groupBoxSteam.Controls.Add(this.buttonDefApp);
+            this.groupBoxSteam.Controls.Add(this.buttonDefDocs);
+            this.groupBoxSteam.Controls.Add(this.buttonDefSteam);
+            this.groupBoxSteam.Controls.Add(this.textBoxAppData);
             this.groupBoxSteam.Controls.Add(this.label3);
             this.groupBoxSteam.Controls.Add(this.buttonAppData);
-            this.groupBoxSteam.Controls.Add(this.textBox2);
+            this.groupBoxSteam.Controls.Add(this.textBoxDocs);
             this.groupBoxSteam.Controls.Add(this.label2);
             this.groupBoxSteam.Controls.Add(this.buttonDocs);
-            this.groupBoxSteam.Controls.Add(this.textBox1);
+            this.groupBoxSteam.Controls.Add(this.textBoxSteam);
             this.groupBoxSteam.Controls.Add(this.label1);
             this.groupBoxSteam.Controls.Add(this.buttonSteam);
-            this.groupBoxSteam.Location = new System.Drawing.Point(6, 70);
+            this.groupBoxSteam.Location = new System.Drawing.Point(8, 6);
             this.groupBoxSteam.Name = "groupBoxSteam";
             this.groupBoxSteam.Size = new System.Drawing.Size(533, 184);
             this.groupBoxSteam.TabIndex = 0;
             this.groupBoxSteam.TabStop = false;
             this.groupBoxSteam.Text = "Steam Settings";
             // 
-            // textBox3
+            // textBoxAppData
             // 
-            this.textBox3.Location = new System.Drawing.Point(109, 140);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(418, 20);
-            this.textBox3.TabIndex = 8;
-            this.textBox3.Text = " ";
+            this.textBoxAppData.Location = new System.Drawing.Point(87, 140);
+            this.textBoxAppData.Name = "textBoxAppData";
+            this.textBoxAppData.Size = new System.Drawing.Size(363, 20);
+            this.textBoxAppData.TabIndex = 8;
+            this.textBoxAppData.Text = " ";
             // 
             // label3
             // 
@@ -117,13 +121,13 @@
             this.buttonAppData.UseVisualStyleBackColor = true;
             this.buttonAppData.Click += new System.EventHandler(this.buttonAppData_Click);
             // 
-            // textBox2
+            // textBoxDocs
             // 
-            this.textBox2.Location = new System.Drawing.Point(109, 89);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(418, 20);
-            this.textBox2.TabIndex = 5;
-            this.textBox2.Text = " ";
+            this.textBoxDocs.Location = new System.Drawing.Point(87, 89);
+            this.textBoxDocs.Name = "textBoxDocs";
+            this.textBoxDocs.Size = new System.Drawing.Size(363, 20);
+            this.textBoxDocs.TabIndex = 5;
+            this.textBoxDocs.Text = " ";
             // 
             // label2
             // 
@@ -144,13 +148,13 @@
             this.buttonDocs.UseVisualStyleBackColor = true;
             this.buttonDocs.Click += new System.EventHandler(this.buttonDocs_Click);
             // 
-            // textBox1
+            // textBoxSteam
             // 
-            this.textBox1.Location = new System.Drawing.Point(109, 38);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(418, 20);
-            this.textBox1.TabIndex = 2;
-            this.textBox1.Text = " ";
+            this.textBoxSteam.Location = new System.Drawing.Point(87, 38);
+            this.textBoxSteam.Name = "textBoxSteam";
+            this.textBoxSteam.Size = new System.Drawing.Size(363, 20);
+            this.textBoxSteam.TabIndex = 2;
+            this.textBoxSteam.Text = " ";
             // 
             // label1
             // 
@@ -173,26 +177,26 @@
             // 
             // groupBoxNMM
             // 
-            this.groupBoxNMM.Controls.Add(this.textBox5);
+            this.groupBoxNMM.Controls.Add(this.textBoxNmmMod);
             this.groupBoxNMM.Controls.Add(this.label5);
             this.groupBoxNMM.Controls.Add(this.buttonNmmMod);
-            this.groupBoxNMM.Controls.Add(this.textBox4);
+            this.groupBoxNMM.Controls.Add(this.textBoxNmmInfo);
             this.groupBoxNMM.Controls.Add(this.label4);
             this.groupBoxNMM.Controls.Add(this.buttonNmmInfo);
-            this.groupBoxNMM.Location = new System.Drawing.Point(6, 260);
+            this.groupBoxNMM.Location = new System.Drawing.Point(6, 196);
             this.groupBoxNMM.Name = "groupBoxNMM";
             this.groupBoxNMM.Size = new System.Drawing.Size(532, 143);
             this.groupBoxNMM.TabIndex = 1;
             this.groupBoxNMM.TabStop = false;
             this.groupBoxNMM.Text = "(Optional) NMM Settings";
             // 
-            // textBox5
+            // textBoxNmmMod
             // 
-            this.textBox5.Location = new System.Drawing.Point(108, 93);
-            this.textBox5.Name = "textBox5";
-            this.textBox5.Size = new System.Drawing.Size(418, 20);
-            this.textBox5.TabIndex = 8;
-            this.textBox5.Text = " ";
+            this.textBoxNmmMod.Location = new System.Drawing.Point(87, 93);
+            this.textBoxNmmMod.Name = "textBoxNmmMod";
+            this.textBoxNmmMod.Size = new System.Drawing.Size(439, 20);
+            this.textBoxNmmMod.TabIndex = 8;
+            this.textBoxNmmMod.Text = " ";
             // 
             // label5
             // 
@@ -213,13 +217,13 @@
             this.buttonNmmMod.UseVisualStyleBackColor = true;
             this.buttonNmmMod.Click += new System.EventHandler(this.buttonNmmMod_Click);
             // 
-            // textBox4
+            // textBoxNmmInfo
             // 
-            this.textBox4.Location = new System.Drawing.Point(108, 44);
-            this.textBox4.Name = "textBox4";
-            this.textBox4.Size = new System.Drawing.Size(418, 20);
-            this.textBox4.TabIndex = 5;
-            this.textBox4.Text = " ";
+            this.textBoxNmmInfo.Location = new System.Drawing.Point(87, 44);
+            this.textBoxNmmInfo.Name = "textBoxNmmInfo";
+            this.textBoxNmmInfo.Size = new System.Drawing.Size(439, 20);
+            this.textBoxNmmInfo.TabIndex = 5;
+            this.textBoxNmmInfo.Text = " ";
             // 
             // label4
             // 
@@ -243,7 +247,7 @@
             // buttonSave
             // 
             this.buttonSave.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.buttonSave.Location = new System.Drawing.Point(463, 421);
+            this.buttonSave.Location = new System.Drawing.Point(466, 354);
             this.buttonSave.Name = "buttonSave";
             this.buttonSave.Size = new System.Drawing.Size(75, 23);
             this.buttonSave.TabIndex = 9;
@@ -254,35 +258,13 @@
             // buttonCancel
             // 
             this.buttonCancel.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.buttonCancel.Location = new System.Drawing.Point(363, 421);
+            this.buttonCancel.Location = new System.Drawing.Point(365, 354);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 10;
             this.buttonCancel.Text = "Cancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
-            // 
-            // radioButtonDefault
-            // 
-            this.radioButtonDefault.AutoSize = true;
-            this.radioButtonDefault.Location = new System.Drawing.Point(6, 7);
-            this.radioButtonDefault.Name = "radioButtonDefault";
-            this.radioButtonDefault.Size = new System.Drawing.Size(122, 17);
-            this.radioButtonDefault.TabIndex = 11;
-            this.radioButtonDefault.TabStop = true;
-            this.radioButtonDefault.Text = "Use Default Settings";
-            this.radioButtonDefault.UseVisualStyleBackColor = true;
-            // 
-            // radioButton2
-            // 
-            this.radioButton2.AutoSize = true;
-            this.radioButton2.Location = new System.Drawing.Point(6, 30);
-            this.radioButton2.Name = "radioButton2";
-            this.radioButton2.Size = new System.Drawing.Size(157, 17);
-            this.radioButton2.TabIndex = 12;
-            this.radioButton2.TabStop = true;
-            this.radioButton2.Text = "Edit Settings (Recomended)";
-            this.radioButton2.UseVisualStyleBackColor = true;
             // 
             // tabSettingsMain
             // 
@@ -292,21 +274,19 @@
             this.tabSettingsMain.Location = new System.Drawing.Point(0, 0);
             this.tabSettingsMain.Name = "tabSettingsMain";
             this.tabSettingsMain.SelectedIndex = 0;
-            this.tabSettingsMain.Size = new System.Drawing.Size(605, 481);
+            this.tabSettingsMain.Size = new System.Drawing.Size(605, 415);
             this.tabSettingsMain.TabIndex = 13;
             // 
             // tabConfiguration
             // 
-            this.tabConfiguration.Controls.Add(this.radioButton2);
             this.tabConfiguration.Controls.Add(this.groupBoxSteam);
-            this.tabConfiguration.Controls.Add(this.radioButtonDefault);
             this.tabConfiguration.Controls.Add(this.groupBoxNMM);
             this.tabConfiguration.Controls.Add(this.buttonCancel);
             this.tabConfiguration.Controls.Add(this.buttonSave);
             this.tabConfiguration.Location = new System.Drawing.Point(4, 22);
             this.tabConfiguration.Name = "tabConfiguration";
             this.tabConfiguration.Padding = new System.Windows.Forms.Padding(3);
-            this.tabConfiguration.Size = new System.Drawing.Size(597, 455);
+            this.tabConfiguration.Size = new System.Drawing.Size(597, 389);
             this.tabConfiguration.TabIndex = 0;
             this.tabConfiguration.Text = "Game Configuration";
             this.tabConfiguration.UseVisualStyleBackColor = true;
@@ -435,11 +415,41 @@
             this.radioInfo.Text = "Info";
             this.radioInfo.UseVisualStyleBackColor = true;
             // 
+            // buttonDefSteam
+            // 
+            this.buttonDefSteam.Location = new System.Drawing.Point(456, 38);
+            this.buttonDefSteam.Name = "buttonDefSteam";
+            this.buttonDefSteam.Size = new System.Drawing.Size(69, 23);
+            this.buttonDefSteam.TabIndex = 9;
+            this.buttonDefSteam.Text = "DEFAULT";
+            this.buttonDefSteam.UseVisualStyleBackColor = true;
+            this.buttonDefSteam.Click += new System.EventHandler(this.buttonDefSteam_Click);
+            // 
+            // buttonDefDocs
+            // 
+            this.buttonDefDocs.Location = new System.Drawing.Point(456, 86);
+            this.buttonDefDocs.Name = "buttonDefDocs";
+            this.buttonDefDocs.Size = new System.Drawing.Size(69, 23);
+            this.buttonDefDocs.TabIndex = 10;
+            this.buttonDefDocs.Text = "DEFAULT";
+            this.buttonDefDocs.UseVisualStyleBackColor = true;
+            this.buttonDefDocs.Click += new System.EventHandler(this.buttonDefDocs_Click);
+            // 
+            // buttonDefApp
+            // 
+            this.buttonDefApp.Location = new System.Drawing.Point(456, 137);
+            this.buttonDefApp.Name = "buttonDefApp";
+            this.buttonDefApp.Size = new System.Drawing.Size(69, 23);
+            this.buttonDefApp.TabIndex = 11;
+            this.buttonDefApp.Text = "DEFAULT";
+            this.buttonDefApp.UseVisualStyleBackColor = true;
+            this.buttonDefApp.Click += new System.EventHandler(this.buttonDefApp_Click);
+            // 
             // FormSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(605, 481);
+            this.ClientSize = new System.Drawing.Size(605, 415);
             this.Controls.Add(this.tabSettingsMain);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormSettings";
@@ -450,7 +460,6 @@
             this.groupBoxNMM.PerformLayout();
             this.tabSettingsMain.ResumeLayout(false);
             this.tabConfiguration.ResumeLayout(false);
-            this.tabConfiguration.PerformLayout();
             this.tabLogs.ResumeLayout(false);
             this.groupLogBackup.ResumeLayout(false);
             this.groupLogBackup.PerformLayout();
@@ -463,26 +472,24 @@
         #endregion
 
         private System.Windows.Forms.GroupBox groupBoxSteam;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox textBoxSteam;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button buttonSteam;
         private System.Windows.Forms.GroupBox groupBoxNMM;
-        private System.Windows.Forms.TextBox textBox3;
+        private System.Windows.Forms.TextBox textBoxAppData;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Button buttonAppData;
-        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.TextBox textBoxDocs;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button buttonDocs;
-        private System.Windows.Forms.TextBox textBox5;
+        private System.Windows.Forms.TextBox textBoxNmmMod;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Button buttonNmmMod;
-        private System.Windows.Forms.TextBox textBox4;
+        private System.Windows.Forms.TextBox textBoxNmmInfo;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button buttonNmmInfo;
         private System.Windows.Forms.Button buttonSave;
         private System.Windows.Forms.Button buttonCancel;
-        private System.Windows.Forms.RadioButton radioButtonDefault;
-        private System.Windows.Forms.RadioButton radioButton2;
         private System.Windows.Forms.TabControl tabSettingsMain;
         private System.Windows.Forms.TabPage tabConfiguration;
         private System.Windows.Forms.TabPage tabLogs;
@@ -496,5 +503,8 @@
         private System.Windows.Forms.RadioButton radioDebug;
         private System.Windows.Forms.RadioButton radioWarn;
         private System.Windows.Forms.RadioButton radioInfo;
+        private System.Windows.Forms.Button buttonDefApp;
+        private System.Windows.Forms.Button buttonDefDocs;
+        private System.Windows.Forms.Button buttonDefSteam;
     }
 }
