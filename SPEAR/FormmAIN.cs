@@ -21,6 +21,7 @@ namespace Spear
     {
         // log
         private readonly ILogger log;
+        private readonly string[] availableGames;
         // Profile Manager
         private ProfileManagerBusinessLayer managerBusinessLayer;
         // Data Grid View
@@ -38,11 +39,16 @@ namespace Spear
         public FormMain()
         {
             log = Log4NetLogger.getInstance(LogAppender.APP_UI);
-            //log = ConsoleLogger.getInstance();
             log.Debug("###############################################################################");
             log.Debug("# INITIALIZE FormMain");
             log.Debug("###############################################################################");
+            this.availableGames = ProfileManagerBusinessLayer.availableGames();
+            if (availableGames.Length == 0)
+            {
+                this.availableGames = new string[]{ "*NO GAME DEFINED*"};
+            }
             InitializeComponent();
+            this.updateDropdownGameMenu();
             // enable testing panel
             this.panelTests.Visible = ENABLE_TESTING;
             // select first item as default
@@ -55,7 +61,8 @@ namespace Spear
         // update settings after saving data
         private void configureToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormSettings settings = new FormSettings();
+            SettingsViewData oldSvd = this.managerBusinessLayer.action_getSettings();
+            FormSettings settings = new FormSettings(oldSvd, this.managerBusinessLayer.gameName());
             settings.ShowDialog();
             if (settings.saveSettings)
             {
@@ -111,6 +118,12 @@ namespace Spear
             this.updateToolStripButtons();
 
 
+        }
+
+        private void updateDropdownGameMenu()
+        {
+            this.toolStripComboBoxSelectGame.Items.Clear();
+            this.toolStripComboBoxSelectGame.Items.AddRange(this.availableGames);
         }
 
         /// <summary>
@@ -451,6 +464,11 @@ namespace Spear
 
         private void toolStripComboBoxSelectGame_Click(object sender, EventArgs e)
         {
+        }
+
+        private void toolStripButton1_Click(object sender, EventArgs e)
+        {
+            this.managerBusinessLayer.createGitignore();
         }
     }
 }

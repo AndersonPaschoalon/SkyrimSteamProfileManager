@@ -13,32 +13,34 @@ namespace Spear
 {
     public partial class FormSettings : Form
     {
-        private readonly string DEFAULT_STEAM;
-        private readonly string DEFAULT_DOCS;
-        private readonly string DEFAULT_APPDATA = @"C:\Users\anderson_paschoalon\AppData\Local";
-        private readonly string DEFAULT_NMMINFO = "";
-        private readonly string DEFAULT_NMMMOD = "";
         private FolderBrowserDialog folderDlg = new FolderBrowserDialog();
         private SettingsViewData settings { get; set; }
+        private readonly SettingsViewData defaultSettings;
         public bool saveSettings { get; private set; }
 
-        public FormSettings()
+        public FormSettings(SettingsViewData oldSets, string gameName)
         {
-            // steam defalt path
-            this.DEFAULT_STEAM = @"C:\Program Files(x86)\Steam\steamapps\common";
-            // my documents
-            this.DEFAULT_DOCS = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            // %localappdata%
-            this.DEFAULT_APPDATA = Environment.GetEnvironmentVariable("localappdata");
-            // default: blank
-            this.DEFAULT_NMMINFO = "";
-            this.DEFAULT_NMMMOD = "";
+            // default values
+            this.defaultSettings = new SettingsViewData {
+                appData = Environment.GetEnvironmentVariable("localappdata"),
+                docs = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+                steam = @"C:\Program Files (x86)\Steam\steamapps\common",
+                nmmMod = "",
+                nmmInfo = ""
+            };
             // settings object
             this.settings = new SettingsViewData();
             // tools
             this.folderDlg.ShowNewFolderButton = true;
             this.saveSettings = false;
             InitializeComponent();
+            // original settings
+            this.textBoxSteam.Text = oldSets.steam;
+            this.textBoxDocs.Text = oldSets.docs;
+            this.textBoxAppData.Text = oldSets.appData;
+            this.textBoxNmmInfo.Text = oldSets.nmmInfo;
+            this.textBoxNmmMod.Text = oldSets.nmmMod;
+            this.Text = this.Text + " [" + gameName + "]";
         }
 
         public SettingsViewData getSettings()
@@ -115,20 +117,20 @@ namespace Spear
 
         private void buttonDefSteam_Click(object sender, EventArgs e)
         {
-            this.settings.steam = DEFAULT_STEAM;
-            this.textBoxSteam.Text = DEFAULT_STEAM;
+            this.settings.steam = defaultSettings.steam;
+            this.textBoxSteam.Text = defaultSettings.steam;
         }
 
         private void buttonDefDocs_Click(object sender, EventArgs e)
         {
-            this.settings.docs = DEFAULT_DOCS;
-            this.textBoxDocs.Text = DEFAULT_DOCS;
+            this.settings.docs = defaultSettings.docs;
+            this.textBoxDocs.Text = defaultSettings.docs;
         }
 
         private void buttonDefApp_Click(object sender, EventArgs e)
         {
-            this.settings.appData = DEFAULT_APPDATA;
-            this.textBoxAppData.Text = DEFAULT_APPDATA;
+            this.settings.appData = defaultSettings.appData;
+            this.textBoxAppData.Text = defaultSettings.appData;
         }
     }
 }

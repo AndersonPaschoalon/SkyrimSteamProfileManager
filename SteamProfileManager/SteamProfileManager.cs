@@ -11,6 +11,14 @@ using ProfileManager.Enum;
 using Utils;
 using Utils.Loggers;
 using System.Security.Permissions;
+using System.Windows.Forms;
+using System.Diagnostics;
+
+/*
+TODO 
+1 - Deixar o caminho do GITBASH configuravel no XML
+
+*/
 
 namespace ProfileManager
 {
@@ -20,6 +28,8 @@ namespace ProfileManager
      */
     public class SteamProfileManager
     {
+        // const 
+        private const string GIT_BASH_EXE = @"C:\Program Files\Git\git-bash.exe";
         // readonly
         private readonly ILogger log;
         private readonly string theGame;
@@ -124,6 +134,7 @@ namespace ProfileManager
             string errString = "";
             if (!CSharp.checkDirs(mandatoryPaths, out errString))
             {
+                MessageBox.Show("Path " + errString + " does not exist!", "ERROR: INVALID PATH!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 log.Warn("** ONE OF THE MANDATORY PATHS DOES NOT EXIST! ERR:" + errString);
                 return Errors.ERR_INVALID_SETTINGS;
             }
@@ -580,6 +591,10 @@ namespace ProfileManager
             return this.applicationState;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public SPMState reloadState()
         {
             this.updateManagerState();
@@ -613,13 +628,21 @@ namespace ProfileManager
             return this.applicationState;
         }
 
+        /// <summary>
+        /// Return the object SPSettings of the current loaded game
+        /// </summary>
+        /// <returns></returns>
+        public SPSettings getProfileSettings()
+        {
+            return this.settings;
+        }
 
         /// <summary>
         /// Kill all steam processes. Requires elevation to execute.
         /// </summary>
         /// <returns></returns>
         [PrincipalPermission(SecurityAction.Demand, Role = @"BUILTIN\Administrators")]
-        public void killAllSteam()
+        public static void killAllSteam()
         {
             // batch commands
             // taskkill / f / im Steam.exe
@@ -628,9 +651,62 @@ namespace ProfileManager
             string killSteam = "taskkill /f /im Steam.exe";
             string killSteamService = "taskkill /f /im SteamService.exe";
             string killSteamHelper = "taskkill /f /im steamwebhelper.exe";
-            System.Diagnostics.Process.Start("CMD.exe", killSteam);
-            System.Diagnostics.Process.Start("CMD.exe", killSteamService);
-            System.Diagnostics.Process.Start("CMD.exe", killSteamHelper);
+            Process.Start("CMD.exe", killSteam);
+            Process.Start("CMD.exe", killSteamService);
+            Process.Start("CMD.exe", killSteamHelper);
+        }
+
+        public bool gitignoreDetected()
+        {
+            // check if git-bash exist 
+            if (File.Exists(GIT_BASH_EXE))
+            {
+                string gitignorePath = this.paths.steamGame + "\\" + ".gititnore";
+                if (File.Exists(gitignorePath))
+                {
+                    return true;
+                }
+                return false;
+            }
+            else
+            {
+                log.Warn(" ** git-bash.exe not found @" + GIT_BASH_EXE);
+                MessageBox.Show(" Git-Bash.exe not found @" + GIT_BASH_EXE + ". Install GitBash to use this feature.", 
+                                "Warning",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Information);
+            }
+            return true;
+        }
+
+        public bool createGitignore()
+        {
+            log.Debug(" -- createGitignore()");
+            // find . -print > .gitignore
+            Process gitProcess = new Process();
+            ProcessStartInfo gitInfo = new ProcessStartInfo();
+            gitInfo.FileName = GIT_BASH_EXE;
+            gitInfo.Arguments = @"find . -print > .gitignore"; // such as "fetch origin"
+            gitInfo.WorkingDirectory = this.paths.steamGame;
+            gitInfo.UseShellExecute = false;
+
+            gitProcess.StartInfo = gitInfo;
+            gitProcess.Start();
+
+            string stderr_str = gitProcess.StandardError.ReadToEnd();  // pick up STDERR
+            string stdout_str = gitProcess.StandardOutput.ReadToEnd(); // pick up STDOUT
+            log.Debug("stderr_str={" + stderr_str + "}");
+            log.Debug("stdout_str={" + stdout_str + "}");
+            if (!stderr_str.Trim().Equals(""))
+            {
+                MessageBox.Show("Error: " + stderr_str, "ERROR CREATING GITIGNORE FILE!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+
+            gitProcess.WaitForExit();
+            gitProcess.Close();
+
+            return true;
         }
 
         #endregion interface_methods

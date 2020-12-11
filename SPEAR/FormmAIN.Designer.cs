@@ -61,6 +61,7 @@ namespace Spear
             this.buttonSelectTest = new System.Windows.Forms.Button();
             this.textBoxSelectedTest = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.toolStripButtonGitignore = new System.Windows.Forms.ToolStripButton();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
@@ -94,7 +95,7 @@ namespace Spear
             // configureToolStripMenuItem
             // 
             this.configureToolStripMenuItem.Name = "configureToolStripMenuItem";
-            this.configureToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.configureToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
             this.configureToolStripMenuItem.Text = "Configure";
             this.configureToolStripMenuItem.Click += new System.EventHandler(this.configureToolStripMenuItem_Click);
             // 
@@ -104,7 +105,7 @@ namespace Spear
             this.openWithNotepadToolStripMenuItem,
             this.exportAszipToolStripMenuItem});
             this.logsToolStripMenuItem.Name = "logsToolStripMenuItem";
-            this.logsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.logsToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
             this.logsToolStripMenuItem.Text = "Logs";
             // 
             // openWithNotepadToolStripMenuItem
@@ -146,7 +147,8 @@ namespace Spear
             this.toolStripButtonDesactivate,
             this.toolStripButtonSwitch,
             this.toolStripButtonEdit,
-            this.toolStripButtonReload});
+            this.toolStripButtonReload,
+            this.toolStripButtonGitignore});
             this.toolStrip1.Location = new System.Drawing.Point(0, 24);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(800, 25);
@@ -156,6 +158,7 @@ namespace Spear
             // toolStripComboBoxSelectGame
             // 
             this.toolStripComboBoxSelectGame.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            // availableGames
             this.toolStripComboBoxSelectGame.Items.AddRange(new object[] {
             "Skyrim",
             "Skyrim SE"});
@@ -375,6 +378,16 @@ namespace Spear
             this.label1.TabIndex = 0;
             this.label1.Text = "TEST PANEL";
             // 
+            // toolStripButtonGitignore
+            // 
+            this.toolStripButtonGitignore.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonGitignore.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonGitignore.Image")));
+            this.toolStripButtonGitignore.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonGitignore.Name = "toolStripButtonGitignore";
+            this.toolStripButtonGitignore.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonGitignore.Text = "toolStripButton1";
+            this.toolStripButtonGitignore.Click += new System.EventHandler(this.toolStripButton1_Click);
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -438,5 +451,6 @@ namespace Spear
         private System.Windows.Forms.ToolStripComboBox toolStripComboBoxSelectGame;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripButton toolStripButtonReload;
+        private System.Windows.Forms.ToolStripButton toolStripButtonGitignore;
     }
 }

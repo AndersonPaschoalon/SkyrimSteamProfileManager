@@ -18,7 +18,14 @@ namespace ProfileManagerBL
     {
         private const string HELP_PAGE = "HelpPage.html";
         private readonly ILogger log;
+        private readonly string gameStr;
         private ProfileManager.SteamProfileManager manager;
+
+
+        public static string[] availableGames()
+        {
+            return SPConfig.arrayGames();
+        }
 
         public ProfileManagerBusinessLayer(string game)
         {
@@ -31,6 +38,7 @@ namespace ProfileManagerBL
                 game = Consts.GAME_DEFAULT;
             }
             this.manager = new SteamProfileManager(game);
+            this.gameStr = game;
         }
 
         #region bl_helpers
@@ -173,40 +181,15 @@ namespace ProfileManagerBL
             }
         }
 
-        public void openHelpPage()
-        {
-            string htmlPage = Environment.CurrentDirectory + "\\" + HELP_PAGE;
-            try
-            {
-                System.Diagnostics.Process.Start(htmlPage);
-            }
-            catch (Exception)
-            {
-                System.Diagnostics.Process.Start("Chrome", Uri.EscapeDataString(htmlPage));
-            }
-        }
-
-        public void openLogFiles()
-        {
-            List<string> logFiles = new List<string> 
-            {"Logs\\app_core.log","Logs\\app_ui.log"};
-            foreach (var item in logFiles)
-            {
-                try
-                {
-                    Process.Start(item);
-                }
-                catch (Exception)
-                {
-                    Process.Start("notepad.exe", item);
-                }
-            }
-        }
-
         public SettingsViewData getSettingsData()
         {
             SettingsViewData se = new SettingsViewData();
             return se;
+        }
+
+        public string gameName()
+        {
+            return this.gameStr;
         }
 
         public static string listProfileViewToString(List<ProfileViewData> lprof)
@@ -227,6 +210,19 @@ namespace ProfileManagerBL
         #endregion bl_helpers
 
         #region bl_actions
+
+        public SettingsViewData action_getSettings()
+        {
+            SettingsViewData settings = new SettingsViewData();
+            SPSettings spsettings = manager.getProfileSettings();
+            settings.appData = spsettings.appDataPath;
+            settings.docs = spsettings.documentsPath;
+            settings.steam = spsettings.steamPath;
+            settings.nmmInfo = spsettings.nmmInfoPath;
+            settings.nmmMod = spsettings.nmmModPath;
+            return settings;
+        }
+
         public int action_updateSettings(SettingsViewData s)
         {
             int ret = Errors.SUCCESS;
@@ -325,6 +321,64 @@ namespace ProfileManagerBL
         }
 
         #endregion bl_actions
+
+        #region bl_tools
+
+        public void openHelpPage()
+        {
+            string htmlPage = Environment.CurrentDirectory + "\\" + HELP_PAGE;
+            try
+            {
+                System.Diagnostics.Process.Start(htmlPage);
+            }
+            catch (Exception)
+            {
+                System.Diagnostics.Process.Start("Chrome", Uri.EscapeDataString(htmlPage));
+            }
+        }
+
+        public void openLogFiles()
+        {
+            List<string> logFiles = new List<string>
+            {"Logs\\app_core.log","Logs\\app_ui.log"};
+            foreach (var item in logFiles)
+            {
+                try
+                {
+                    Process.Start(item);
+                }
+                catch (Exception)
+                {
+                    Process.Start("notepad.exe", item);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public bool gitignoreDetected()
+        {
+            return this.manager.gitignoreDetected();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public bool createGitignore()
+        {
+            if (!this.manager.gitignoreDetected())
+            {
+                log.Debug(" -- gitignore not detected");
+                return this.manager.createGitignore();
+            }
+            log.Info(" -- Gitignore file detected or gig-bash not installed.");
+            return false;
+        }
+
+        #endregion bl_tools
 
         #region test_methods
 
