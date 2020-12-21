@@ -29,7 +29,7 @@ namespace ProfileManager
     public class SteamProfileManager
     {
         // const 
-        private const string GIT_BASH_EXE = @"C:\Program Files\Git\git-bash.exe";
+        private const string FILE_GITIGNORE = ".gitignore";
         // readonly
         private readonly ILogger log;
         private readonly string theGame;
@@ -50,12 +50,6 @@ namespace ProfileManager
             log.Info("");
             log.Debug("-- load settings");
 
-            List<string> ll = SPConfig.listGames();
-            foreach (var item in ll)
-            {
-                Console.WriteLine(">>>>" + item);
-            }
-
             SPConfig config = SPConfig.loadConfig();
             if (config != null)
             {
@@ -69,9 +63,7 @@ namespace ProfileManager
                 log.Warn("COULD NOT LOAD CONFIGURATION FILE");
                 this.settings = null;
             }
-            log.Debug("-- createBackupsRoot()");
             this.createBackupsRoot();
-            log.Debug("-- updateManagerState()");
             this.updateManagerState();
         }
 
@@ -272,20 +264,53 @@ namespace ProfileManager
             }
 
             log.Debug("STEP 3: moving folders from backup to root dir...");
-            string[] sourceDirs = { 
+            //string[] sourceDirs = { 
+            //        this.paths.steamBkpProfGame(profileName),      // steam
+            //        this.paths.appDataBkpProfGame(profileName),    // appdata
+            //        this.paths.docsBkpProfGame(profileName),       // docs
+            //        this.paths.nmmInfoBkpProfGame(profileName),    //
+            //        this.paths.nmmModBkpProfGame(profileName)      //
+            //};
+            //string[] destinationDirs = {
+            //    this.paths.steam,
+            //    this.paths.appData,
+            //    this.paths.docs,
+            //    this.paths.nmmInfo,
+            //    this.paths.nmmMod
+            //};
+            string[] destinationDirs;
+            string[] sourceDirs;
+            if (this.paths.optionalAreSet())
+            {
+                destinationDirs = new string[]  {
+                    this.paths.steam,
+                    this.paths.appData,
+                    this.paths.docs,
+                    this.paths.nmmInfo,
+                    this.paths.nmmMod
+                };
+                sourceDirs = new string[] {
                     this.paths.steamBkpProfGame(profileName),      // steam
                     this.paths.appDataBkpProfGame(profileName),    // appdata
                     this.paths.docsBkpProfGame(profileName),       // docs
                     this.paths.nmmInfoBkpProfGame(profileName),    //
                     this.paths.nmmModBkpProfGame(profileName)      //
-            };
-            string[] destinationDirs = {
-                this.paths.steam,
-                this.paths.appData,
-                this.paths.docs,
-                this.paths.nmmInfo,
-                this.paths.nmmMod
-            };
+                };
+            }
+            else
+            {
+                log.Info(" -- Optional dirs are not set. They will not be moved.");
+                destinationDirs = new string[]  {
+                    this.paths.steam,
+                    this.paths.appData,
+                    this.paths.docs
+                };
+                sourceDirs = new string[] {
+                    this.paths.steamBkpProfGame(profileName),      // steam
+                    this.paths.appDataBkpProfGame(profileName),    // appdata
+                    this.paths.docsBkpProfGame(profileName)        // docs
+                };
+            }
             string errMsg = "";
             string errSrcDir = "";
             string errDstDir = "";
@@ -362,20 +387,39 @@ namespace ProfileManager
             // create backup dir if does not exit
             this.createBackupProfilesFolder(profileName);
             // move directories to backup dir   sourceDirs
-            string[] destinationDirs = {
+            string[] destinationDirs;
+            string[] sourceDirs;
+            if (this.paths.optionalAreSet())
+            {
+                destinationDirs = new string[]  {
                     this.paths.steamBkpProf(profileName),      // steam
                     this.paths.appDataBkpProf(profileName),    // appdata
                     this.paths.docsBkpProf(profileName),       // docs
                     this.paths.nmmInfoBkpProf(profileName),    //
                     this.paths.nmmModBkpProf(profileName)      //
-            };
-            string[] sourceDirs = {
-                this.paths.steamGame,
-                this.paths.appDataGame,
-                this.paths.docsGame,
-                this.paths.nmmInfoGame,
-                this.paths.nmmModGame
-            };
+                };
+                sourceDirs = new string[] {
+                    this.paths.steamGame,
+                    this.paths.appDataGame,
+                    this.paths.docsGame,
+                    this.paths.nmmInfoGame,
+                    this.paths.nmmModGame
+                };
+            }
+            else
+            {
+                log.Info(" -- Optional dirs are not set. They will not be moved.");
+                destinationDirs = new string[]  {
+                    this.paths.steamBkpProf(profileName),      // steam
+                    this.paths.appDataBkpProf(profileName),    // appdata
+                    this.paths.docsBkpProf(profileName)       // docs
+                };
+                sourceDirs = new string[] {
+                    this.paths.steamGame,
+                    this.paths.appDataGame,
+                    this.paths.docsGame
+                };
+            }
             string errMsg = "";
             string errSrcDir = "";
             string errDstDir = "";
@@ -482,8 +526,7 @@ namespace ProfileManager
                     ret = this.paths.updateActiveIntegrityFile(prof, out errMsg, out errPath);
                     if (ret)
                     {
-                        log.Debug("Success Updating integrity file");
-                        log.Info("New Integrity File:{" + paths.activeIntegrityFileContent() + "}");
+                        log.Info("Success Updating integrity file! New Integrity File:{" + paths.activeIntegrityFileContent() + "}");
                         errMsgRet = "SUCCESS";
                         return Errors.SUCCESS;
                     }
@@ -526,8 +569,7 @@ namespace ProfileManager
                         ret = this.paths.updateDesactivatedIntegrityFile(prof, out errMsg, out errPath);
                         if (ret)
                         {
-                            log.Debug("Success Updating integrity file");
-                            log.Info("New Integrity File:{" + paths.activeIntegrityFileContent() + "}");
+                            log.Info("Success Updating integrity file! New Integrity File:{" + paths.activeIntegrityFileContent() + "}");
                         }
                         else
                         {
@@ -597,22 +639,17 @@ namespace ProfileManager
         /// <returns></returns>
         public SPMState reloadState()
         {
+            log.Debug(" -- reloadState");
             this.updateManagerState();
-            log.Debug("###############################################################################");
-            log.Debug("# STEAM PROFILE APP_CORE");
-            log.Debug("###############################################################################");
-
-            log.Debug("# Active profiles");
             if (this.activeProfile != null)
             {
-                log.Debug("  name:" + this.activeProfile.name + ", color:" + this.activeProfile.color);
+                log.Debug("Active profiles =>  name:" + this.activeProfile.name + ", color:" + this.activeProfile.color);
             }
-            log.Debug("# Desactivated profiles [Count:" + this.listDesactivated.Count + "]");
+            log.Debug("Desactivated profiles [Count:" + this.listDesactivated.Count + "]");
             foreach (var item in this.listDesactivated)
             {
-                log.Debug("  name:" + item.name + ", color:" + item.color + ", creationDate:" + item.creationDate);
+                log.Debug("    name:" + item.name + ", color:" + item.color + ", creationDate:" + item.creationDate);
             }
-            log.Debug("# configuration file");
             string textConfig = "";
             string configPath = PathsHelper.getConfigFileName();
             if (File.Exists(configPath))
@@ -624,7 +661,7 @@ namespace ProfileManager
             {
                 log.Debug("** ERROR!! CONFIGURATION FILE NOT FOUND!!");
             }
-            log.Debug("# APPLICATION STATE:" + this.applicationState.ToString());
+            log.Info("# APPLICATION STATE:" + this.applicationState.ToString());
             return this.applicationState;
         }
 
@@ -658,55 +695,65 @@ namespace ProfileManager
 
         public bool gitignoreDetected()
         {
-            // check if git-bash exist 
-            if (File.Exists(GIT_BASH_EXE))
+            string gitignorePath = this.paths.steamGame + "\\" + FILE_GITIGNORE;
+            if (File.Exists(gitignorePath))
             {
-                string gitignorePath = this.paths.steamGame + "\\" + ".gititnore";
-                if (File.Exists(gitignorePath))
-                {
-                    return true;
-                }
-                return false;
+                return true;
             }
-            else
-            {
-                log.Warn(" ** git-bash.exe not found @" + GIT_BASH_EXE);
-                MessageBox.Show(" Git-Bash.exe not found @" + GIT_BASH_EXE + ". Install GitBash to use this feature.", 
-                                "Warning",
-                                MessageBoxButtons.OK,
-                                MessageBoxIcon.Information);
-            }
-            return true;
+            return false;
         }
 
-        public bool createGitignore()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public bool createGitignore(out string errMsg)
         {
             log.Debug(" -- createGitignore()");
-            // find . -print > .gitignore
-            Process gitProcess = new Process();
-            ProcessStartInfo gitInfo = new ProcessStartInfo();
-            gitInfo.FileName = GIT_BASH_EXE;
-            gitInfo.Arguments = @"find . -print > .gitignore"; // such as "fetch origin"
-            gitInfo.WorkingDirectory = this.paths.steamGame;
-            gitInfo.UseShellExecute = false;
-
-            gitProcess.StartInfo = gitInfo;
-            gitProcess.Start();
-
-            string stderr_str = gitProcess.StandardError.ReadToEnd();  // pick up STDERR
-            string stdout_str = gitProcess.StandardOutput.ReadToEnd(); // pick up STDOUT
-            log.Debug("stderr_str={" + stderr_str + "}");
-            log.Debug("stdout_str={" + stdout_str + "}");
-            if (!stderr_str.Trim().Equals(""))
+            string gitignorePath = this.paths.steamGame + "\\" + FILE_GITIGNORE;
+            String gitignoreContent = "";
+            try
             {
-                MessageBox.Show("Error: " + stderr_str, "ERROR CREATING GITIGNORE FILE!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return false;
+                if (!File.Exists(gitignorePath))
+                {
+                    foreach (string file in Directory.EnumerateFiles(this.paths.steamGame,
+                                                                     "*.*",
+                                                                     System.IO.SearchOption.AllDirectories))
+                    {
+                        string content = file.Replace(this.paths.steamGame, "");
+                        content = content.Replace(@"\", @"/");
+                        gitignoreContent += @"." + content + "\n";
+                    }
+                    File.WriteAllText(gitignorePath, gitignoreContent);
+                    errMsg = "";
+                    return true;
+                }
+                errMsg = ".gitignore file already exist!";
             }
+            catch (Exception ex)
+            {
+                log.Error("** ERROR ** Error creating .gitignore file. Message:" + ex.Message + ", StackTrace:" + ex.StackTrace);
+                errMsg = "Exception:<" + ex.Message + ">";
+            }
+            return false;
+        }
 
-            gitProcess.WaitForExit();
-            gitProcess.Close();
-
-            return true;
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public bool deleteGitignore(out string errMsg)
+        {
+            log.Debug(" -- deleteGitignore()");
+            string gitignorePath = this.paths.steamGame + "\\" + FILE_GITIGNORE;
+            if (File.Exists(gitignorePath))
+            {
+                File.Delete(gitignorePath);
+                errMsg = "";
+                return true;
+            }
+            errMsg = ".gitignore file does not exist!";
+            return false;
         }
 
         #endregion interface_methods
@@ -774,13 +821,12 @@ namespace ProfileManager
 
         private void createBackupsRoot()
         {
-            log.Debug("-- createBackupsRoot");
+            log.Debug(" -- createBackupsRoot");
             Directory.CreateDirectory(this.paths.steamBkp);
             Directory.CreateDirectory(this.paths.docsBkp);
             Directory.CreateDirectory(this.paths.appDataBkp);
             if (this.paths.optionalAreSet())
             {
-                log.Debug("optional fields are set");
                 log.Debug("creating directory this.paths.nmmInfoBkp:" + this.paths.nmmInfoBkp);
                 Directory.CreateDirectory(this.paths.nmmInfoBkp);
                 log.Debug("creating directory this.paths.nmmMod:" + this.paths.nmmMod);
@@ -790,16 +836,16 @@ namespace ProfileManager
 
         private void createBackupProfilesFolder(string profName)
         {
+            log.Debug(" -- createBackupProfilesFolder");
             Directory.CreateDirectory(this.paths.steamBkpProf(profName));
             Directory.CreateDirectory(this.paths.docsBkpProf(profName));
             Directory.CreateDirectory(this.paths.appDataBkpProf(profName));
             if (this.paths.optionalAreSet())
             {
-                log.Debug("optional fields are set");
-                log.Debug("creating directory this.paths.nmmInfoBkpProf(profName):" + 
+                log.Debug("creating directory paths.nmmInfoBkpProf(profName):" + 
                           this.paths.nmmInfoBkpProf(profName));
                 Directory.CreateDirectory(this.paths.nmmInfoBkpProf(profName));
-                log.Debug("creating directory this.paths.nmmModBkpProf(profName):" + 
+                log.Debug("creating directory paths.nmmModBkpProf(profName):" + 
                           this.paths.nmmModBkpProf(profName));
                 Directory.CreateDirectory(this.paths.nmmModBkpProf(profName));
             }
@@ -989,23 +1035,23 @@ namespace ProfileManager
         /// </summary>
         private void updateManagerState()
         {
+            log.Debug(" -- updateManagerState");
             // update state
             this.applicationState = this.discoverApplicationState();
             // log statte
             log.Debug("State: " + this.applicationState.ToString());
-            log.Debug("Active Profile");
             if (this.activeProfile != null)
             {
-                log.Debug("  name:" + this.activeProfile.name + ", isActive:" + this.activeProfile.isReady );
+                log.Debug("Active Profile => name:" + this.activeProfile.name + ", isReady:" + this.activeProfile.isReady );
             }
             else
             {
-                log.Debug("no active profile");
+                log.Debug("No active profile");
             }
-            log.Debug("Desactivated Profiles [Count:" + this.listDesactivated.Count + "]");
+            log.Debug("Desactivated Profiles => [Count:" + this.listDesactivated.Count + "]");
             foreach (var item in this.listDesactivated)
             {
-                log.Debug("  name:" + item.name +
+                log.Debug("    name:" + item.name +
                           ", isReady:" + item.isReady);
             }
         }

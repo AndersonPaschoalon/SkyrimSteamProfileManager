@@ -42,11 +42,15 @@ namespace Spear
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripComboBoxSelectGame = new System.Windows.Forms.ToolStripComboBox();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
             this.toolStripButtonActivate = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonDesactivate = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonSwitch = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonEdit = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonReload = new System.Windows.Forms.ToolStripButton();
+            this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
+            this.toolStripButtonGitignore = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonGitThrash = new System.Windows.Forms.ToolStripButton();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.panel1 = new System.Windows.Forms.Panel();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
@@ -61,7 +65,8 @@ namespace Spear
             this.buttonSelectTest = new System.Windows.Forms.Button();
             this.textBoxSelectedTest = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.toolStripButtonGitignore = new System.Windows.Forms.ToolStripButton();
+            this.toolStripLabel3 = new System.Windows.Forms.ToolStripLabel();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
@@ -142,13 +147,18 @@ namespace Spear
             // 
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripComboBoxSelectGame,
-            this.toolStripSeparator1,
+            this.toolStripSeparator2,
+            this.toolStripLabel1,
+            this.toolStripLabel3,
             this.toolStripButtonActivate,
             this.toolStripButtonDesactivate,
             this.toolStripButtonSwitch,
             this.toolStripButtonEdit,
             this.toolStripButtonReload,
-            this.toolStripButtonGitignore});
+            this.toolStripSeparator1,
+            this.toolStripLabel2,
+            this.toolStripButtonGitignore,
+            this.toolStripButtonGitThrash});
             this.toolStrip1.Location = new System.Drawing.Point(0, 24);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(800, 25);
@@ -158,7 +168,6 @@ namespace Spear
             // toolStripComboBoxSelectGame
             // 
             this.toolStripComboBoxSelectGame.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            // availableGames
             this.toolStripComboBoxSelectGame.Items.AddRange(new object[] {
             "Skyrim",
             "Skyrim SE"});
@@ -171,6 +180,11 @@ namespace Spear
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
+            // 
+            // toolStripLabel1
+            // 
+            this.toolStripLabel1.Name = "toolStripLabel1";
+            this.toolStripLabel1.Size = new System.Drawing.Size(0, 22);
             // 
             // toolStripButtonActivate
             // 
@@ -209,7 +223,7 @@ namespace Spear
             this.toolStripButtonEdit.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonEdit.Name = "toolStripButtonEdit";
             this.toolStripButtonEdit.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonEdit.Text = "EDIT Profiles";
+            this.toolStripButtonEdit.Text = "EDIT Profile";
             this.toolStripButtonEdit.Click += new System.EventHandler(this.toolStripButtonEdit_Click);
             // 
             // toolStripButtonReload
@@ -221,6 +235,32 @@ namespace Spear
             this.toolStripButtonReload.Size = new System.Drawing.Size(23, 22);
             this.toolStripButtonReload.Text = "RELOAD Profiles";
             this.toolStripButtonReload.Click += new System.EventHandler(this.toolStripButtonReload_Click);
+            // 
+            // toolStripLabel2
+            // 
+            this.toolStripLabel2.Name = "toolStripLabel2";
+            this.toolStripLabel2.Size = new System.Drawing.Size(90, 22);
+            this.toolStripLabel2.Text = "Developer Tools";
+            // 
+            // toolStripButtonGitignore
+            // 
+            this.toolStripButtonGitignore.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonGitignore.Image = global::Spear.Properties.Resources._15_git_ico;
+            this.toolStripButtonGitignore.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonGitignore.Name = "toolStripButtonGitignore";
+            this.toolStripButtonGitignore.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonGitignore.Text = "Create gitignore file";
+            this.toolStripButtonGitignore.Click += new System.EventHandler(this.toolStripButtonGitignore_Click);
+            // 
+            // toolStripButtonGitThrash
+            // 
+            this.toolStripButtonGitThrash.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonGitThrash.Image = global::Spear.Properties.Resources._15_thrash;
+            this.toolStripButtonGitThrash.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonGitThrash.Name = "toolStripButtonGitThrash";
+            this.toolStripButtonGitThrash.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonGitThrash.Text = "Delete gitignore file";
+            this.toolStripButtonGitThrash.Click += new System.EventHandler(this.toolStripButtonGitThrash_Click);
             // 
             // tableLayoutPanel1
             // 
@@ -378,15 +418,16 @@ namespace Spear
             this.label1.TabIndex = 0;
             this.label1.Text = "TEST PANEL";
             // 
-            // toolStripButtonGitignore
+            // toolStripLabel3
             // 
-            this.toolStripButtonGitignore.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonGitignore.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonGitignore.Image")));
-            this.toolStripButtonGitignore.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonGitignore.Name = "toolStripButtonGitignore";
-            this.toolStripButtonGitignore.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonGitignore.Text = "toolStripButton1";
-            this.toolStripButtonGitignore.Click += new System.EventHandler(this.toolStripButton1_Click);
+            this.toolStripLabel3.Name = "toolStripLabel3";
+            this.toolStripLabel3.Size = new System.Drawing.Size(91, 22);
+            this.toolStripLabel3.Text = "Profile Manager";
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
             // 
             // FormMain
             // 
@@ -452,5 +493,10 @@ namespace Spear
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripButton toolStripButtonReload;
         private System.Windows.Forms.ToolStripButton toolStripButtonGitignore;
+        private System.Windows.Forms.ToolStripLabel toolStripLabel1;
+        private System.Windows.Forms.ToolStripLabel toolStripLabel2;
+        private System.Windows.Forms.ToolStripButton toolStripButtonGitThrash;
+        private System.Windows.Forms.ToolStripLabel toolStripLabel3;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
     }
 }

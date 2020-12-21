@@ -14,20 +14,18 @@ namespace ProfileManagerBL.ViewModel
             this.desactivateProfile = false;
             this.activateProfile = false;
             this.switchProfile = false;
-        }
+            this.reloadProfile = false;
+            this.createGitignore = false;
+            this.deleteGitignore = false;
 
-        //public static EnabledOp getInstance()
-        //{
-        //    if (EnabledOp.instance == null)
-        //    {
-        //        EnabledOp.instance = new EnabledOp();
-        //    }
-        //    return EnabledOp.instance;
-        //}
+        }
 
         public  bool editProfile { get; set; }
         public  bool activateProfile { get; set; }
         public  bool desactivateProfile { get; set; }
         public  bool switchProfile { get; set; }
+        public bool reloadProfile { get; set; }
+        public bool createGitignore { get; set; }
+        public bool deleteGitignore { get; set; }
     }
 }

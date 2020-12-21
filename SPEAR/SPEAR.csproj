@@ -180,6 +180,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\15-reload.png" />
+    <None Include="Resources\15-git-ico.png" />
+    <None Include="Resources\15-thrash.png" />
+    <None Include="Resources\15-open-folder.png" />
     <Content Include="spear.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

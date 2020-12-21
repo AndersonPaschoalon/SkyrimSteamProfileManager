@@ -65,6 +65,11 @@ namespace UiConsole
                             updateConfigCsvDefault(manager);
                             break;
                         }
+                    case "06":
+                        {
+                            listAllFiles();
+                            break;
+                        }
                     // 20   activateInactiveProfile
                     case "20":
                         {
@@ -130,6 +135,7 @@ namespace UiConsole
             Console.WriteLine("03   Configure List");
             Console.WriteLine("04   configureCsv");
             Console.WriteLine("05   configure Default");
+            Console.WriteLine("06   list all files");
 
             Console.WriteLine("20   activateInactiveProfile");
             Console.WriteLine("30   activateDesactivatedProfile");
@@ -198,8 +204,6 @@ namespace UiConsole
             {
                 Console.WriteLine("> abort updateSettings");
             }
-
-
         }
 
         private static void updateConfigCsvDefault(SteamProfileManager manager)
@@ -214,6 +218,18 @@ namespace UiConsole
             Console.WriteLine("  NMM Mod: " + opts[4]);
             Console.WriteLine("---------------------------------");
             manager.updateSettings(opts[0], opts[1], opts[2], opts[3], opts[4]);
+        }
+
+        private static void listAllFiles()
+        {
+            String gitignoreFile = "";
+            foreach (string file in Directory.EnumerateFiles(".\\", "*.*", SearchOption.AllDirectories))
+            {
+                gitignoreFile += file.Replace(@"\", @"/") + "\n";
+            }
+            File.WriteAllText(@".gitignore", gitignoreFile);
+            Console.WriteLine(gitignoreFile);
+
         }
 
         private static void exec_activateInactiveProfile(SteamProfileManager manager)
@@ -260,7 +276,7 @@ namespace UiConsole
         private static void exec_killAll(SteamProfileManager manager)
         {
             Console.WriteLine("> exec_killAll");
-            manager.killAllSteam();
+            SteamProfileManager.killAllSteam();
         }
 
         private static string readOption(string optionName)

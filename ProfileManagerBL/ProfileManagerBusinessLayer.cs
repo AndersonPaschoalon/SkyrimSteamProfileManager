@@ -105,17 +105,19 @@ namespace ProfileManagerBL
             int nDe = this.countCheckedDesactivated();
             ProfileManager.Enum.SPMState state = this.manager.getApplicationState();
             EnabledOp eop = new EnabledOp(); // return obj
+            // Profile Operations
             switch (state)
             {
                 case ProfileManager.Enum.SPMState.NO_PROFILE:
                     {
                         log.Debug("No Profile, No Operations Allowed");
-                        return eop;
+                        break;
+
                     }
                 case ProfileManager.Enum.SPMState.NOT_CONFIGURED:
                     {
                         log.Debug("Not Configured, No Operations Allowed");
-                        return eop;
+                        break;
                     }
                 case ProfileManager.Enum.SPMState.INACTIVE_PROFILE:
                     // configuration and activation operation is permited
@@ -126,7 +128,7 @@ namespace ProfileManagerBL
                             log.Debug("One INACTIVE selected");
                             eop.activateProfile = true;
                         }
-                        return eop;
+                        break;
                     }
                 case ProfileManager.Enum.SPMState.DESACTIVATED_ONLY:
                     // configuration and activation operations are permited
@@ -138,7 +140,7 @@ namespace ProfileManagerBL
                             eop.activateProfile = true;
                             eop.editProfile = true;
                         }
-                        return eop;
+                        break;
                     }
                 case ProfileManager.Enum.SPMState.ACTIVE_ONLY:
                     // configuration and desactivation operations are permited
@@ -149,7 +151,7 @@ namespace ProfileManagerBL
                             eop.desactivateProfile = true;
                             eop.editProfile = true;
                         }
-                        return eop;
+                        break;
                     }
                 case ProfileManager.Enum.SPMState.ACTIVE_AND_DESACTIVATED_PROFILES:
                     // configuration, desactivation and switch operations are permited
@@ -172,13 +174,21 @@ namespace ProfileManagerBL
                             log.Debug("desactivated selected: edit, active");
                             eop.editProfile = true;
                         }
-                        return eop;
+                        break;
                     }
                 default:
                     {
-                        return eop;
+                        break;
                     }
             }
+            // Developer Operations
+            if (nIn == 1 || nAc == 1)
+            {
+                eop.createGitignore = !this.manager.gitignoreDetected();
+                eop.deleteGitignore = this.manager.gitignoreDetected();
+            }
+
+            return eop;
         }
 
         public SettingsViewData getSettingsData()
@@ -367,14 +377,27 @@ namespace ProfileManagerBL
         /// 
         /// </summary>
         /// <returns></returns>
-        public bool createGitignore()
+        public bool createGitignore(out string errMsg)
         {
+            log.Debug(" -- createGitignore()");
             if (!this.manager.gitignoreDetected())
             {
                 log.Debug(" -- gitignore not detected");
-                return this.manager.createGitignore();
+                return this.manager.createGitignore(out errMsg);
             }
-            log.Info(" -- Gitignore file detected or gig-bash not installed.");
+            errMsg = ".gitignore file was detected!";
+            return false;
+        }
+
+        public bool deleteGitignore(out string errMsg)
+        {
+            log.Debug(" -- deleteGitignore()");
+            if (this.manager.gitignoreDetected())
+            {
+                log.Debug(" -- gitignore DETECTED");
+                return this.manager.deleteGitignore(out errMsg);
+            }
+            errMsg = ".gitignore file was not detected!";
             return false;
         }
 

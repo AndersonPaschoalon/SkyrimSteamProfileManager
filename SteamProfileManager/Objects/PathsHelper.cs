@@ -310,13 +310,21 @@ namespace ProfileManager.Objects
         public bool nmmModEmpty { get; private set; }
 
         // optional are set
+        //public bool optionalAreSet()
+        //{
+        //     if (!nmmInfoEmpty || !nmmModEmpty)
+        //    {
+        //        return true;
+        //    }
+        //    return false;
+        //}
         public bool optionalAreSet()
         {
-            if (!nmmInfoEmpty || !nmmModEmpty)
+            if (nmmInfoEmpty || nmmModEmpty)
             {
-                return true;
+                return false;
             }
-            return false;
+            return true;
         }
 
         #endregion NMM

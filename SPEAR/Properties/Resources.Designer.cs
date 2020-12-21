@@ -103,9 +103,39 @@ namespace Spear.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap _15_git_ico {
+            get {
+                object obj = ResourceManager.GetObject("_15_git_ico", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap _15_open_folder {
+            get {
+                object obj = ResourceManager.GetObject("_15_open_folder", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap _15_reload {
             get {
                 object obj = ResourceManager.GetObject("_15_reload", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap _15_thrash {
+            get {
+                object obj = ResourceManager.GetObject("_15_thrash", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

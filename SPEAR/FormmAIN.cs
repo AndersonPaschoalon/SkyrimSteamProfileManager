@@ -48,6 +48,7 @@ namespace Spear
                 this.availableGames = new string[]{ "*NO GAME DEFINED*"};
             }
             InitializeComponent();
+            // update game list
             this.updateDropdownGameMenu();
             // enable testing panel
             this.panelTests.Visible = ENABLE_TESTING;
@@ -91,6 +92,18 @@ namespace Spear
         #endregion window_events
 
         #region events_helpers
+
+        private static void ansMessageBox(bool ret, string successMsg, string errMsg)
+        {
+            if (ret)
+            {
+                MessageBox.Show(successMsg, "SUCCESS", MessageBoxButtons.OK);
+            }
+            else
+            {
+                MessageBox.Show(successMsg, "WARNING", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
 
         private void fillDataGrids()
         {
@@ -148,12 +161,16 @@ namespace Spear
             log.Debug("allowed operations >> Activate:" + enabled.activateProfile +
                       ", Desactivate:" + enabled.desactivateProfile +
                       ", Switch:" + enabled.switchProfile +
-                      ", Edit:" + enabled.editProfile);
+                      ", Edit:" + enabled.editProfile +
+                      ", createGitignore:" + enabled.createGitignore +
+                      ", deleteGitignore:" + enabled.deleteGitignore);
             this.toolStripButtonActivate.Enabled = enabled.activateProfile;
             this.toolStripButtonDesactivate.Enabled = enabled.desactivateProfile;
             this.toolStripButtonSwitch.Enabled = enabled.switchProfile;
             this.toolStripButtonEdit.Enabled = enabled.editProfile;
             this.toolStripButtonReload.Enabled = true;
+            this.toolStripButtonGitignore.Enabled = enabled.createGitignore;
+            this.toolStripButtonGitThrash.Enabled = enabled.deleteGitignore;
         }
 
 
@@ -164,6 +181,8 @@ namespace Spear
             this.toolStripButtonSwitch.Enabled = false;
             this.toolStripButtonEdit.Enabled = false;
             this.toolStripButtonReload.Enabled = false;
+            this.toolStripButtonGitignore.Enabled = false;
+            this.toolStripButtonGitThrash.Enabled = false;
         }
         #endregion events_helpers
 
@@ -339,6 +358,9 @@ namespace Spear
                         }
                         catch (Exception ex)
                         {
+                            log.Warn("EXCEPTION: Message:" + ex.Message + ", StackTrace:" + ex.StackTrace);
+                            log.Warn("Error on using dataFormat! dateFormat:<" + 
+                                     this.managerBusinessLayer.dateFormat() + ">");
                             creatinDate = DateTime.Now.ToString("yyyy/MM/dd");
                         }
                         newProf.creatingDate = creatinDate;
@@ -466,9 +488,36 @@ namespace Spear
         {
         }
 
-        private void toolStripButton1_Click(object sender, EventArgs e)
+        private void toolStripButtonGitThrash_Click(object sender, EventArgs e)
         {
-            this.managerBusinessLayer.createGitignore();
+            log.Debug("-- toolStripButtonGitThrash_Click");
+            string errMsg = "";
+            var result = MessageBox.Show("Are you sure you want to DELETE .gitignore file?", 
+                                         "DELETE CONFIRMATION", 
+                                         MessageBoxButtons.YesNo, 
+                                         MessageBoxIcon.Question);
+            if (result == System.Windows.Forms.DialogResult.Yes)
+            {
+                bool retval = this.managerBusinessLayer.deleteGitignore(out errMsg);
+                ansMessageBox(retval, ".gitignore file was successfully deleted!", "ERROR: " + errMsg);
+            }
+            this.updateToolStripButtons();
+        }
+
+        private void toolStripButtonGitignore_Click(object sender, EventArgs e)
+        {
+            log.Debug("-- toolStripButtonGitignore_Click");
+            string errMsg = "";
+            var result = MessageBox.Show("Do you want to create a .gitignore of all files of the game root folder?",
+                                         "Creating gitignore",
+                                         MessageBoxButtons.YesNo,
+                                         MessageBoxIcon.Question);
+            if (result == System.Windows.Forms.DialogResult.Yes)
+            {
+                bool ret = this.managerBusinessLayer.createGitignore(out errMsg);
+                ansMessageBox(ret, ".gitignore file was successfully created!", "ERROR: " + errMsg);
+            }
+            this.updateToolStripButtons();
         }
     }
 }

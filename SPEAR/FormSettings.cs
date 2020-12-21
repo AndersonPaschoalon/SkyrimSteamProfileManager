@@ -18,12 +18,33 @@ namespace Spear
         private readonly SettingsViewData defaultSettings;
         public bool saveSettings { get; private set; }
 
+        private void openDir(string path)
+        {
+            if (!Utils.CSharp.openDirectoryOnFileExplorer(path))
+            {
+                MessageBox.Show("Could not open directory \"" + path + "\" on file explorer",
+                                "CANNOT OPEN DIRECTORY",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Error);
+            }
+        }
+
+        private void updateSettings()
+        {
+            this.settings.steam = this.textBoxSteam.Text;
+            this.settings.docs = this.textBoxDocs.Text;
+            this.settings.appData = this.textBoxAppData.Text;
+            this.settings.nmmInfo = this.textBoxNmmInfo.Text;
+            this.settings.nmmMod = this.textBoxNmmMod.Text;
+        }
+
+
         public FormSettings(SettingsViewData oldSets, string gameName)
         {
             // default values
             this.defaultSettings = new SettingsViewData {
                 appData = Environment.GetEnvironmentVariable("localappdata"),
-                docs = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+                docs = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\My Games\",
                 steam = @"C:\Program Files (x86)\Steam\steamapps\common",
                 nmmMod = "",
                 nmmInfo = ""
@@ -54,7 +75,7 @@ namespace Spear
             if (result == DialogResult.OK)
             {
                 this.textBoxSteam.Text = this.folderDlg.SelectedPath;
-                this.settings.steam = folderDlg.SelectedPath;
+                this.textBoxSteam.Text = folderDlg.SelectedPath;
                 Environment.SpecialFolder root = folderDlg.RootFolder;
             }
         }
@@ -65,7 +86,7 @@ namespace Spear
             if (result == DialogResult.OK)
             {
                 this.textBoxDocs.Text = this.folderDlg.SelectedPath;
-                this.settings.docs = folderDlg.SelectedPath;
+                this.textBoxDocs.Text = folderDlg.SelectedPath;
                 Environment.SpecialFolder root = folderDlg.RootFolder;
             }
         }
@@ -76,7 +97,7 @@ namespace Spear
             if (result == DialogResult.OK)
             {
                 this.textBoxAppData.Text = this.folderDlg.SelectedPath;
-                this.settings.appData = folderDlg.SelectedPath;
+                this.textBoxAppData.Text = folderDlg.SelectedPath;
                 Environment.SpecialFolder root = folderDlg.RootFolder;
             }
         }
@@ -87,7 +108,7 @@ namespace Spear
             if (result == DialogResult.OK)
             {
                 this.textBoxNmmInfo.Text = this.folderDlg.SelectedPath;
-                this.settings.nmmInfo = folderDlg.SelectedPath;
+                this.textBoxNmmInfo.Text = folderDlg.SelectedPath;
                 Environment.SpecialFolder root = folderDlg.RootFolder;
             }
         }
@@ -98,7 +119,7 @@ namespace Spear
             if (result == DialogResult.OK)
             {
                 this.textBoxNmmMod.Text = this.folderDlg.SelectedPath;
-                this.settings.nmmMod = folderDlg.SelectedPath;
+                this.textBoxNmmMod.Text = folderDlg.SelectedPath;
                 Environment.SpecialFolder root = folderDlg.RootFolder;
             }
         }
@@ -106,6 +127,7 @@ namespace Spear
         private void buttonSave_Click(object sender, EventArgs e)
         {
             this.saveSettings = true;
+            this.updateSettings();
             this.Close();
         }
 
@@ -117,20 +139,52 @@ namespace Spear
 
         private void buttonDefSteam_Click(object sender, EventArgs e)
         {
-            this.settings.steam = defaultSettings.steam;
             this.textBoxSteam.Text = defaultSettings.steam;
         }
 
         private void buttonDefDocs_Click(object sender, EventArgs e)
         {
-            this.settings.docs = defaultSettings.docs;
             this.textBoxDocs.Text = defaultSettings.docs;
         }
 
         private void buttonDefApp_Click(object sender, EventArgs e)
         {
-            this.settings.appData = defaultSettings.appData;
             this.textBoxAppData.Text = defaultSettings.appData;
+        }
+
+        private void buttonDefNmmInfo_Click(object sender, EventArgs e)
+        {
+            this.textBoxNmmInfo.Text = defaultSettings.nmmInfo;
+        }
+
+        private void buttonDefNmmMod_Click(object sender, EventArgs e)
+        {
+            this.textBoxNmmMod.Text = defaultSettings.nmmMod;
+        }
+
+        private void pictureBoxSteam_Click(object sender, EventArgs e)
+        {
+            this.openDir(this.textBoxSteam.Text);
+        }
+
+        private void pictureBoxDocs_Click(object sender, EventArgs e)
+        {
+            this.openDir(this.textBoxDocs.Text);
+        }
+
+        private void pictureBoxAppData_Click(object sender, EventArgs e)
+        {
+            this.openDir(this.textBoxAppData.Text);
+        }
+
+        private void pictureBoxNmmInfo_Click(object sender, EventArgs e)
+        {
+            this.openDir(this.textBoxNmmInfo.Text);
+        }
+
+        private void pictureBoxNmmMod_Click(object sender, EventArgs e)
+        {
+            this.openDir(this.textBoxNmmMod.Text);
         }
     }
 }

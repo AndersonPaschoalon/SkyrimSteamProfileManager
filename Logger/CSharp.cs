@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -439,7 +440,8 @@ namespace Utils
                     }
                     else
                     {
-                        if (currentItem.Trim() == sources[j].Trim())
+                        // if two elements are equal
+                        if ((currentItem.Trim() == sources[j].Trim()))
                         {
                             errMsg = "Error: item[" + i + "] == item[" + j + "] " +
                                 currentItem + "::" + sources[j];
@@ -631,7 +633,6 @@ namespace Utils
             return true;
         }
 
-
         /// <summary>
         /// Safely rename a directory.
         /// </summary>
@@ -706,7 +707,6 @@ namespace Utils
             }
             return ret;
         }
-
 
         public static bool stackRename(string[] dirNames, string[] newNames, out string errMsg, out string errDir, out string errName)
         {
@@ -835,6 +835,20 @@ namespace Utils
         public static bool isDirectoryEmpty(string path)
         {
             return !Directory.EnumerateFileSystemEntries(path).Any();
+        }
+
+
+        public static bool openDirectoryOnFileExplorer(string path)
+        {
+            if (Directory.Exists(path))
+            {
+                Process.Start("explorer.exe", path);
+            }
+            else
+            {
+                return false;
+            }
+            return true;
         }
 
         #endregion fileSystemOperations

@@ -9,7 +9,7 @@ namespace ProfileManager.Objects
     public class Consts
     {
         // integrity file
-        public const string INTEGRITY_FILE_NAME = "sp_profile.int";
+        public const string INTEGRITY_FILE_NAME = "spear_profile.int";
         public const int INTEGRITY_FILE_ITEMS = 3;
         //  configuration files
         public const string CONFIG_FILE = "Settings\\SPConfig.xml";

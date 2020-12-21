@@ -139,8 +139,17 @@
   <data name="_15_engineering" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\15-engineering.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="_15_git_ico" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\15-git-ico.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="_15_open_folder" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\15-open-folder.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="_15_reload" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\15-reload.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="_15_thrash" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\15-thrash.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="_15_tick" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\15-tick.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>

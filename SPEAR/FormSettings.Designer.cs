@@ -30,6 +30,12 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormSettings));
             this.groupBoxSteam = new System.Windows.Forms.GroupBox();
+            this.pictureBoxAppData = new System.Windows.Forms.PictureBox();
+            this.pictureBoxDocs = new System.Windows.Forms.PictureBox();
+            this.pictureBoxSteam = new System.Windows.Forms.PictureBox();
+            this.buttonDefApp = new System.Windows.Forms.Button();
+            this.buttonDefDocs = new System.Windows.Forms.Button();
+            this.buttonDefSteam = new System.Windows.Forms.Button();
             this.textBoxAppData = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.buttonAppData = new System.Windows.Forms.Button();
@@ -40,6 +46,10 @@
             this.label1 = new System.Windows.Forms.Label();
             this.buttonSteam = new System.Windows.Forms.Button();
             this.groupBoxNMM = new System.Windows.Forms.GroupBox();
+            this.pictureBoxNmmMod = new System.Windows.Forms.PictureBox();
+            this.pictureBoxNmmInfo = new System.Windows.Forms.PictureBox();
+            this.buttonDefNmmMod = new System.Windows.Forms.Button();
+            this.buttonDefNmmInfo = new System.Windows.Forms.Button();
             this.textBoxNmmMod = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.buttonNmmMod = new System.Windows.Forms.Button();
@@ -61,11 +71,13 @@
             this.radioDebug = new System.Windows.Forms.RadioButton();
             this.radioWarn = new System.Windows.Forms.RadioButton();
             this.radioInfo = new System.Windows.Forms.RadioButton();
-            this.buttonDefSteam = new System.Windows.Forms.Button();
-            this.buttonDefDocs = new System.Windows.Forms.Button();
-            this.buttonDefApp = new System.Windows.Forms.Button();
             this.groupBoxSteam.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxAppData)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxDocs)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSteam)).BeginInit();
             this.groupBoxNMM.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxNmmMod)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxNmmInfo)).BeginInit();
             this.tabSettingsMain.SuspendLayout();
             this.tabConfiguration.SuspendLayout();
             this.tabLogs.SuspendLayout();
@@ -75,6 +87,9 @@
             // 
             // groupBoxSteam
             // 
+            this.groupBoxSteam.Controls.Add(this.pictureBoxAppData);
+            this.groupBoxSteam.Controls.Add(this.pictureBoxDocs);
+            this.groupBoxSteam.Controls.Add(this.pictureBoxSteam);
             this.groupBoxSteam.Controls.Add(this.buttonDefApp);
             this.groupBoxSteam.Controls.Add(this.buttonDefDocs);
             this.groupBoxSteam.Controls.Add(this.buttonDefSteam);
@@ -89,10 +104,76 @@
             this.groupBoxSteam.Controls.Add(this.buttonSteam);
             this.groupBoxSteam.Location = new System.Drawing.Point(8, 6);
             this.groupBoxSteam.Name = "groupBoxSteam";
-            this.groupBoxSteam.Size = new System.Drawing.Size(533, 184);
+            this.groupBoxSteam.Size = new System.Drawing.Size(561, 184);
             this.groupBoxSteam.TabIndex = 0;
             this.groupBoxSteam.TabStop = false;
             this.groupBoxSteam.Text = "Steam Settings";
+            // 
+            // pictureBoxAppData
+            // 
+            this.pictureBoxAppData.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.pictureBoxAppData.Image = global::Spear.Properties.Resources._15_open_folder;
+            this.pictureBoxAppData.InitialImage = global::Spear.Properties.Resources._15_open_folder;
+            this.pictureBoxAppData.Location = new System.Drawing.Point(531, 142);
+            this.pictureBoxAppData.Name = "pictureBoxAppData";
+            this.pictureBoxAppData.Size = new System.Drawing.Size(18, 18);
+            this.pictureBoxAppData.TabIndex = 14;
+            this.pictureBoxAppData.TabStop = false;
+            this.pictureBoxAppData.Click += new System.EventHandler(this.pictureBoxAppData_Click);
+            // 
+            // pictureBoxDocs
+            // 
+            this.pictureBoxDocs.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.pictureBoxDocs.Image = global::Spear.Properties.Resources._15_open_folder;
+            this.pictureBoxDocs.InitialImage = global::Spear.Properties.Resources._15_open_folder;
+            this.pictureBoxDocs.Location = new System.Drawing.Point(531, 91);
+            this.pictureBoxDocs.Name = "pictureBoxDocs";
+            this.pictureBoxDocs.Size = new System.Drawing.Size(18, 18);
+            this.pictureBoxDocs.TabIndex = 13;
+            this.pictureBoxDocs.TabStop = false;
+            this.pictureBoxDocs.Click += new System.EventHandler(this.pictureBoxDocs_Click);
+            // 
+            // pictureBoxSteam
+            // 
+            this.pictureBoxSteam.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.pictureBoxSteam.Image = global::Spear.Properties.Resources._15_open_folder;
+            this.pictureBoxSteam.InitialImage = global::Spear.Properties.Resources._15_open_folder;
+            this.pictureBoxSteam.Location = new System.Drawing.Point(531, 41);
+            this.pictureBoxSteam.Name = "pictureBoxSteam";
+            this.pictureBoxSteam.Size = new System.Drawing.Size(18, 18);
+            this.pictureBoxSteam.TabIndex = 12;
+            this.pictureBoxSteam.TabStop = false;
+            this.pictureBoxSteam.Click += new System.EventHandler(this.pictureBoxSteam_Click);
+            // 
+            // buttonDefApp
+            // 
+            this.buttonDefApp.Location = new System.Drawing.Point(456, 137);
+            this.buttonDefApp.Name = "buttonDefApp";
+            this.buttonDefApp.Size = new System.Drawing.Size(69, 23);
+            this.buttonDefApp.TabIndex = 11;
+            this.buttonDefApp.Text = "DEFAULT";
+            this.buttonDefApp.UseVisualStyleBackColor = true;
+            this.buttonDefApp.Click += new System.EventHandler(this.buttonDefApp_Click);
+            // 
+            // buttonDefDocs
+            // 
+            this.buttonDefDocs.Location = new System.Drawing.Point(456, 86);
+            this.buttonDefDocs.Name = "buttonDefDocs";
+            this.buttonDefDocs.Size = new System.Drawing.Size(69, 23);
+            this.buttonDefDocs.TabIndex = 10;
+            this.buttonDefDocs.Text = "DEFAULT";
+            this.buttonDefDocs.UseVisualStyleBackColor = true;
+            this.buttonDefDocs.Click += new System.EventHandler(this.buttonDefDocs_Click);
+            // 
+            // buttonDefSteam
+            // 
+            this.buttonDefSteam.Location = new System.Drawing.Point(456, 38);
+            this.buttonDefSteam.Name = "buttonDefSteam";
+            this.buttonDefSteam.Size = new System.Drawing.Size(69, 23);
+            this.buttonDefSteam.TabIndex = 9;
+            this.buttonDefSteam.Text = "DEFAULT";
+            this.buttonDefSteam.UseVisualStyleBackColor = true;
+            this.buttonDefSteam.Click += new System.EventHandler(this.buttonDefSteam_Click);
             // 
             // textBoxAppData
             // 
@@ -177,6 +258,10 @@
             // 
             // groupBoxNMM
             // 
+            this.groupBoxNMM.Controls.Add(this.pictureBoxNmmMod);
+            this.groupBoxNMM.Controls.Add(this.pictureBoxNmmInfo);
+            this.groupBoxNMM.Controls.Add(this.buttonDefNmmMod);
+            this.groupBoxNMM.Controls.Add(this.buttonDefNmmInfo);
             this.groupBoxNMM.Controls.Add(this.textBoxNmmMod);
             this.groupBoxNMM.Controls.Add(this.label5);
             this.groupBoxNMM.Controls.Add(this.buttonNmmMod);
@@ -185,16 +270,60 @@
             this.groupBoxNMM.Controls.Add(this.buttonNmmInfo);
             this.groupBoxNMM.Location = new System.Drawing.Point(6, 196);
             this.groupBoxNMM.Name = "groupBoxNMM";
-            this.groupBoxNMM.Size = new System.Drawing.Size(532, 143);
+            this.groupBoxNMM.Size = new System.Drawing.Size(563, 143);
             this.groupBoxNMM.TabIndex = 1;
             this.groupBoxNMM.TabStop = false;
             this.groupBoxNMM.Text = "(Optional) NMM Settings";
+            // 
+            // pictureBoxNmmMod
+            // 
+            this.pictureBoxNmmMod.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.pictureBoxNmmMod.Image = global::Spear.Properties.Resources._15_open_folder;
+            this.pictureBoxNmmMod.InitialImage = global::Spear.Properties.Resources._15_open_folder;
+            this.pictureBoxNmmMod.Location = new System.Drawing.Point(533, 96);
+            this.pictureBoxNmmMod.Name = "pictureBoxNmmMod";
+            this.pictureBoxNmmMod.Size = new System.Drawing.Size(18, 18);
+            this.pictureBoxNmmMod.TabIndex = 17;
+            this.pictureBoxNmmMod.TabStop = false;
+            this.pictureBoxNmmMod.Click += new System.EventHandler(this.pictureBoxNmmMod_Click);
+            // 
+            // pictureBoxNmmInfo
+            // 
+            this.pictureBoxNmmInfo.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.pictureBoxNmmInfo.Image = global::Spear.Properties.Resources._15_open_folder;
+            this.pictureBoxNmmInfo.InitialImage = global::Spear.Properties.Resources._15_open_folder;
+            this.pictureBoxNmmInfo.Location = new System.Drawing.Point(533, 47);
+            this.pictureBoxNmmInfo.Name = "pictureBoxNmmInfo";
+            this.pictureBoxNmmInfo.Size = new System.Drawing.Size(18, 18);
+            this.pictureBoxNmmInfo.TabIndex = 15;
+            this.pictureBoxNmmInfo.TabStop = false;
+            this.pictureBoxNmmInfo.Click += new System.EventHandler(this.pictureBoxNmmInfo_Click);
+            // 
+            // buttonDefNmmMod
+            // 
+            this.buttonDefNmmMod.Location = new System.Drawing.Point(458, 90);
+            this.buttonDefNmmMod.Name = "buttonDefNmmMod";
+            this.buttonDefNmmMod.Size = new System.Drawing.Size(69, 23);
+            this.buttonDefNmmMod.TabIndex = 16;
+            this.buttonDefNmmMod.Text = "DEFAULT";
+            this.buttonDefNmmMod.UseVisualStyleBackColor = true;
+            this.buttonDefNmmMod.Click += new System.EventHandler(this.buttonDefNmmMod_Click);
+            // 
+            // buttonDefNmmInfo
+            // 
+            this.buttonDefNmmInfo.Location = new System.Drawing.Point(458, 41);
+            this.buttonDefNmmInfo.Name = "buttonDefNmmInfo";
+            this.buttonDefNmmInfo.Size = new System.Drawing.Size(69, 23);
+            this.buttonDefNmmInfo.TabIndex = 15;
+            this.buttonDefNmmInfo.Text = "DEFAULT";
+            this.buttonDefNmmInfo.UseVisualStyleBackColor = true;
+            this.buttonDefNmmInfo.Click += new System.EventHandler(this.buttonDefNmmInfo_Click);
             // 
             // textBoxNmmMod
             // 
             this.textBoxNmmMod.Location = new System.Drawing.Point(87, 93);
             this.textBoxNmmMod.Name = "textBoxNmmMod";
-            this.textBoxNmmMod.Size = new System.Drawing.Size(439, 20);
+            this.textBoxNmmMod.Size = new System.Drawing.Size(365, 20);
             this.textBoxNmmMod.TabIndex = 8;
             this.textBoxNmmMod.Text = " ";
             // 
@@ -221,7 +350,7 @@
             // 
             this.textBoxNmmInfo.Location = new System.Drawing.Point(87, 44);
             this.textBoxNmmInfo.Name = "textBoxNmmInfo";
-            this.textBoxNmmInfo.Size = new System.Drawing.Size(439, 20);
+            this.textBoxNmmInfo.Size = new System.Drawing.Size(365, 20);
             this.textBoxNmmInfo.TabIndex = 5;
             this.textBoxNmmInfo.Text = " ";
             // 
@@ -299,7 +428,7 @@
             this.tabLogs.Location = new System.Drawing.Point(4, 22);
             this.tabLogs.Name = "tabLogs";
             this.tabLogs.Padding = new System.Windows.Forms.Padding(3);
-            this.tabLogs.Size = new System.Drawing.Size(597, 455);
+            this.tabLogs.Size = new System.Drawing.Size(597, 389);
             this.tabLogs.TabIndex = 1;
             this.tabLogs.Text = "Logs";
             this.tabLogs.UseVisualStyleBackColor = true;
@@ -415,36 +544,6 @@
             this.radioInfo.Text = "Info";
             this.radioInfo.UseVisualStyleBackColor = true;
             // 
-            // buttonDefSteam
-            // 
-            this.buttonDefSteam.Location = new System.Drawing.Point(456, 38);
-            this.buttonDefSteam.Name = "buttonDefSteam";
-            this.buttonDefSteam.Size = new System.Drawing.Size(69, 23);
-            this.buttonDefSteam.TabIndex = 9;
-            this.buttonDefSteam.Text = "DEFAULT";
-            this.buttonDefSteam.UseVisualStyleBackColor = true;
-            this.buttonDefSteam.Click += new System.EventHandler(this.buttonDefSteam_Click);
-            // 
-            // buttonDefDocs
-            // 
-            this.buttonDefDocs.Location = new System.Drawing.Point(456, 86);
-            this.buttonDefDocs.Name = "buttonDefDocs";
-            this.buttonDefDocs.Size = new System.Drawing.Size(69, 23);
-            this.buttonDefDocs.TabIndex = 10;
-            this.buttonDefDocs.Text = "DEFAULT";
-            this.buttonDefDocs.UseVisualStyleBackColor = true;
-            this.buttonDefDocs.Click += new System.EventHandler(this.buttonDefDocs_Click);
-            // 
-            // buttonDefApp
-            // 
-            this.buttonDefApp.Location = new System.Drawing.Point(456, 137);
-            this.buttonDefApp.Name = "buttonDefApp";
-            this.buttonDefApp.Size = new System.Drawing.Size(69, 23);
-            this.buttonDefApp.TabIndex = 11;
-            this.buttonDefApp.Text = "DEFAULT";
-            this.buttonDefApp.UseVisualStyleBackColor = true;
-            this.buttonDefApp.Click += new System.EventHandler(this.buttonDefApp_Click);
-            // 
             // FormSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -456,8 +555,13 @@
             this.Text = "Edit Settings";
             this.groupBoxSteam.ResumeLayout(false);
             this.groupBoxSteam.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxAppData)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxDocs)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSteam)).EndInit();
             this.groupBoxNMM.ResumeLayout(false);
             this.groupBoxNMM.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxNmmMod)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxNmmInfo)).EndInit();
             this.tabSettingsMain.ResumeLayout(false);
             this.tabConfiguration.ResumeLayout(false);
             this.tabLogs.ResumeLayout(false);
@@ -506,5 +610,12 @@
         private System.Windows.Forms.Button buttonDefApp;
         private System.Windows.Forms.Button buttonDefDocs;
         private System.Windows.Forms.Button buttonDefSteam;
+        private System.Windows.Forms.PictureBox pictureBoxSteam;
+        private System.Windows.Forms.PictureBox pictureBoxAppData;
+        private System.Windows.Forms.PictureBox pictureBoxDocs;
+        private System.Windows.Forms.PictureBox pictureBoxNmmMod;
+        private System.Windows.Forms.PictureBox pictureBoxNmmInfo;
+        private System.Windows.Forms.Button buttonDefNmmMod;
+        private System.Windows.Forms.Button buttonDefNmmInfo;
     }
 }
