@@ -4,8 +4,7 @@
             steamPath=""
             documentsPath=""
             appDataPath=""
-            nmmModPath=""
-            nmmInfoPath=""
+            nmmPath=""
             gameFolder="Skyrim"
             backupFolder="SkyrimBackups"
             dateFormat="yyyy/MM/dd" />
@@ -13,8 +12,7 @@
             steamPath=""
             documentsPath=""
             appDataPath=""
-            nmmModPath=""
-            nmmInfoPath=""
+            nmmPath=""
             gameFolder="Skyrim SE"
             backupFolder="SkyrimSEBackups" 
             dateFormat="yyyy/MM/dd" />

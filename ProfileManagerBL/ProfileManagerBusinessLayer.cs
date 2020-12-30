@@ -228,8 +228,9 @@ namespace ProfileManagerBL
             settings.appData = spsettings.appDataPath;
             settings.docs = spsettings.documentsPath;
             settings.steam = spsettings.steamPath;
-            settings.nmmInfo = spsettings.nmmInfoPath;
-            settings.nmmMod = spsettings.nmmModPath;
+            //settings.nmmInfo = spsettings.nmmInfoPath;
+            //settings.nmmMod = spsettings.nmmModPath;
+            settings.nmm = spsettings.nmmPath;
             return settings;
         }
 
@@ -238,7 +239,8 @@ namespace ProfileManagerBL
             int ret = Errors.SUCCESS;
             try
             {
-                this.manager.updateSettings(s.steam, s.docs, s.appData, s.nmmInfo, s.nmmMod);
+                //this.manager.updateSettings(s.steam, s.docs, s.appData, s.nmmInfo, s.nmmMod);
+                this.manager.updateSettings(s.steam, s.docs, s.appData, s.nmm);
                 this.manager.reloadState();
             }
             catch (Exception ex)

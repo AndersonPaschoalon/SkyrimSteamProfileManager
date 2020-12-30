@@ -82,11 +82,9 @@ namespace ProfileManager
         /// <param name="newSteamPath"></param>
         /// <param name="newDocumentsPath"></param>
         /// <param name="newAppDataPath"></param>
-        /// <param name="nmmInfoPath"></param>
-        /// <param name="nmmModPath"></param>
+        /// <param name="nmmPath"></param>
         /// <returns></returns>
-        public int updateSettings(string newSteamPath, string newDocumentsPath, string newAppDataPath, 
-                                  string nmmInfoPath, string nmmModPath)
+        public int updateSettings(string newSteamPath, string newDocumentsPath, string newAppDataPath, string nmmPath)
         {
             log.Debug("## manager.updateSettings() ####################################################");
 
@@ -95,10 +93,7 @@ namespace ProfileManager
                 newDocumentsPath,
                 newAppDataPath
             };
-            List<string> optionalPaths = new List<string>{
-                nmmInfoPath,
-                nmmModPath
-            };
+            List<string> optionalPaths = new List<string>{nmmPath};
 
             // check if any optional is not null (this should not be null)
             bool optionalNotNull = CSharp.checkNotNull(optionalPaths);
@@ -139,9 +134,10 @@ namespace ProfileManager
             this.settings.appDataPath = newAppDataPath;
             this.settings.steamPath = newSteamPath;
             this.settings.documentsPath = newDocumentsPath;
-            this.settings.nmmInfoPath = nmmInfoPath;
-            this.settings.nmmModPath = nmmModPath;
-            
+            this.settings.nmmPath = nmmPath;
+            //this.settings.nmmInfoPath = nmmInfoPath;
+            //this.settings.nmmModPath = nmmModPath;
+
 
             // update path helper
             this.paths.update(this.settings);
@@ -286,15 +282,17 @@ namespace ProfileManager
                     this.paths.steam,
                     this.paths.appData,
                     this.paths.docs,
-                    this.paths.nmmInfo,
-                    this.paths.nmmMod
+                    this.paths.nmm
+                    //this.paths.nmmInfo,
+                    //this.paths.nmmMod
                 };
                 sourceDirs = new string[] {
                     this.paths.steamBkpProfGame(profileName),      // steam
                     this.paths.appDataBkpProfGame(profileName),    // appdata
                     this.paths.docsBkpProfGame(profileName),       // docs
-                    this.paths.nmmInfoBkpProfGame(profileName),    //
-                    this.paths.nmmModBkpProfGame(profileName)      //
+                    this.paths.nmmBkpProfGame(profileName)
+                    //this.paths.nmmInfoBkpProfGame(profileName),    //
+                    //this.paths.nmmModBkpProfGame(profileName)      //
                 };
             }
             else
@@ -395,15 +393,17 @@ namespace ProfileManager
                     this.paths.steamBkpProf(profileName),      // steam
                     this.paths.appDataBkpProf(profileName),    // appdata
                     this.paths.docsBkpProf(profileName),       // docs
-                    this.paths.nmmInfoBkpProf(profileName),    //
-                    this.paths.nmmModBkpProf(profileName)      //
+                    this.paths.nmmBkpProf(profileName),    //
+                    //this.paths.nmmInfoBkpProf(profileName),    //
+                    //this.paths.nmmModBkpProf(profileName)      //
                 };
                 sourceDirs = new string[] {
                     this.paths.steamGame,
                     this.paths.appDataGame,
                     this.paths.docsGame,
-                    this.paths.nmmInfoGame,
-                    this.paths.nmmModGame
+                    this.paths.nmmGame,
+                    //this.paths.nmmInfoGame,
+                    //this.paths.nmmModGame
                 };
             }
             else
@@ -553,8 +553,9 @@ namespace ProfileManager
                     };
                     if (this.paths.optionalAreSet())
                     {
-                        dirsToCheck.Add(this.paths.nmmInfoBkpProf(profNameOld));
-                        dirsToCheck.Add(this.paths.nmmModBkpProf(profNameOld));
+                        dirsToCheck.Add(this.paths.nmmBkpProf(profNameOld));
+                        //dirsToCheck.Add(this.paths.nmmInfoBkpProf(profNameOld));
+                        //dirsToCheck.Add(this.paths.nmmModBkpProf(profNameOld));
                         names.Add(profNameNew);
                         names.Add(profNameNew);
                     }
@@ -827,10 +828,14 @@ namespace ProfileManager
             Directory.CreateDirectory(this.paths.appDataBkp);
             if (this.paths.optionalAreSet())
             {
+                /*
                 log.Debug("creating directory this.paths.nmmInfoBkp:" + this.paths.nmmInfoBkp);
                 Directory.CreateDirectory(this.paths.nmmInfoBkp);
                 log.Debug("creating directory this.paths.nmmMod:" + this.paths.nmmMod);
                 Directory.CreateDirectory(this.paths.nmmMod);
+                */
+                log.Debug("creating directory this.paths.nmm:" + this.paths.nmm);
+                Directory.CreateDirectory(this.paths.nmm);
             }
         }
 
@@ -842,12 +847,15 @@ namespace ProfileManager
             Directory.CreateDirectory(this.paths.appDataBkpProf(profName));
             if (this.paths.optionalAreSet())
             {
-                log.Debug("creating directory paths.nmmInfoBkpProf(profName):" + 
-                          this.paths.nmmInfoBkpProf(profName));
-                Directory.CreateDirectory(this.paths.nmmInfoBkpProf(profName));
-                log.Debug("creating directory paths.nmmModBkpProf(profName):" + 
-                          this.paths.nmmModBkpProf(profName));
-                Directory.CreateDirectory(this.paths.nmmModBkpProf(profName));
+                //log.Debug("creating directory paths.nmmInfoBkpProf(profName):" + 
+                //          this.paths.nmmInfoBkpProf(profName));
+                //Directory.CreateDirectory(this.paths.nmmInfoBkpProf(profName));
+                //log.Debug("creating directory paths.nmmModBkpProf(profName):" + 
+                //          this.paths.nmmModBkpProf(profName));
+                //Directory.CreateDirectory(this.paths.nmmModBkpProf(profName));
+                log.Debug("creating directory paths.nmmBkpProf(profName):" +
+                          this.paths.nmmBkpProf(profName));
+                Directory.CreateDirectory(this.paths.nmmBkpProf(profName));
             }
         }
 
@@ -1003,7 +1011,8 @@ namespace ProfileManager
                      this.settings.documentsPath == null || this.settings.documentsPath.Trim().Equals("") ||
                      this.settings.steamPath == null || this.settings.steamPath.Trim().Equals("") ||
                      this.settings.gameFolder == null || this.settings.gameFolder.Trim().Equals("") ||
-                     this.settings.nmmInfoPath == null || this.settings.nmmModPath == null)
+                     this.settings.nmmPath == null )
+            //this.settings.nmmInfoPath == null || this.settings.nmmModPath == null)
             {
                 log.Warn("Invalid SP settings, settings must be initialized before used");
                 return false;

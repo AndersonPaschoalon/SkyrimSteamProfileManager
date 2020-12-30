@@ -163,18 +163,21 @@ namespace UiConsole
             string newSteamPath = readOption("SteamPath");
             string newDocumentsPath = readOption("DocumentsPath"); 
             string newAppDataPath = readOption("AppDataPath");
-            string nmmInfoPath = readOption("nmmInfoPath");
-            string nmmModPath = readOption("nmmModPath");
+            //string nmmInfoPath = readOption("nmmInfoPath");
+            //string nmmModPath = readOption("nmmModPath");
+            string nmmPath = readOption("nmmPath");
             Console.WriteLine("    Steam: " + newSteamPath);
             Console.WriteLine("Documents: " + newDocumentsPath);
             Console.WriteLine("  AppData: " + newAppDataPath);
-            Console.WriteLine(" NMM Info: " + nmmInfoPath);
-            Console.WriteLine("  NMM Mod: " + nmmModPath);
+            //Console.WriteLine(" NMM Info: " + nmmInfoPath);
+            //Console.WriteLine("  NMM Mod: " + nmmModPath);
+            Console.WriteLine("      NMM: " + nmmPath);
             Console.WriteLine("---------------------------------");
             string confirmOption = readOption("Confirm Option?y/n");
             if (confirmOption.Trim().ToUpper() == "Y")
             {
-                manager.updateSettings(newSteamPath, newDocumentsPath, newAppDataPath, nmmInfoPath, nmmModPath);
+                //manager.updateSettings(newSteamPath, newDocumentsPath, newAppDataPath, nmmInfoPath, nmmModPath);
+                manager.updateSettings(newSteamPath, newDocumentsPath, newAppDataPath, nmmPath);
 
             }
             else
@@ -192,13 +195,15 @@ namespace UiConsole
             Console.WriteLine("    Steam: " + opts[0]);
             Console.WriteLine("Documents: " + opts[1]);
             Console.WriteLine("  AppData: " + opts[2]);
-            Console.WriteLine(" NMM Info: " + opts[3]);
-            Console.WriteLine("  NMM Mod: " + opts[4]);
+            Console.WriteLine("      NMM: " + opts[3]);
+            //Console.WriteLine(" NMM Info: " + opts[3]);
+            //Console.WriteLine("  NMM Mod: " + opts[4]);
             Console.WriteLine("---------------------------------");
             string confirmOption = readOption("Confirm Option?y/n");
             if (confirmOption.Trim().ToUpper() == "Y")
             {
-                manager.updateSettings(opts[0], opts[1], opts[2], opts[3], opts[4]);
+                //manager.updateSettings(opts[0], opts[1], opts[2], opts[3], opts[4]);
+                manager.updateSettings(opts[0], opts[1], opts[2], opts[3]);
             }
             else
             {
@@ -214,10 +219,12 @@ namespace UiConsole
             Console.WriteLine("    Steam: " + opts[0]);
             Console.WriteLine("Documents: " + opts[1]);
             Console.WriteLine("  AppData: " + opts[2]);
-            Console.WriteLine(" NMM Info: " + opts[3]);
-            Console.WriteLine("  NMM Mod: " + opts[4]);
+            //Console.WriteLine(" NMM Info: " + opts[3]);
+            //Console.WriteLine("  NMM Mod: " + opts[4]);
+            Console.WriteLine("      NMM: " + opts[3]);
             Console.WriteLine("---------------------------------");
-            manager.updateSettings(opts[0], opts[1], opts[2], opts[3], opts[4]);
+            //manager.updateSettings(opts[0], opts[1], opts[2], opts[3], opts[4]);
+            manager.updateSettings(opts[0], opts[1], opts[2], opts[3]);
         }
 
         private static void listAllFiles()

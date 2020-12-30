@@ -56,7 +56,7 @@ namespace ProfileManager.Objects
         public void update(SPSettings settings)
         {
             this.execUpdate(settings.steamPath, settings.appDataPath, settings.documentsPath,
-                            settings.nmmInfoPath, settings.nmmModPath, settings.gameFolder, 
+                            settings.nmmPath, settings.gameFolder, 
                             settings.backupFolder);
         }
 
@@ -88,21 +88,13 @@ namespace ProfileManager.Objects
             }
             if (!this.optionalAreSet())
             {
-                if (!Directory.Exists(this.nmmInfo))
+                if (!Directory.Exists(this.nmm))
                 {
-                    return Errors.ERR_NMMINFO_DIRRECTORY_MISSING;
+                    return Errors.ERR_NMMDIRRECTORY_MISSING;
                 }
-                if (!Directory.Exists(this.nmmInfoBkp))
+                if (!Directory.Exists(this.nmmBkp))
                 {
-                    return Errors.ERR_NMMINFOBKP_DIRRECTORY_MISSING;
-                }
-                if (!Directory.Exists(this.nmmMod))
-                {
-                    return Errors.ERR_NMMMOD_DIRRECTORY_MISSING;
-                }
-                if (!Directory.Exists(this.nmmModBkp))
-                {
-                    return Errors.ERR_NMMMODBKP_DIRRECTORY_MISSING;
+                    return Errors.ERR_NMMBKP_DIRRECTORY_MISSING;
                 }
             }
             return Errors.SUCCESS;
@@ -281,46 +273,23 @@ namespace ProfileManager.Objects
 
         #region NMM
 
-        // nmmInfo
-        public string nmmInfo { get { return this._nmmInfo; } }
-        public string nmmInfoGame { get { return this._nmmInfoGame; } }
-        public string nmmInfoBkp { get { return this._nmmInfoBackup; } }
-        public string nmmInfoBkpProf(string prof) 
-        { 
-            return (this.nmmInfoEmpty)? "" : this._nmmInfoBackup + "\\" + prof; 
-        }
-        public string nmmInfoBkpProfGame(string prof) 
-        { 
-            return (this.nmmInfoEmpty) ? "" : this._nmmInfoBackup + "\\" + prof + "\\" + this._gameFolder; 
-        }
-        public bool nmmInfoEmpty { get; private set; }
-
         // nmmMod
-        public string nmmMod { get { return this._nmmMod; } }
-        public string nmmModGame { get { return this._nmmModGame; } }
-        public string nmmModBkp { get { return this._nmmModBackup; } }
-        public string nmmModBkpProf(string prof) 
-        { 
-            return (this.nmmModEmpty) ? "" : this._nmmModBackup + "\\" + prof; 
+        public string nmm { get { return this._nmm; } }
+        public string nmmGame { get { return this._nmmGame; } }
+        public string nmmBkp { get { return this._nmmBackup; } }
+        public string nmmBkpProf(string prof)
+        {
+            return (this.nmmEmpty) ? "" : this._nmmBackup + "\\" + prof;
         }
-        public string nmmModBkpProfGame(string prof) 
-        { 
-            return (this.nmmModEmpty) ? "" : this._nmmModBackup + "\\" + prof + "\\" + this._gameFolder; 
+        public string nmmBkpProfGame(string prof)
+        {
+            return (this.nmmEmpty) ? "" : this._nmmBackup + "\\" + prof + "\\" + this._gameFolder;
         }
-        public bool nmmModEmpty { get; private set; }
+        public bool nmmEmpty { get; private set; }
 
-        // optional are set
-        //public bool optionalAreSet()
-        //{
-        //     if (!nmmInfoEmpty || !nmmModEmpty)
-        //    {
-        //        return true;
-        //    }
-        //    return false;
-        //}
         public bool optionalAreSet()
         {
-            if (nmmInfoEmpty || nmmModEmpty)
+            if (nmmEmpty)
             {
                 return false;
             }
@@ -385,22 +354,17 @@ namespace ProfileManager.Objects
         private string _docsGame = "";
         private string _docsBackup = "";
 
-        private string _nmmInfo = "";
-        private string _nmmInfoGame = "";
-        private string _nmmInfoBackup = "";
+        private string _nmm = "";
+        private string _nmmGame = "";
+        private string _nmmBackup = "";
 
-        private string _nmmMod = "";
-        private string _nmmModGame = "";
-        private string _nmmModBackup = "";
-
-        private void execUpdate(string steam, string appData, string myDocs, string nmmInfo,
-                                string nmmMod, string gameFolder, string backupFolder)
+        private void execUpdate(string steam, string appData, string myDocs, string nmm,
+                                string gameFolder, string backupFolder)
         {
             steam.Trim();
             appData.Trim();
             myDocs.Trim();
-            nmmInfo.Trim();
-            nmmMod.Trim();
+            nmm.Trim();
             gameFolder = CSharp.alphaNumeric(gameFolder);
             backupFolder = CSharp.alphaNumeric(backupFolder);
 
@@ -426,19 +390,12 @@ namespace ProfileManager.Objects
                 this._docsBackup = myDocs + "\\" + this._backupFolder;
             }
 
-            this._nmmInfo = nmmInfo;
-            this._nmmMod = nmmMod;
-            this.nmmInfoEmpty = (nmmInfo.Trim().Equals("")) ? true : false;
-            this.nmmModEmpty = (nmmMod.Trim().Equals("")) ? true : false;
-            if (!this.nmmInfoEmpty)
+            this._nmm = nmm;
+            this.nmmEmpty = (nmm.Trim().Equals("")) ? true : false;
+            if (!this.nmmEmpty)
             {
-                this._nmmInfoGame = nmmInfo + "\\" + gameFolder;
-                this._nmmInfoBackup = nmmInfo + "\\" + this._backupFolder;
-            }
-            if (!this.nmmModEmpty)
-            {
-                this._nmmModGame = nmmMod + "\\" + gameFolder;
-                this._nmmModBackup = nmmMod + "\\" + this._backupFolder;
+                this._nmmGame = nmm + "\\" + gameFolder;
+                this._nmmBackup = nmm + "\\" + this._backupFolder;
             }
         }
 

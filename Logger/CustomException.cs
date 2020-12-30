@@ -8,6 +8,7 @@ using Utils.Loggers;
 
 namespace Utils
 {
+    /*
     public class CustomException
     {
         private CustomException()
@@ -36,4 +37,5 @@ namespace Utils
 
 
     }
+    */
 }

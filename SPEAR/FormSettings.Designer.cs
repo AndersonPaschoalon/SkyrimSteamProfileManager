@@ -46,16 +46,11 @@
             this.label1 = new System.Windows.Forms.Label();
             this.buttonSteam = new System.Windows.Forms.Button();
             this.groupBoxNMM = new System.Windows.Forms.GroupBox();
-            this.pictureBoxNmmMod = new System.Windows.Forms.PictureBox();
             this.pictureBoxNmmInfo = new System.Windows.Forms.PictureBox();
-            this.buttonDefNmmMod = new System.Windows.Forms.Button();
-            this.buttonDefNmmInfo = new System.Windows.Forms.Button();
-            this.textBoxNmmMod = new System.Windows.Forms.TextBox();
-            this.label5 = new System.Windows.Forms.Label();
-            this.buttonNmmMod = new System.Windows.Forms.Button();
-            this.textBoxNmmInfo = new System.Windows.Forms.TextBox();
+            this.buttonDefNmm = new System.Windows.Forms.Button();
+            this.textBoxNmm = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
-            this.buttonNmmInfo = new System.Windows.Forms.Button();
+            this.buttonNmm = new System.Windows.Forms.Button();
             this.buttonSave = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.tabSettingsMain = new System.Windows.Forms.TabControl();
@@ -76,7 +71,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxDocs)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSteam)).BeginInit();
             this.groupBoxNMM.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxNmmMod)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxNmmInfo)).BeginInit();
             this.tabSettingsMain.SuspendLayout();
             this.tabConfiguration.SuspendLayout();
@@ -258,34 +252,17 @@
             // 
             // groupBoxNMM
             // 
-            this.groupBoxNMM.Controls.Add(this.pictureBoxNmmMod);
             this.groupBoxNMM.Controls.Add(this.pictureBoxNmmInfo);
-            this.groupBoxNMM.Controls.Add(this.buttonDefNmmMod);
-            this.groupBoxNMM.Controls.Add(this.buttonDefNmmInfo);
-            this.groupBoxNMM.Controls.Add(this.textBoxNmmMod);
-            this.groupBoxNMM.Controls.Add(this.label5);
-            this.groupBoxNMM.Controls.Add(this.buttonNmmMod);
-            this.groupBoxNMM.Controls.Add(this.textBoxNmmInfo);
+            this.groupBoxNMM.Controls.Add(this.buttonDefNmm);
+            this.groupBoxNMM.Controls.Add(this.textBoxNmm);
             this.groupBoxNMM.Controls.Add(this.label4);
-            this.groupBoxNMM.Controls.Add(this.buttonNmmInfo);
+            this.groupBoxNMM.Controls.Add(this.buttonNmm);
             this.groupBoxNMM.Location = new System.Drawing.Point(6, 196);
             this.groupBoxNMM.Name = "groupBoxNMM";
-            this.groupBoxNMM.Size = new System.Drawing.Size(563, 143);
+            this.groupBoxNMM.Size = new System.Drawing.Size(563, 107);
             this.groupBoxNMM.TabIndex = 1;
             this.groupBoxNMM.TabStop = false;
             this.groupBoxNMM.Text = "(Optional) NMM Settings";
-            // 
-            // pictureBoxNmmMod
-            // 
-            this.pictureBoxNmmMod.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.pictureBoxNmmMod.Image = global::Spear.Properties.Resources._15_open_folder;
-            this.pictureBoxNmmMod.InitialImage = global::Spear.Properties.Resources._15_open_folder;
-            this.pictureBoxNmmMod.Location = new System.Drawing.Point(533, 96);
-            this.pictureBoxNmmMod.Name = "pictureBoxNmmMod";
-            this.pictureBoxNmmMod.Size = new System.Drawing.Size(18, 18);
-            this.pictureBoxNmmMod.TabIndex = 17;
-            this.pictureBoxNmmMod.TabStop = false;
-            this.pictureBoxNmmMod.Click += new System.EventHandler(this.pictureBoxNmmMod_Click);
             // 
             // pictureBoxNmmInfo
             // 
@@ -299,84 +276,47 @@
             this.pictureBoxNmmInfo.TabStop = false;
             this.pictureBoxNmmInfo.Click += new System.EventHandler(this.pictureBoxNmmInfo_Click);
             // 
-            // buttonDefNmmMod
+            // buttonDefNmm
             // 
-            this.buttonDefNmmMod.Location = new System.Drawing.Point(458, 90);
-            this.buttonDefNmmMod.Name = "buttonDefNmmMod";
-            this.buttonDefNmmMod.Size = new System.Drawing.Size(69, 23);
-            this.buttonDefNmmMod.TabIndex = 16;
-            this.buttonDefNmmMod.Text = "DEFAULT";
-            this.buttonDefNmmMod.UseVisualStyleBackColor = true;
-            this.buttonDefNmmMod.Click += new System.EventHandler(this.buttonDefNmmMod_Click);
+            this.buttonDefNmm.Location = new System.Drawing.Point(458, 41);
+            this.buttonDefNmm.Name = "buttonDefNmm";
+            this.buttonDefNmm.Size = new System.Drawing.Size(69, 23);
+            this.buttonDefNmm.TabIndex = 15;
+            this.buttonDefNmm.Text = "DEFAULT";
+            this.buttonDefNmm.UseVisualStyleBackColor = true;
+            this.buttonDefNmm.Click += new System.EventHandler(this.buttonDefNmmInfo_Click);
             // 
-            // buttonDefNmmInfo
+            // textBoxNmm
             // 
-            this.buttonDefNmmInfo.Location = new System.Drawing.Point(458, 41);
-            this.buttonDefNmmInfo.Name = "buttonDefNmmInfo";
-            this.buttonDefNmmInfo.Size = new System.Drawing.Size(69, 23);
-            this.buttonDefNmmInfo.TabIndex = 15;
-            this.buttonDefNmmInfo.Text = "DEFAULT";
-            this.buttonDefNmmInfo.UseVisualStyleBackColor = true;
-            this.buttonDefNmmInfo.Click += new System.EventHandler(this.buttonDefNmmInfo_Click);
-            // 
-            // textBoxNmmMod
-            // 
-            this.textBoxNmmMod.Location = new System.Drawing.Point(87, 93);
-            this.textBoxNmmMod.Name = "textBoxNmmMod";
-            this.textBoxNmmMod.Size = new System.Drawing.Size(365, 20);
-            this.textBoxNmmMod.TabIndex = 8;
-            this.textBoxNmmMod.Text = " ";
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(5, 75);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(92, 13);
-            this.label5.TabIndex = 7;
-            this.label5.Text = "NMM Mod Folder:";
-            // 
-            // buttonNmmMod
-            // 
-            this.buttonNmmMod.Location = new System.Drawing.Point(5, 91);
-            this.buttonNmmMod.Name = "buttonNmmMod";
-            this.buttonNmmMod.Size = new System.Drawing.Size(75, 23);
-            this.buttonNmmMod.TabIndex = 6;
-            this.buttonNmmMod.Text = "Browse...";
-            this.buttonNmmMod.UseVisualStyleBackColor = true;
-            this.buttonNmmMod.Click += new System.EventHandler(this.buttonNmmMod_Click);
-            // 
-            // textBoxNmmInfo
-            // 
-            this.textBoxNmmInfo.Location = new System.Drawing.Point(87, 44);
-            this.textBoxNmmInfo.Name = "textBoxNmmInfo";
-            this.textBoxNmmInfo.Size = new System.Drawing.Size(365, 20);
-            this.textBoxNmmInfo.TabIndex = 5;
-            this.textBoxNmmInfo.Text = " ";
+            this.textBoxNmm.Location = new System.Drawing.Point(87, 44);
+            this.textBoxNmm.Name = "textBoxNmm";
+            this.textBoxNmm.Size = new System.Drawing.Size(365, 20);
+            this.textBoxNmm.TabIndex = 5;
+            this.textBoxNmm.Text = " ";
             // 
             // label4
             // 
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(5, 26);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(86, 13);
+            this.label4.Size = new System.Drawing.Size(65, 13);
             this.label4.TabIndex = 4;
-            this.label4.Text = "NMM Info folder:";
+            this.label4.Text = "NMM folder:";
             // 
-            // buttonNmmInfo
+            // buttonNmm
             // 
-            this.buttonNmmInfo.Location = new System.Drawing.Point(5, 42);
-            this.buttonNmmInfo.Name = "buttonNmmInfo";
-            this.buttonNmmInfo.Size = new System.Drawing.Size(75, 23);
-            this.buttonNmmInfo.TabIndex = 3;
-            this.buttonNmmInfo.Text = "Browse...";
-            this.buttonNmmInfo.UseVisualStyleBackColor = true;
-            this.buttonNmmInfo.Click += new System.EventHandler(this.buttonNmmInfo_Click);
+            this.buttonNmm.Location = new System.Drawing.Point(5, 42);
+            this.buttonNmm.Name = "buttonNmm";
+            this.buttonNmm.Size = new System.Drawing.Size(75, 23);
+            this.buttonNmm.TabIndex = 3;
+            this.buttonNmm.Text = "Browse...";
+            this.buttonNmm.UseVisualStyleBackColor = true;
+            this.buttonNmm.Click += new System.EventHandler(this.buttonNmmInfo_Click);
             // 
             // buttonSave
             // 
             this.buttonSave.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.buttonSave.Location = new System.Drawing.Point(466, 354);
+            this.buttonSave.Location = new System.Drawing.Point(464, 309);
             this.buttonSave.Name = "buttonSave";
             this.buttonSave.Size = new System.Drawing.Size(75, 23);
             this.buttonSave.TabIndex = 9;
@@ -387,7 +327,7 @@
             // buttonCancel
             // 
             this.buttonCancel.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.buttonCancel.Location = new System.Drawing.Point(365, 354);
+            this.buttonCancel.Location = new System.Drawing.Point(365, 309);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 10;
@@ -403,7 +343,7 @@
             this.tabSettingsMain.Location = new System.Drawing.Point(0, 0);
             this.tabSettingsMain.Name = "tabSettingsMain";
             this.tabSettingsMain.SelectedIndex = 0;
-            this.tabSettingsMain.Size = new System.Drawing.Size(605, 415);
+            this.tabSettingsMain.Size = new System.Drawing.Size(605, 370);
             this.tabSettingsMain.TabIndex = 13;
             // 
             // tabConfiguration
@@ -415,7 +355,7 @@
             this.tabConfiguration.Location = new System.Drawing.Point(4, 22);
             this.tabConfiguration.Name = "tabConfiguration";
             this.tabConfiguration.Padding = new System.Windows.Forms.Padding(3);
-            this.tabConfiguration.Size = new System.Drawing.Size(597, 389);
+            this.tabConfiguration.Size = new System.Drawing.Size(597, 344);
             this.tabConfiguration.TabIndex = 0;
             this.tabConfiguration.Text = "Game Configuration";
             this.tabConfiguration.UseVisualStyleBackColor = true;
@@ -548,7 +488,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(605, 415);
+            this.ClientSize = new System.Drawing.Size(605, 370);
             this.Controls.Add(this.tabSettingsMain);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormSettings";
@@ -560,7 +500,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSteam)).EndInit();
             this.groupBoxNMM.ResumeLayout(false);
             this.groupBoxNMM.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxNmmMod)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxNmmInfo)).EndInit();
             this.tabSettingsMain.ResumeLayout(false);
             this.tabConfiguration.ResumeLayout(false);
@@ -586,12 +525,9 @@
         private System.Windows.Forms.TextBox textBoxDocs;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button buttonDocs;
-        private System.Windows.Forms.TextBox textBoxNmmMod;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Button buttonNmmMod;
-        private System.Windows.Forms.TextBox textBoxNmmInfo;
+        private System.Windows.Forms.TextBox textBoxNmm;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Button buttonNmmInfo;
+        private System.Windows.Forms.Button buttonNmm;
         private System.Windows.Forms.Button buttonSave;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.TabControl tabSettingsMain;
@@ -613,9 +549,7 @@
         private System.Windows.Forms.PictureBox pictureBoxSteam;
         private System.Windows.Forms.PictureBox pictureBoxAppData;
         private System.Windows.Forms.PictureBox pictureBoxDocs;
-        private System.Windows.Forms.PictureBox pictureBoxNmmMod;
         private System.Windows.Forms.PictureBox pictureBoxNmmInfo;
-        private System.Windows.Forms.Button buttonDefNmmMod;
-        private System.Windows.Forms.Button buttonDefNmmInfo;
+        private System.Windows.Forms.Button buttonDefNmm;
     }
 }

@@ -52,6 +52,8 @@ namespace Utils
         public const int ERR_NMMMOD_DIRRECTORY_MISSING = 206;
         public const int ERR_NMMMODBKP_DIRRECTORY_MISSING = 207;
         public const int ERR_NMMMODGAME_DIRRECTORY_MISSING = 208;
+        public const int ERR_NMMDIRRECTORY_MISSING = 209;
+        public const int ERR_NMMBKP_DIRRECTORY_MISSING = 210;
         // invalid arguments
         public const int ERR_INVALID_GAME = 200;
         public const int ERR_INVALID_GAME_FOLDER = 201;
@@ -147,9 +149,88 @@ namespace Utils
                         return "ERR_INVALID_SETTINGS";
                     }
                 case ERR_INVALID_STATE_FOR_REQUESTED_OPERATION:
-
                     {
                         return "ERR_INVALID_STATE_FOR_REQUESTED_OPERATION";
+                    }
+                case ERR_PARSING_INTEGRITY_FILE:
+                    {
+                        return "ERR_PARSING_INTEGRITY_FILE";
+                    }
+                case ERR_COULD_NOT_OPEN_INTEGRIY_FILE:
+                    {
+                        return "ERR_COULD_NOT_OPEN_INTEGRIY_FILE";
+                    }
+                case ERR_ACTIVE_PROFILE_CORRUPTED:
+                    {
+                        return "ERR_ACTIVE_PROFILE_CORRUPTED";
+                    }
+                case ERR_STEAM_DIRRECTORY_MISSING:
+                    {
+                        return "ERR_STEAM_DIRRECTORY_MISSING";
+                    }
+                case ERR_DOCUMENTS_DIRRECTORY_MISSING:
+                    {
+                        return "ERR_DOCUMENTS_DIRRECTORY_MISSING";
+                    }
+                case ERR_APPDATA_DIRRECTORY_MISSING:
+                    {
+                        return "ERR_APPDATA_DIRRECTORY_MISSING";
+                    }
+                case ERR_STEAMBKP_DIRRECTORY_MISSING:
+                    {
+                        return "ERR_STEAMBKP_DIRRECTORY_MISSING";
+                    }
+                case ERR_DOCUMENTSBKP_DIRRECTORY_MISSING:
+                    {
+                        return "ERR_DOCUMENTSBKP_DIRRECTORY_MISSING";
+                    }
+                case ERR_APPDATABKP_DIRRECTORY_MISSING:
+                    {
+                        return "ERR_APPDATABKP_DIRRECTORY_MISSING";
+                    }
+                case ERR_STEAMGAME_DIRRECTORY_MISSING:
+                    {
+                        return "ERR_STEAMGAME_DIRRECTORY_MISSING";
+                    }
+                case ERR_DOCUMENTSGAME_DIRRECTORY_MISSING:
+                    {
+                        return "ERR_DOCUMENTSGAME_DIRRECTORY_MISSING";
+                    }
+                case ERR_APPDATAGAME_DIRRECTORY_MISSING:
+                    {
+                        return "ERR_APPDATAGAME_DIRRECTORY_MISSING";
+                    }
+                case ERR_NMMINFO_DIRRECTORY_MISSING:
+                    {
+                        return "ERR_NMMINFO_DIRRECTORY_MISSING";
+                    }
+                case ERR_NMMINFOBKP_DIRRECTORY_MISSING:
+                    {
+                        return "ERR_NMMINFOBKP_DIRRECTORY_MISSING";
+                    }
+                case ERR_NMMINFOGAME_DIRRECTORY_MISSING:
+                    {
+                        return "ERR_NMMINFOGAME_DIRRECTORY_MISSING";
+                    }
+                case ERR_NMMMOD_DIRRECTORY_MISSING:
+                    {
+                        return "ERR_NMMMOD_DIRRECTORY_MISSING";
+                    }
+                case ERR_NMMMODBKP_DIRRECTORY_MISSING:
+                    {
+                        return "ERR_NMMMODBKP_DIRRECTORY_MISSING";
+                    }
+                case ERR_NMMMODGAME_DIRRECTORY_MISSING:
+                    {
+                        return "ERR_NMMMODGAME_DIRRECTORY_MISSING";
+                    }
+                case ERR_NMMDIRRECTORY_MISSING:
+                    {
+                        return "ERR_NMMDIRRECTORY_MISSING";
+                    }
+                case ERR_NMMBKP_DIRRECTORY_MISSING:
+                    {
+                        return "ERR_NMMBKP_DIRRECTORY_MISSING";
                     }
                 // NOT DEFINED
                 default:

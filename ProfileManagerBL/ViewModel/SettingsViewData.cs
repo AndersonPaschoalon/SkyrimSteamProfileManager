@@ -13,14 +13,16 @@ namespace ProfileManagerBL.ViewModel
             this.steam = "";
             this.docs = "";
             this.appData = "";
-            this.nmmInfo = "";
-            this.nmmMod = "";
+            //this.nmmInfo = "";
+            //this.nmmMod = "";
+            this.nmm = "";
         }
 
         public string steam { get; set; }
         public string docs { get; set; }
         public string appData { get; set; }
-        public string nmmInfo { get; set; }
-        public string nmmMod { get; set; }
+        //public string nmmInfo { get; set; }
+        //public string nmmMod { get; set; }
+        public string nmm { get; set; }
     }
 }
