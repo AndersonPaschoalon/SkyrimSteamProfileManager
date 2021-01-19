@@ -48,7 +48,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CSharp.cs" />
-    <Compile Include="CustomException.cs" />
     <Compile Include="Errors.cs" />
     <Compile Include="ILogger.cs" />
     <Compile Include="Loggers\ConsoleLogger.cs" />
@@ -59,7 +58,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Utils.logConfig.xml" />
+    <Content Include="logConfig.xml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App.config">

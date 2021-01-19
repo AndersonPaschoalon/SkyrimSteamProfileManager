@@ -145,6 +145,12 @@
   <data name="_15_open_folder" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\15-open-folder.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="_15_open_git2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\15-open-git2.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="_15_play" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\15-play.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="_15_reload" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\15-reload.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>

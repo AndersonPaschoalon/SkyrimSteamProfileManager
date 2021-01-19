@@ -12,7 +12,7 @@
             steamPath=""
             documentsPath=""
             appDataPath=""
-            nmmPath=""
+            nmmPath=""           
             gameFolder="Skyrim SE"
             backupFolder="SkyrimSEBackups" 
             dateFormat="yyyy/MM/dd" />

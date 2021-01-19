@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-16"?>
+<CONFIG xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <SETTINGS game="Skyrim" steamPath="C:\Program Files (x86)\Steam\steamapps\common" documentsPath="C:\Users\anderson_paschoalon\Documents" appDataPath="C:\Users\anderson_paschoalon\AppData\Local" nmmModPath="" nmmInfoPath="" gameFolder="Skyrim" backupFolder="SkyrimBackups" dateFormat="yyyy/MM/dd" />
+  <SETTINGS game="Skyrim SE" steamPath="TestEnviroment\Test02\Steam\Commons\" documentsPath="TestEnviroment\Test02\Docs" appDataPath="TestEnviroment\Test02\AppData" nmmModPath="TestEnviroment\Test02\NMM\nmmMod" nmmInfoPath="TestEnviroment\Test02\NMM\nmmInfo" gameFolder="Skyrim SE" backupFolder="SkyrimSEBackups" dateFormat="yyyy/MM/dd" />
+    <SETTINGS game="Age of Mitology" steamPath="TestEnviroment\Test02\Steam\Commons\" documentsPath="TestEnviroment\Test02\Docs" appDataPath="TestEnviroment\Test02\AppData" nmmModPath="TestEnviroment\Test02\NMM\nmmMod" nmmInfoPath="TestEnviroment\Test02\NMM\nmmInfo" gameFolder="Skyrim SE" backupFolder="SkyrimSEBackups" dateFormat="yyyy/MM/dd" />
+</CONFIG>

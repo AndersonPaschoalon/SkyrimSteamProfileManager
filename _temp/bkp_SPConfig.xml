@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<CONFIG xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <SETTINGS game="Skyrim" 
+            steamPath="TestEnviroment\Test02\Steam\Commons\" 
+            documentsPath="TestEnviroment\Test02\Docs" 
+            appDataPath="TestEnviroment\Test02\AppData" 
+            nmmModPath="TestEnviroment\Test02\NMM\nmmMod" 
+            nmmInfoPath="TestEnviroment\Test02\NMM\nmmInfo" 
+            gameFolder="Skyrim" 
+            backupFolder="SkyrimBackups"
+            dateFormat="yyyy/MM/dd"/>
+  <SETTINGS game="Skyrim SE"
+            steamPath="TestEnviroment\Test02\Steam\Commons\"
+            documentsPath="TestEnviroment\Test02\Docs"
+            appDataPath="TestEnviroment\Test02\AppData"
+            nmmModPath="TestEnviroment\Test02\NMM\nmmMod"
+            nmmInfoPath="TestEnviroment\Test02\NMM\nmmInfo"
+            gameFolder="Skyrim SE"
+            backupFolder="SkyrimSEBackups" 
+            dateFormat="yyyy/MM/dd"/>  
+</CONFIG>

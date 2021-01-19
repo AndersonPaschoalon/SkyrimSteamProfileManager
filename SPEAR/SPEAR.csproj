@@ -171,6 +171,10 @@
       <Project>{E2EDF30E-8041-4C61-B499-B251E6054A64}</Project>
       <Name>ProfileManager</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ToolsManager\ToolsManager.csproj">
+      <Project>{19740288-33F5-48DE-B07F-F3DBF4D8603E}</Project>
+      <Name>ToolsManager</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\spear.ico" />
@@ -183,6 +187,10 @@
     <None Include="Resources\15-git-ico.png" />
     <None Include="Resources\15-thrash.png" />
     <None Include="Resources\15-open-folder.png" />
+    <None Include="Resources\15-play.png" />
+    <None Include="Resources\open-git.png" />
+    <None Include="Resources\15-open-git.png" />
+    <None Include="Resources\15-open-git2.png" />
     <Content Include="spear.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

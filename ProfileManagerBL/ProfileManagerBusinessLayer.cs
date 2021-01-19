@@ -3,23 +3,29 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using System.Diagnostics;
-
 using ProfileManagerBL.ViewModel;
 using ProfileManager;
-using ProfileManager.Objects;
 using ProfileManager.Enum;
 using Utils;
 using Utils.Loggers;
-using System.Threading.Tasks;
+using System.IO;
+using SpearSettings;
+using ToolsManager;
 
 namespace ProfileManagerBL
 {
     public class ProfileManagerBusinessLayer
     {
-        private const string HELP_PAGE = "HelpPage.html";
+        // logger
         private readonly ILogger log;
+        // settings
         private readonly string gameStr;
-        private ProfileManager.SteamProfileManager manager;
+        private PathsHelper paths;                  // helper for generating the right names of the paths
+        private readonly SPGame gameSettings;
+        private SPSettings settings;
+        // manager
+        private SteamProfileManager manager;
+        private SpearToolsManager tools;
 
 
         public static string[] availableGames()
@@ -31,14 +37,31 @@ namespace ProfileManagerBL
         {
             this.log = Log4NetLogger.getInstance(LogAppender.APP_CORE);
             log.Debug("SELECTED GAME: " + game);
-            List<string> listGames = SPConfig.listGames();
+            List<string> listGames = SPConfig.listGameNames();
             if (!listGames.Contains(game))
             {
                 log.Warn("** ERROR!! Provided game " + game + " dont exit in the Settings file!");
                 game = Consts.GAME_DEFAULT;
             }
-            this.manager = new SteamProfileManager(game);
-            this.gameStr = game;
+
+            SPConfig config = SPConfig.loadConfig();
+            if (config != null)
+            {
+                log.Debug("-- config.selectSettings() game:" + game);
+                this.settings = config.settings;
+                this.gameStr = game;
+                this.gameSettings = config.selectGame(game);
+                this.paths = new PathsHelper(this.settings, this.gameSettings);
+                this.manager = new SteamProfileManager(game);
+                this.tools = new SpearToolsManager(game);
+    }
+            else
+            {
+                log.Warn("COULD NOT LOAD CONFIGURATION FILE");
+                this.settings = null;
+                this.gameSettings = null;
+                // Shutdown app
+            }            
         }
 
         #region bl_helpers
@@ -104,8 +127,10 @@ namespace ProfileManagerBL
             int nAc = this.countCheckedActive();
             int nDe = this.countCheckedDesactivated();
             ProfileManager.Enum.SPMState state = this.manager.getApplicationState();
-            EnabledOp eop = new EnabledOp(); // return obj
-            // Profile Operations
+            EnabledOp eop = new EnabledOp();
+
+            // Profile Operations /////////////////////////////////////////////
+            eop.reloadProfile = true;
             switch (state)
             {
                 case ProfileManager.Enum.SPMState.NO_PROFILE:
@@ -181,13 +206,62 @@ namespace ProfileManagerBL
                         break;
                     }
             }
-            // Developer Operations
+
+            // Developer Operations ///////////////////////////////////////////
             if (nIn == 1 || nAc == 1)
             {
-                eop.createGitignore = !this.manager.gitignoreDetected();
-                eop.deleteGitignore = this.manager.gitignoreDetected();
+                eop.createGitignore = !this.tools.gitignoreDetected();
+                eop.openGititnore = this.tools.gitignoreDetected();
+                eop.deleteGitignore = this.tools.gitignoreDetected();
             }
 
+            // Tools Helpers //////////////////////////////////////////////////
+            eop.killSteamApp = true;
+            eop.openGameFolder = Directory.Exists(this.paths.steamGame);
+
+            // Tools Launch //////////////////////////////////////////////////
+            SettingsViewData settings = action_getSettings();
+            if (File.Exists(settings.nmm) || Directory.Exists(settings.nmm))
+            {
+                eop.launchNMM = true;
+            }
+            if (File.Exists(settings.vortex) || Directory.Exists(settings.vortex))
+            {
+                eop.launchVortex = true;
+            }
+            if (File.Exists(settings.tesvedit) || Directory.Exists(settings.tesvedit))
+            {
+                eop.skyrimLaunchTESVEdit = true;
+            }
+            eop.launchGame = File.Exists(this.paths.gameExe());
+
+            // Tools Skyrim ///////////////////////////////////////////////////
+            if (this.gameName() == Consts.SKYRIM_STR)
+            {
+                if (this.paths.skyrimLogPath() != "" && Directory.Exists(this.paths.skyrimLogPath()))
+                {
+                    eop.skyrimCleanLogs = true;
+                }
+                // check if creation kit exe exist
+                eop.skyrimLaunchCreationKit = File.Exists(this.paths.creationKitExe());
+                // skyrim logs
+                List<string> listlogs = this.paths.gameLogsList();
+                eop.skyrimOpenLogs = false;
+                foreach (var item in listlogs)
+                {
+                    if (File.Exists(item))
+                    {
+                        eop.skyrimOpenLogs = true;
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                eop.skyrimCleanLogs = false;
+                eop.skyrimLaunchCreationKit = false;
+                eop.skyrimOpenLogs = false;
+            }
             return eop;
         }
 
@@ -225,12 +299,9 @@ namespace ProfileManagerBL
         {
             SettingsViewData settings = new SettingsViewData();
             SPSettings spsettings = manager.getProfileSettings();
-            settings.appData = spsettings.appDataPath;
-            settings.docs = spsettings.documentsPath;
-            settings.steam = spsettings.steamPath;
-            //settings.nmmInfo = spsettings.nmmInfoPath;
-            //settings.nmmMod = spsettings.nmmModPath;
             settings.nmm = spsettings.nmmPath;
+            settings.vortex = spsettings.vortexPath;
+            settings.tesvedit = spsettings.tesvEditPath;
             return settings;
         }
 
@@ -239,8 +310,7 @@ namespace ProfileManagerBL
             int ret = Errors.SUCCESS;
             try
             {
-                //this.manager.updateSettings(s.steam, s.docs, s.appData, s.nmmInfo, s.nmmMod);
-                this.manager.updateSettings(s.steam, s.docs, s.appData, s.nmm);
+                this.manager.updateSettings(s.nmm, s.tesvedit, s.vortex);
                 this.manager.reloadState();
             }
             catch (Exception ex)
@@ -336,9 +406,9 @@ namespace ProfileManagerBL
 
         #region bl_tools
 
-        public void openHelpPage()
+        public void tool_openHelpPage()
         {
-            string htmlPage = Environment.CurrentDirectory + "\\" + HELP_PAGE;
+            string htmlPage = Environment.CurrentDirectory + "\\" + Consts.FILE_HELP_PAGE;
             try
             {
                 System.Diagnostics.Process.Start(htmlPage);
@@ -349,20 +419,13 @@ namespace ProfileManagerBL
             }
         }
 
-        public void openLogFiles()
+        public void tool_openLogFiles()
         {
             List<string> logFiles = new List<string>
             {"Logs\\app_core.log","Logs\\app_ui.log"};
             foreach (var item in logFiles)
             {
-                try
-                {
-                    Process.Start(item);
-                }
-                catch (Exception)
-                {
-                    Process.Start("notepad.exe", item);
-                }
+                this.openTxtFile(item);
             }
         }
 
@@ -370,38 +433,174 @@ namespace ProfileManagerBL
         /// 
         /// </summary>
         /// <returns></returns>
-        public bool gitignoreDetected()
+        public bool tool_gitignoreDetected()
         {
-            return this.manager.gitignoreDetected();
+            return this.tools.gitignoreDetected();
         }
 
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        public bool createGitignore(out string errMsg)
+        public bool tool_createGitignore(out string errMsg)
         {
             log.Debug(" -- createGitignore()");
-            if (!this.manager.gitignoreDetected())
+            if (!this.tools.gitignoreDetected())
             {
                 log.Debug(" -- gitignore not detected");
-                return this.manager.createGitignore(out errMsg);
+                return this.tools.createGitignore(out errMsg);
             }
             errMsg = ".gitignore file was detected!";
             return false;
         }
 
-        public bool deleteGitignore(out string errMsg)
+        public bool tool_deleteGitignore(out string errMsg)
         {
             log.Debug(" -- deleteGitignore()");
-            if (this.manager.gitignoreDetected())
+            if (this.tools.gitignoreDetected())
             {
                 log.Debug(" -- gitignore DETECTED");
-                return this.manager.deleteGitignore(out errMsg);
+                return this.tools.deleteGitignore(out errMsg);
             }
             errMsg = ".gitignore file was not detected!";
             return false;
         }
+
+        public bool tool_openGititnore(out string errMsg)
+        {
+            bool ret = false;
+            if (this.tool_gitignoreDetected())
+            {
+                this.openTxtFile(this.paths.gitignore());
+                errMsg = "";
+                ret = true;
+            }
+            else
+            {
+                errMsg = "gitignore file not found";
+            }
+            return ret;
+        }
+
+        public bool tool_openGameFolder(out string errMsg)
+        {
+            errMsg = "";
+            bool ret = CSharp.openDirectoryOnFileExplorer(this.paths.steamGame);
+            if (!ret)
+            {
+                errMsg = "Could not open game folder.";
+            }
+            return ret;
+        }
+
+        public bool tool_exportLogs(string dstPath, out string errMsg)
+        {
+            errMsg = "";
+            bool ret = SpearToolsManager.exportLogsAsZip(dstPath);
+            if (!ret)
+            {
+                errMsg = "Could not export Log files";
+            }
+            return ret;
+        }
+
+        public bool tool_killSteamProcs(out string errMsg)
+        {
+            errMsg = "";
+            SpearToolsManager.killAllSteam();
+            return true;
+        }
+
+        public bool tool_openSkyrimLogs(out string errMsg)
+        {
+            errMsg = "";
+            List<string> logFiles = this.paths.gameLogsList();
+            foreach (var item in logFiles)
+            {
+                this.openTxtFile(item);
+            }
+            return true;
+        }
+
+        public bool tool_launchCreationKit(out string errMsg)
+        {
+            errMsg = "";
+            string creationKitExe = this.paths.creationKitExe();
+            if (File.Exists(creationKitExe))
+            {
+                System.Diagnostics.Process.Start(creationKitExe);
+            }
+            else
+            {
+                errMsg = "Creation kit exe not found.";
+                return false;
+            }
+            return true;            
+        }
+
+        public bool tool_launchGame(out string errMsg)
+        {
+            errMsg = "";
+            if (File.Exists(this.paths.gameExe()))
+            {
+                System.Diagnostics.Process.Start(this.paths.gameExe());
+            }
+            else
+            {
+                errMsg = "Game exe not found.";
+                return false;
+            }
+            return true;
+        }
+
+        public bool tool_launchVortex(out string errMsg)
+        {
+            errMsg = "";
+            string vortexExe = this.paths.vortex();
+            if (File.Exists(vortexExe))
+            {
+                System.Diagnostics.Process.Start(vortexExe);
+            }
+            else
+            {
+                errMsg = "Creation kit exe not found.";
+                return false;
+            }
+            return true;
+        }
+
+        public bool tool_launchTesvEdit(out string errMsg)
+        {
+            errMsg = "";
+            string tesveditExe = this.paths.tesvedit();
+            if (File.Exists(tesveditExe))
+            {
+                System.Diagnostics.Process.Start(tesveditExe);
+            }
+            else
+            {
+                errMsg = "Creation kit exe not found.";
+                return false;
+            }
+            return true;
+        }
+
+        public bool tool_launchNmm(out string errMsg)
+        {
+            errMsg = "";
+            string nmm = this.paths.nmmExe();
+            if (File.Exists(nmm))
+            {
+                System.Diagnostics.Process.Start(nmm);
+            }
+            else
+            {
+                errMsg = "Creation kit exe not found.";
+                return false;
+            }
+            return true;
+        }
+
 
         #endregion bl_tools
 
@@ -896,6 +1095,18 @@ namespace ProfileManagerBL
                 }
             }
             return i;
+        }
+
+        private void openTxtFile(string file)
+        {
+            try
+            {
+                Process.Start(file);
+            }
+            catch (Exception)
+            {
+                Process.Start("notepad.exe", file);
+            }
         }
 
         #endregion private_methods

@@ -6,19 +6,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.VisualBasic.FileIO;
-using ProfileManager.Objects;
 using ProfileManager.Enum;
 using Utils;
 using Utils.Loggers;
 using System.Security.Permissions;
 using System.Windows.Forms;
 using System.Diagnostics;
-
-/*
-TODO 
-1 - Deixar o caminho do GITBASH configuravel no XML
-
-*/
+using SpearSettings;
 
 namespace ProfileManager
 {
@@ -28,11 +22,10 @@ namespace ProfileManager
      */
     public class SteamProfileManager
     {
-        // const 
-        private const string FILE_GITIGNORE = ".gitignore";
         // readonly
         private readonly ILogger log;
         private readonly string theGame;
+        private readonly SPGame gameSettings;
         // app state
         private PathsHelper paths;                  // helper for generating the right names of the paths
         private SPSettings settings;
@@ -54,14 +47,16 @@ namespace ProfileManager
             if (config != null)
             {
                 log.Debug("-- config.selectSettings() game:" + gameName);
-                this.settings = config.selectSettings(gameName);
+                this.settings = config.settings;
                 this.theGame = gameName;
-                this.paths = new PathsHelper(this.theGame, this.settings);
+                this.gameSettings = config.selectGame(gameName);
+                this.paths = new PathsHelper(this.settings, this.gameSettings);
             }
             else
             {
                 log.Warn("COULD NOT LOAD CONFIGURATION FILE");
                 this.settings = null;
+                this.gameSettings = null;
             }
             this.createBackupsRoot();
             this.updateManagerState();
@@ -74,6 +69,7 @@ namespace ProfileManager
             return this.settings.dateFormat;
         }
 
+        /*
         /// <summary>
         /// This method is used to configure the application for the first time, or to update the configuration.
         /// In case of success updates the app settings, otherwise returns an error code, and informs wich parameter
@@ -148,6 +144,52 @@ namespace ProfileManager
             // save settings
             SPConfig config = SPConfig.loadConfig();
             config.updateSettings(this.theGame, this.settings);
+            config.saveConfig();
+
+            // update app state
+            this.applicationState = this.discoverApplicationState();
+
+            return Errors.SUCCESS;
+        }
+        */
+
+        public int updateSettings(string nmmPath, string tesvedit, string vortex)
+        {
+            log.Debug("## manager.updateSettings() ####################################################");
+            if (nmmPath == null) nmmPath = "";
+            if (tesvedit == null) tesvedit = "";
+            if (vortex == null) vortex = "";
+
+            List<string> settingsPaths = new List<string> { nmmPath, tesvedit, vortex };
+            List<string> paths = new List<string> { nmmPath };
+
+            // check if mandatory are valid directories
+            string errString = "";
+            if (!CSharp.checkDirs(paths, out errString))
+            {
+                MessageBox.Show("Path " + errString + " does not exist!", "ERROR: INVALID PATH!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                log.Warn("** ONE OF THE MANDATORY PATHS DOES NOT EXIST! ERR:" + errString);
+                return Errors.ERR_INVALID_SETTINGS;
+            }
+            else
+            {
+                log.Debug("all paths are ok");
+            }
+
+            // Settings are OK. update settings 
+            this.settings.nmmPath = nmmPath;
+            this.settings.tesvEditPath = tesvedit;
+            this.settings.vortexPath = vortex;
+
+            // update path helper
+            this.paths.update(this.settings, this.gameSettings);
+
+            // create backup direcotories
+            this.createBackupsRoot();
+
+            // save settings
+            SPConfig config = SPConfig.loadConfig();
+            config.updateSettings(this.settings);
             config.saveConfig();
 
             // update app state
@@ -283,16 +325,12 @@ namespace ProfileManager
                     this.paths.appData,
                     this.paths.docs,
                     this.paths.nmm
-                    //this.paths.nmmInfo,
-                    //this.paths.nmmMod
                 };
                 sourceDirs = new string[] {
                     this.paths.steamBkpProfGame(profileName),      // steam
                     this.paths.appDataBkpProfGame(profileName),    // appdata
                     this.paths.docsBkpProfGame(profileName),       // docs
                     this.paths.nmmBkpProfGame(profileName)
-                    //this.paths.nmmInfoBkpProfGame(profileName),    //
-                    //this.paths.nmmModBkpProfGame(profileName)      //
                 };
             }
             else
@@ -324,7 +362,6 @@ namespace ProfileManager
             }
 
             log.Debug("STEP 4: create integrity file...");
-            //this.createIntegrityFile(profToActivate);
             errMsg = "";
             errPath = "";
             if (!this.paths.updateActiveIntegrityFile(profToActivate, out errMsg, out errPath))
@@ -394,16 +431,12 @@ namespace ProfileManager
                     this.paths.appDataBkpProf(profileName),    // appdata
                     this.paths.docsBkpProf(profileName),       // docs
                     this.paths.nmmBkpProf(profileName),    //
-                    //this.paths.nmmInfoBkpProf(profileName),    //
-                    //this.paths.nmmModBkpProf(profileName)      //
                 };
                 sourceDirs = new string[] {
                     this.paths.steamGame,
                     this.paths.appDataGame,
                     this.paths.docsGame,
                     this.paths.nmmGame,
-                    //this.paths.nmmInfoGame,
-                    //this.paths.nmmModGame
                 };
             }
             else
@@ -554,8 +587,6 @@ namespace ProfileManager
                     if (this.paths.optionalAreSet())
                     {
                         dirsToCheck.Add(this.paths.nmmBkpProf(profNameOld));
-                        //dirsToCheck.Add(this.paths.nmmInfoBkpProf(profNameOld));
-                        //dirsToCheck.Add(this.paths.nmmModBkpProf(profNameOld));
                         names.Add(profNameNew);
                         names.Add(profNameNew);
                     }
@@ -675,88 +706,6 @@ namespace ProfileManager
             return this.settings;
         }
 
-        /// <summary>
-        /// Kill all steam processes. Requires elevation to execute.
-        /// </summary>
-        /// <returns></returns>
-        [PrincipalPermission(SecurityAction.Demand, Role = @"BUILTIN\Administrators")]
-        public static void killAllSteam()
-        {
-            // batch commands
-            // taskkill / f / im Steam.exe
-            // taskkill / f / im SteamService.exe
-            // taskkill / f / im steamwebhelper.exe
-            string killSteam = "taskkill /f /im Steam.exe";
-            string killSteamService = "taskkill /f /im SteamService.exe";
-            string killSteamHelper = "taskkill /f /im steamwebhelper.exe";
-            Process.Start("CMD.exe", killSteam);
-            Process.Start("CMD.exe", killSteamService);
-            Process.Start("CMD.exe", killSteamHelper);
-        }
-
-        public bool gitignoreDetected()
-        {
-            string gitignorePath = this.paths.steamGame + "\\" + FILE_GITIGNORE;
-            if (File.Exists(gitignorePath))
-            {
-                return true;
-            }
-            return false;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public bool createGitignore(out string errMsg)
-        {
-            log.Debug(" -- createGitignore()");
-            string gitignorePath = this.paths.steamGame + "\\" + FILE_GITIGNORE;
-            String gitignoreContent = "";
-            try
-            {
-                if (!File.Exists(gitignorePath))
-                {
-                    foreach (string file in Directory.EnumerateFiles(this.paths.steamGame,
-                                                                     "*.*",
-                                                                     System.IO.SearchOption.AllDirectories))
-                    {
-                        string content = file.Replace(this.paths.steamGame, "");
-                        content = content.Replace(@"\", @"/");
-                        gitignoreContent += @"." + content + "\n";
-                    }
-                    File.WriteAllText(gitignorePath, gitignoreContent);
-                    errMsg = "";
-                    return true;
-                }
-                errMsg = ".gitignore file already exist!";
-            }
-            catch (Exception ex)
-            {
-                log.Error("** ERROR ** Error creating .gitignore file. Message:" + ex.Message + ", StackTrace:" + ex.StackTrace);
-                errMsg = "Exception:<" + ex.Message + ">";
-            }
-            return false;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public bool deleteGitignore(out string errMsg)
-        {
-            log.Debug(" -- deleteGitignore()");
-            string gitignorePath = this.paths.steamGame + "\\" + FILE_GITIGNORE;
-            if (File.Exists(gitignorePath))
-            {
-                File.Delete(gitignorePath);
-                errMsg = "";
-                return true;
-            }
-            errMsg = ".gitignore file does not exist!";
-            return false;
-        }
-
         #endregion interface_methods
 
         #region app_state
@@ -799,7 +748,7 @@ namespace ProfileManager
                     return new SPProfile();
                 }
             }
-            else // (this.applicationState == SPMState.INACTIVE_PROFILE)
+            else
             {
                 return new SPProfile();
             }
@@ -828,12 +777,6 @@ namespace ProfileManager
             Directory.CreateDirectory(this.paths.appDataBkp);
             if (this.paths.optionalAreSet())
             {
-                /*
-                log.Debug("creating directory this.paths.nmmInfoBkp:" + this.paths.nmmInfoBkp);
-                Directory.CreateDirectory(this.paths.nmmInfoBkp);
-                log.Debug("creating directory this.paths.nmmMod:" + this.paths.nmmMod);
-                Directory.CreateDirectory(this.paths.nmmMod);
-                */
                 log.Debug("creating directory this.paths.nmm:" + this.paths.nmm);
                 Directory.CreateDirectory(this.paths.nmm);
             }
@@ -847,12 +790,6 @@ namespace ProfileManager
             Directory.CreateDirectory(this.paths.appDataBkpProf(profName));
             if (this.paths.optionalAreSet())
             {
-                //log.Debug("creating directory paths.nmmInfoBkpProf(profName):" + 
-                //          this.paths.nmmInfoBkpProf(profName));
-                //Directory.CreateDirectory(this.paths.nmmInfoBkpProf(profName));
-                //log.Debug("creating directory paths.nmmModBkpProf(profName):" + 
-                //          this.paths.nmmModBkpProf(profName));
-                //Directory.CreateDirectory(this.paths.nmmModBkpProf(profName));
                 log.Debug("creating directory paths.nmmBkpProf(profName):" +
                           this.paths.nmmBkpProf(profName));
                 Directory.CreateDirectory(this.paths.nmmBkpProf(profName));
@@ -879,8 +816,7 @@ namespace ProfileManager
             else
             {
                 // load desactivated installations
-                this.listDesactivated = SPProfile.loadDesactivatedProfiles(this.paths.steamBkp,
-                    this.settings.gameFolder);
+                this.listDesactivated = SPProfile.loadDesactivatedProfiles(this.paths.steamBkp, this.gameSettings.gameFolder);
                 // load active instalations
                 if (!Directory.Exists(this.paths.steamGame))
                 {
@@ -1007,14 +943,17 @@ namespace ProfileManager
                 log.Error("this.config.settings object not initialized!");
                 return false;
             }
-            else if (this.settings.appDataPath == null || this.settings.appDataPath.Trim().Equals("") ||
+            else if (this.settings.appDataPath == null   || this.settings.appDataPath.Trim().Equals("") ||
                      this.settings.documentsPath == null || this.settings.documentsPath.Trim().Equals("") ||
-                     this.settings.steamPath == null || this.settings.steamPath.Trim().Equals("") ||
-                     this.settings.gameFolder == null || this.settings.gameFolder.Trim().Equals("") ||
-                     this.settings.nmmPath == null )
-            //this.settings.nmmInfoPath == null || this.settings.nmmModPath == null)
+                     this.settings.steamPath == null     || this.settings.steamPath.Trim().Equals("") ||
+                     this.settings.nmmPath == null       ||
+                     this.gameSettings.gameFolder == null   || this.gameSettings.gameFolder.Trim().Equals("") ||
+                     this.gameSettings.game == null         || this.gameSettings.game.Trim().Equals("") ||
+                     this.gameSettings.gameExe == null      || this.gameSettings.gameExe.Trim().Equals("") ||
+                     this.gameSettings.backupFolder == null || this.gameSettings.backupFolder.Trim().Equals("")
+                     )
             {
-                log.Warn("Invalid SP settings, settings must be initialized before used");
+                log.Warn("Invalid AppSettings or Game Settings, settings must be initialized before used");
                 return false;
             }
             else if (!Directory.Exists(this.settings.appDataPath))

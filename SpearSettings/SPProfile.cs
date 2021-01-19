@@ -8,7 +8,7 @@ using System.Xml.Serialization;
 using Utils;
 using Utils.Loggers;
 
-namespace ProfileManager.Objects
+namespace SpearSettings
 {
     public class SPProfile
     {
@@ -19,7 +19,7 @@ namespace ProfileManager.Objects
         /// </summary>
         public SPProfile()
         {
-            this.setInactive();
+            this.setAsInactive();
         }
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace ProfileManager.Objects
             {
                 log.Warn("* CSV CONTENT IS ON THE WRONG FORMAT(name,color,creatinDate): " + settingsCsv);
                 log.Info("* LOADING AN EMPTY OBJECT INSTEAD");
-                this.setInactive();
+                this.setAsInactive();
             }
             return this.isReady;
         }
@@ -80,6 +80,19 @@ namespace ProfileManager.Objects
         public string creationDate { get; set; }
 
         /// <summary>
+        /// Set profile with Inactive settings.
+        /// </summary>
+        private void setAsInactive()
+        {
+            this.name = Consts.INACTIVE_NAME;
+            this.color = Consts.INACTIVE_COLOR;
+            this.creationDate = Consts.INACTIVE_CREATION;
+            this.isReady = false;
+        }
+
+        #region static_methods
+
+        /// <summary>
         /// Receive as parameter the Steam Game Folder where the game is installed or 
         /// should be installed. Returns a profile object is the profile is activated, otherwise
         /// returns a empty list
@@ -91,7 +104,7 @@ namespace ProfileManager.Objects
             ILogger slog = Log4NetLogger.getInstance(LogAppender.APP_CORE);
             slog.Debug("-- loadActiveProfiles() steamGameFolder:" + steamGameFolder);
             SPProfile prof = new SPProfile();
-            string pathFile = steamGameFolder + "\\" + Consts.INTEGRITY_FILE_NAME;
+            string pathFile = steamGameFolder + "\\" + Consts.FILE_INTEGRITYFILE;
             slog.Debug("pathFile:" + pathFile);
             if (File.Exists(pathFile))
             {
@@ -121,7 +134,7 @@ namespace ProfileManager.Objects
             {
                 foreach (var item in allDirs)
                 {
-                    string itemPath = item + "\\" + gameFolder + "\\" + Consts.INTEGRITY_FILE_NAME;
+                    string itemPath = item + "\\" + gameFolder + "\\" + Consts.FILE_INTEGRITYFILE;
                     slog.Info("-- Loding profile from: {" + itemPath + "}");
                     if (File.Exists(itemPath))
                     {
@@ -145,12 +158,6 @@ namespace ProfileManager.Objects
             return listDesactivated;
         }
 
-        private void setInactive()
-        {
-            this.name = Consts.INACTIVE_NAME;
-            this.color = Consts.INACTIVE_COLOR;
-            this.creationDate = Consts.INACTIVE_CREATION;
-            this.isReady = false;
-        }
+        #endregion static_methods
     }
 }

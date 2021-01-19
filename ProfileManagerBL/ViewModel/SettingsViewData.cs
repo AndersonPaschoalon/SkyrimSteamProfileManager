@@ -10,19 +10,13 @@ namespace ProfileManagerBL.ViewModel
     {
         public SettingsViewData()
         {
-            this.steam = "";
-            this.docs = "";
-            this.appData = "";
-            //this.nmmInfo = "";
-            //this.nmmMod = "";
             this.nmm = "";
+            this.vortex = "";
+            this.tesvedit = "";            
         }
 
-        public string steam { get; set; }
-        public string docs { get; set; }
-        public string appData { get; set; }
-        //public string nmmInfo { get; set; }
-        //public string nmmMod { get; set; }
         public string nmm { get; set; }
+        public string vortex { get; set; }
+        public string tesvedit { get; set; }
     }
 }

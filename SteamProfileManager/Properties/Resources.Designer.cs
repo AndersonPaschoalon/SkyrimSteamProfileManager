@@ -59,21 +59,5 @@ namespace ProfileManager.Properties {
                 resourceCulture = value;
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;
-        ///&lt;CONFIG game=&quot;{0}&quot;&gt;
-        ///    &lt;SETTINGS steamPath=&quot;&quot; documentsPath=&quot;&quot; appDataPath=&quot;&quot; 
-        ///              nmmModPath=&quot;&quot; nmmInfoPath=&quot;&quot;  
-        ///              gameFolder=&quot;{1}&quot; backupFolder=&quot;{0}Backups&quot; /&gt;
-        ///    &lt;PROFILES&gt;
-        ///    &lt;/PROFILES&gt;
-        ///&lt;/CONFIG&gt;.
-        /// </summary>
-        internal static string SPConfigTemplate {
-            get {
-                return ResourceManager.GetString("SPConfigTemplate", resourceCulture);
-            }
-        }
     }
 }

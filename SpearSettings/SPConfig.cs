@@ -6,29 +6,37 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Serialization;
-using ProfileManager.Enum;
 using Utils;
 using Utils.Loggers;
 
-namespace ProfileManager.Objects
+namespace SpearSettings
 {
     [XmlRoot("CONFIG", IsNullable = false)]
     public class SPConfig
     {
+        private readonly ILogger log = Log4NetLogger.getInstance(LogAppender.APP_CORE);
+        private readonly string STEAMPATH = @"C:\Program Files (x86)\Steam\steamapps\common";
+        private readonly string DOCSPATH = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\My Games\";
+        private readonly string APPDATAPATH = Environment.GetEnvironmentVariable("localappdata");
+
+        private SPConfig()
+        {
+        }
+
         #region load/save
 
         /// <summary>
         /// Return a list of configured games
         /// </summary>
         /// <returns></returns>
-        public static List<string> listGames()
+        public static List<string> listGameNames()
         {
             SPConfig config = SPConfig.loadConfig();
             List<string> listGamesStr = new List<string>();
-            List<SPSettings> listSettings = config.listSettings;
-            if (listSettings != null)
+            List<SPGame> listGames = config.listGames;
+            if (listGames != null)
             {
-                foreach (var item in listSettings)
+                foreach (var item in listGames)
                 {
                     string gamaStr = item.game.Trim();
                     listGamesStr.Add(gamaStr);
@@ -42,7 +50,7 @@ namespace ProfileManager.Objects
             List<string> lg;
             try
             {
-                lg = SPConfig.listGames();
+                lg = SPConfig.listGameNames();
                 if (lg.Count < 1)
                 {
                     MessageBox.Show("Error! Invalid number of Games on Settings File! The file might be corrupted!",
@@ -80,7 +88,7 @@ namespace ProfileManager.Objects
             if (!File.Exists(configFile))
             {
                 logger.Warn("config file does not exit!");
-                string xmlTemplate = Properties.Resources.SPConfigTemplate;
+                string xmlTemplate = Properties.Resources.SPConfig;
                 logger.Debug("Creating config file from template: " + xmlTemplate);
                 logger.Debug("Formatted XML:" + xmlTemplate);
                 File.WriteAllText(configFile, xmlTemplate);
@@ -111,6 +119,7 @@ namespace ProfileManager.Objects
                     configuration = (SPConfig)serializer.Deserialize(reader);
                     reader.Close();
                 }
+                configuration.systemDefaults();
                 return configuration;
             }
             catch (Exception ex)
@@ -158,9 +167,9 @@ namespace ProfileManager.Objects
             return this.saveConfig(configFile);
         }
 
-        public SPSettings selectSettings(string game)
+        public SPGame selectGame(string game)
         {
-            foreach (var item in listSettings)
+            foreach (var item in this.listGames)
             {
                 if (item.game.Trim() == game.Trim())
                 {
@@ -170,30 +179,82 @@ namespace ProfileManager.Objects
             return null;
         }
 
-        public bool updateSettings(string game, SPSettings gameSetting)
+        public bool updateSettings(SPSettings appSettings, string game, SPGame gameSettings)
         {
-            for (int i = 0; i < listSettings.Count; i++)
+            bool upGame = false;
+            bool upApp = false;
+            for (int i = 0; i < this.listGames.Count; i++)
             {
-                if (listSettings[i].game.Trim() == game.Trim())
+                if (this.listGames[i].game.Trim() == game.Trim())
                 {
-                    listSettings[i] = gameSetting;
-                    return true;
+                    this.listGames[i] = gameSettings;
+                    upGame = true;
+                    break;
                 }
+            }
+            if (appSettings != null)
+            {
+                this.settings = appSettings;
+                upApp = true;
+            }
+
+            if (upApp == true && upGame == true)
+            {
+                return true;
             }
             return false;
         }
 
-
+        public bool updateSettings(SPSettings appSettings)
+        {
+            if (appSettings != null)
+            {
+                this.settings = appSettings;
+                return true;
+            }
+            return false;
+        }
 
         #endregion load/save
 
-        [XmlElement("SETTINGS")]
-        public List<SPSettings> listSettings { get; set; }
+       [XmlElement("SETTINGS")]
+        public SPSettings settings { get; set; }
 
-        private readonly ILogger log = Log4NetLogger.getInstance(LogAppender.APP_CORE);
+        [XmlElement("GAME")]
+        public List<SPGame> listGames { get; set; }
 
-        private SPConfig()
+        #region helpers
+
+        private void systemDefaults()
         {
+            bool saveSettings = false;
+            if (this.settings.steamPath == null || this.settings.steamPath.Trim().Equals(""))
+            {
+                log.Debug(" -- setting default steamPath:<" + STEAMPATH + ">");
+                this.settings.steamPath = STEAMPATH;
+                saveSettings = true;
+            }
+            if (this.settings.documentsPath == null || this.settings.documentsPath.Trim().Equals(""))
+            {
+                log.Debug(" -- setting default documentsPath:<" + DOCSPATH + ">");
+                this.settings.documentsPath = DOCSPATH;
+                saveSettings = true;
+            }
+            if (this.settings.appDataPath == null || this.settings.appDataPath.Trim().Equals(""))
+            {
+                log.Debug(" -- setting default appDataPath:<" + APPDATAPATH + ">");
+                this.settings.appDataPath = APPDATAPATH;
+                saveSettings = true;
+            }
+            // update settings 
+            if (saveSettings)
+            {
+                log.Debug("SAVE defaults settings");
+                this.saveConfig();
+            }
         }
+
+        #endregion helpers
+
     }
 }

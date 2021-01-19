@@ -11,7 +11,7 @@ namespace Utils.Loggers
     [XmlRoot("LOG", IsNullable = false)]
     public class LogConfig
     {
-        private const string LOG_CONFIG = "Utils.logConfig.xml";
+        private const string LOG_CONFIG = "logConfig.xml";
         private const string LV_DEBUG = "DEBUG";
         private const string LV_INFO  = "INFO";
         private const string LV_WARN  = "WARN";

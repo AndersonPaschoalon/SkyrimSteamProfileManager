@@ -14,6 +14,7 @@ using ProfileManagerBL;
 using ProfileManagerBL.ViewModel;
 using System.IO;
 using System.IO.Compression;
+using ToolsManager;
 
 namespace Spear
 {
@@ -47,6 +48,8 @@ namespace Spear
             {
                 this.availableGames = new string[]{ "*NO GAME DEFINED*"};
             }
+            string startGame = this.availableGames[0];
+            this.managerBusinessLayer = new ProfileManagerBusinessLayer(startGame);
             InitializeComponent();
             // update game list
             this.updateDropdownGameMenu();
@@ -67,7 +70,6 @@ namespace Spear
             settings.ShowDialog();
             if (settings.saveSettings)
             {
-                //this.managerBusinessLayer.action_updateSettings(settings.settings);
                 this.managerBusinessLayer.action_updateSettings(settings.getSettings());
             }
         }
@@ -164,26 +166,118 @@ namespace Spear
                       ", Edit:" + enabled.editProfile +
                       ", createGitignore:" + enabled.createGitignore +
                       ", deleteGitignore:" + enabled.deleteGitignore);
+
+            // Disable buttons
+            // - Profile Management
             this.toolStripButtonActivate.Enabled = enabled.activateProfile;
             this.toolStripButtonDesactivate.Enabled = enabled.desactivateProfile;
             this.toolStripButtonSwitch.Enabled = enabled.switchProfile;
             this.toolStripButtonEdit.Enabled = enabled.editProfile;
             this.toolStripButtonReload.Enabled = true;
+            // - tools buttons
+            this.toolStripButtonOpenGameFolder.Enabled = enabled.openGameFolder;
+            this.toolStripButtonPlayGame.Enabled = enabled.launchGame;
             this.toolStripButtonGitignore.Enabled = enabled.createGitignore;
+            this.toolStripButtonOpenGitignore.Enabled = enabled.openGititnore;
             this.toolStripButtonGitThrash.Enabled = enabled.deleteGitignore;
-        }
 
+            // Disable Menu
+            // - Profile management
+            this.ACTIVATEProfileToolStripMenuItem.Enabled = enabled.activateProfile;
+            this.DESACTIVATEProfileToolStripMenuItem.Enabled = enabled.desactivateProfile;
+            this.SWITCHProfilesToolStripMenuItem.Enabled = enabled.switchProfile;
+            this.EDITProfileToolStripMenuItem.Enabled = enabled.editProfile;
+            this.RELOADProfilesToolStripMenuItem.Enabled = true;
+            // - git tools
+            this.createGitignoreFileToolStripMenuItem.Enabled = enabled.createGitignore;
+            this.toolStripMenuItemOpenGitignoreFile.Enabled = enabled.openGititnore;
+            this.deleteGitignoreFileToolStripMenuItem.Enabled = enabled.deleteGitignore;
+            // - tools
+            this.killSteamAppToolStripMenuItem.Enabled = enabled.killSteamApp;
+            this.toolStripMenuItemOpenGameFolder.Enabled = enabled.openGameFolder;
+            // - launch
+            this.toolStripMenuItemLaunchGame.Enabled = enabled.launchGame;
+            this.toolStripMenuItemVortex.Enabled = enabled.launchVortex;
+            this.launchNMMToolStripMenuItem.Enabled = enabled.launchNMM;
+            // - skyrim tools
+            this.skyrimOpenLogsToolStripMenuItem.Enabled = enabled.skyrimOpenLogs;
+            this.skyrimCleanLogsToolStripMenuItem.Enabled = enabled.skyrimCleanLogs;
+            this.skyrimLaunchCreationKitToolStripMenuItem.Enabled = enabled.skyrimLaunchCreationKit;
+            this.skyrimLaunchTESVEditToolStripMenuItem.Enabled = enabled.skyrimLaunchTESVEdit;
+
+        }
 
         private void actionBeforeStartDisableAllActions()
         {
+            // Disable buttons
+            // - Profile Management
             this.toolStripButtonActivate.Enabled = false;
             this.toolStripButtonDesactivate.Enabled = false;
             this.toolStripButtonSwitch.Enabled = false;
             this.toolStripButtonEdit.Enabled = false;
             this.toolStripButtonReload.Enabled = false;
+            // - tools buttons
+            this.toolStripButtonOpenGameFolder.Enabled = false;
+            this.toolStripButtonPlayGame.Enabled = false;
             this.toolStripButtonGitignore.Enabled = false;
+            this.toolStripButtonOpenGitignore.Enabled = false;
             this.toolStripButtonGitThrash.Enabled = false;
+
+            // Disable Menu
+            // - 
+            this.ACTIVATEProfileToolStripMenuItem.Enabled = false;
+            this.DESACTIVATEProfileToolStripMenuItem.Enabled = false;
+            this.SWITCHProfilesToolStripMenuItem.Enabled = false;
+            this.EDITProfileToolStripMenuItem.Enabled = false;
+            this.RELOADProfilesToolStripMenuItem.Enabled = false;
+            // - git tools
+            this.createGitignoreFileToolStripMenuItem.Enabled = false;
+            this.toolStripMenuItemOpenGitignoreFile.Enabled = false;
+            this.deleteGitignoreFileToolStripMenuItem.Enabled = false;
+            // - tools
+            this.killSteamAppToolStripMenuItem.Enabled = false;
+            this.toolStripMenuItemOpenGameFolder.Enabled = false;
+            // - launch
+            this.toolStripMenuItemLaunchGame.Enabled = false;
+            this.toolStripMenuItemVortex.Enabled = false;
+            this.launchNMMToolStripMenuItem.Enabled = false;
+            // - skyrim tools
+            this.skyrimOpenLogsToolStripMenuItem.Enabled = false;
+            this.skyrimCleanLogsToolStripMenuItem.Enabled = false;
+            this.skyrimLaunchCreationKitToolStripMenuItem.Enabled = false;
+            this.skyrimLaunchTESVEditToolStripMenuItem.Enabled = false;
         }
+
+        private void deleteGitignore()
+        {
+            string errMsg = "";
+            var result = MessageBox.Show("Are you sure you want to DELETE .gitignore file?",
+                                         "DELETE CONFIRMATION",
+                                         MessageBoxButtons.YesNo,
+                                         MessageBoxIcon.Question);
+            if (result == System.Windows.Forms.DialogResult.Yes)
+            {
+                bool retval = this.managerBusinessLayer.tool_deleteGitignore(out errMsg);
+                ansMessageBox(retval, ".gitignore file was successfully deleted!", "ERROR: " + errMsg);
+            }
+            this.updateToolStripButtons();
+        }
+
+        private void createGitignore()
+        {
+            string errMsg = "";
+            var result = MessageBox.Show("Do you want to create a .gitignore of all files of the game root folder?",
+                                         "Creating gitignore",
+                                         MessageBoxButtons.YesNo,
+                                         MessageBoxIcon.Question);
+            if (result == System.Windows.Forms.DialogResult.Yes)
+            {
+                bool ret = this.managerBusinessLayer.tool_createGitignore(out errMsg);
+                ansMessageBox(ret, ".gitignore file was successfully created!", "ERROR: " + errMsg);
+            }
+            this.updateToolStripButtons();
+        }
+
         #endregion events_helpers
 
         #region form_helpers
@@ -320,17 +414,18 @@ namespace Spear
 
         private void openWithNotepadToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.managerBusinessLayer.openLogFiles();
+            this.managerBusinessLayer.tool_openLogFiles();
         }
 
         private void exportAszipToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // not working!
-            string startPath = @".\Logs\";
-            string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-            string zipPath = desktopPath + "\\logs.zip";
-            ZipFile.CreateFromDirectory(startPath, zipPath);
-            MessageBox.Show("Zip logs.zip savad on the Destop!");
+            string errMsg = "";
+            // TODO export to desktop
+            // string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            if (!this.managerBusinessLayer.tool_exportLogs(".\\", out errMsg))
+            {
+                MessageBox.Show(errMsg, "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void toolStripButtonActivate_Click(object sender, EventArgs e)
@@ -440,7 +535,7 @@ namespace Spear
 
         private void openHeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.managerBusinessLayer.openHelpPage();
+            this.managerBusinessLayer.tool_openHelpPage();
         }
 
         private void toolStripComboBoxSelectGame_SelectedIndexChanged(object sender, EventArgs e)
@@ -491,33 +586,134 @@ namespace Spear
         private void toolStripButtonGitThrash_Click(object sender, EventArgs e)
         {
             log.Debug("-- toolStripButtonGitThrash_Click");
-            string errMsg = "";
-            var result = MessageBox.Show("Are you sure you want to DELETE .gitignore file?", 
-                                         "DELETE CONFIRMATION", 
-                                         MessageBoxButtons.YesNo, 
-                                         MessageBoxIcon.Question);
-            if (result == System.Windows.Forms.DialogResult.Yes)
-            {
-                bool retval = this.managerBusinessLayer.deleteGitignore(out errMsg);
-                ansMessageBox(retval, ".gitignore file was successfully deleted!", "ERROR: " + errMsg);
-            }
-            this.updateToolStripButtons();
+            this.deleteGitignore();
         }
 
         private void toolStripButtonGitignore_Click(object sender, EventArgs e)
         {
             log.Debug("-- toolStripButtonGitignore_Click");
+            this.createGitignore();
+        }
+
+        private void launchNMMToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            log.Debug("-- launchNMMToolStripMenuItem_Click");
             string errMsg = "";
-            var result = MessageBox.Show("Do you want to create a .gitignore of all files of the game root folder?",
-                                         "Creating gitignore",
-                                         MessageBoxButtons.YesNo,
-                                         MessageBoxIcon.Question);
-            if (result == System.Windows.Forms.DialogResult.Yes)
+            if (!this.managerBusinessLayer.tool_launchNmm(out errMsg))
             {
-                bool ret = this.managerBusinessLayer.createGitignore(out errMsg);
-                ansMessageBox(ret, ".gitignore file was successfully created!", "ERROR: " + errMsg);
+                MessageBox.Show(errMsg, "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            this.updateToolStripButtons();
+        }
+
+        private void toolStripButtonOpenGameFolder_Click(object sender, EventArgs e)
+        {
+            string errMsg = "";
+            if (!this.managerBusinessLayer.tool_openGameFolder(out errMsg))
+            {
+                MessageBox.Show(errMsg, "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void toolStripButtonPlayGame_Click(object sender, EventArgs e)
+        {
+            string errMsg = "";
+            if (!this.managerBusinessLayer.tool_launchGame(out errMsg))
+            {
+                MessageBox.Show(errMsg, "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void toolStripButtonOpenGitignore_Click(object sender, EventArgs e)
+        {
+            string errMsg = "";
+            if (!this.managerBusinessLayer.tool_openGititnore(out errMsg))
+            {
+                MessageBox.Show(errMsg, "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void createGitignoreFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            log.Debug(" -- createGitignoreFileToolStripMenuItem_Click");
+            this.createGitignore();
+        }
+
+        private void deleteGitignoreFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            log.Debug(" -- deleteGitignoreFileToolStripMenuItem_Click");
+            this.deleteGitignore();
+        }
+
+        private void killSteamAppToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            log.Debug(" -- killSteamAppToolStripMenuItem_Click");
+            SpearToolsManager.killAllSteam();
+        }
+
+        private void skyrimOpenLogsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            log.Debug(" -- skyrimOpenLogsToolStripMenuItem_Click");
+            string errMsg = "";
+            if (!this.managerBusinessLayer.tool_openSkyrimLogs(out errMsg))
+            {
+                MessageBox.Show(errMsg, "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void skyrimCleanLogsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            log.Debug(" -- skyrimCleanLogsToolStripMenuItem_Click");
+            MessageBox.Show("TODO", "TODO", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        }
+
+        private void skyrimLaunchCreationKitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            log.Debug(" -- skyrimLaunchCreationKitToolStripMenuItem_Click");
+            string errMsg = "";
+            if (!this.managerBusinessLayer.tool_launchCreationKit(out errMsg))
+            {
+                MessageBox.Show(errMsg, "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void skyrimLaunchTESVEditToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            log.Debug(" -- skyrimLaunchTESVEditToolStripMenuItem_Click");
+            string errMsg = "";
+            if (!this.managerBusinessLayer.tool_launchTesvEdit(out errMsg))
+            {
+                MessageBox.Show(errMsg, "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void toolStripMenuItemLaunchGame_Click(object sender, EventArgs e)
+        {
+            log.Debug(" -- toolStripMenuItemLaunchGame_Click");
+            string errMsg = "";
+            if (!this.managerBusinessLayer.tool_launchGame(out errMsg))
+            {
+                MessageBox.Show(errMsg, "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void toolStripMenuItemVortex_Click(object sender, EventArgs e)
+        {
+            log.Debug(" -- toolStripMenuItemVortex_Click");
+            string errMsg = "";
+            if (!this.managerBusinessLayer.tool_launchVortex(out errMsg))
+            {
+                MessageBox.Show(errMsg, "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void toolStripMenuItemOpenGitignoreFile_Click(object sender, EventArgs e)
+        {
+            log.Debug(" -- toolStripMenuItemOpenGitignoreFile_Click");
+            string errMsg = "";
+            if (!this.managerBusinessLayer.tool_openGititnore(out errMsg))
+            {
+                MessageBox.Show(errMsg, "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }

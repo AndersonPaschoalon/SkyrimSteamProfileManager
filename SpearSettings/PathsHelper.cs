@@ -4,10 +4,10 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ProfileManager.Enum;
+//using ProfileManager.Enum;
 using Utils;
 
-namespace ProfileManager.Objects
+namespace SpearSettings
 {
     /// <summary>
     /// This class helps to hold and generate paths used in the project, encapsulating 
@@ -20,7 +20,7 @@ namespace ProfileManager.Objects
 
         public static string getConfigFileName()
         {
-            return Consts.CONFIG_FILE;
+            return Consts.FILE_SPCONFIG;
         }
 
         public static string validPath(string path)
@@ -38,13 +38,12 @@ namespace ProfileManager.Objects
 
         #endregion static_helpers
 
-        public PathsHelper(string gameName, SPSettings settings)
+        public PathsHelper(SPSettings settings, SPGame gameSettings)
         {
-            this._game = gameName;
-            this.update(settings);
+            this.update(settings, gameSettings);
         }
 
-        public string gamename()
+        public string gameName()
         {
             return this._game;
         }
@@ -53,11 +52,12 @@ namespace ProfileManager.Objects
         /// Update the paths values
         /// </summary>
         /// <param name="settings"></param>
-        public void update(SPSettings settings)
+        public void update(SPSettings settings, SPGame gameSettings)
         {
-            this.execUpdate(settings.steamPath, settings.appDataPath, settings.documentsPath,
-                            settings.nmmPath, settings.gameFolder, 
-                            settings.backupFolder);
+            this._game = gameSettings.game;
+            this.execUpdate1(settings.steamPath, settings.appDataPath, settings.documentsPath,
+                             settings.nmmPath, gameSettings.gameFolder, gameSettings.backupFolder);
+            this.execUpdate2(settings.vortexPath, settings.tesvEditPath, gameSettings.gameExe);
         }
 
         public int checkSettings()
@@ -105,7 +105,7 @@ namespace ProfileManager.Objects
         // active integrity helpers
         public string activeIntegrityFilePath()
         {
-            return this.steamGame + "\\" + Consts.INTEGRITY_FILE_NAME;
+            return this.steamGame + "\\" + Consts.FILE_INTEGRITYFILE;
         }
 
         public bool activeIntegrityFile()
@@ -170,7 +170,7 @@ namespace ProfileManager.Objects
         // desactivated integrity file helpers
         public string desactivatedIntegrityFilePath(string prof)
         {
-            return this.steamBkpProfGame(prof) + "\\" + Consts.INTEGRITY_FILE_NAME;
+            return this.steamBkpProfGame(prof) + "\\" + Consts.FILE_INTEGRITYFILE;
         }
 
         public bool desactivatedIntegrityFile(string prof)
@@ -298,13 +298,89 @@ namespace ProfileManager.Objects
 
         #endregion NMM
 
-        /// <summary>
-        /// Returns a valid profile name.
-        /// </summary>
-        /// <param name="name"></param>
-        /// <param name="inUse"></param>
-        /// <returns></returns>
-        public string safeNewProfileName(string name, List<string> inUse)
+        #region files
+
+        public string gitignore()
+        {
+            return this.steamGame + "\\" + Consts.FILE_GITIGNORE;
+        }
+
+        public string gameExe()
+        {
+            return this.steamGame + "\\" + this._gameExe;
+        }
+
+        public List<string> gameLogsList()
+        {
+            List<string> listLogs = new List<string>();
+            string logPath;
+            // logfiles for skyrim
+            if (this.gameName().ToUpper() == Consts.SKYRIM_STR.ToUpper())
+            {
+                logPath = this.skyrimLogPath();
+                if (File.Exists(logPath))
+                {
+                    foreach (string file in Directory.EnumerateFiles(logPath,
+                                                                     "*.*",
+                                                                     System.IO.SearchOption.AllDirectories))
+                    {
+                        if (file.EndsWith(".log"))
+                        {
+                            listLogs.Add(file);
+                        }
+                    }
+                }
+
+            }
+            return listLogs;
+        }
+
+        public string creationKitExe()
+        {
+            string creationKit = "";
+            if (this.gameName().ToUpper() == Consts.SKYRIM_STR.ToUpper())
+            {
+                creationKit = this.steamGame + "\\" + Consts.EXE_CREATION_KIT;
+            }
+            return creationKit;
+        }
+
+
+        public string nmmExe()
+        {
+            // TODO retornar valor correto
+            return this.nmm;
+        }
+
+        public string vortex()
+        {
+            return this._vortexExe;
+        }
+
+        public string tesvedit()
+        {
+            return this._tesvEditExe;
+        }
+
+        public string skyrimLogPath()
+        {
+            string logPath = "";
+            if (this.gameName().ToUpper() == Consts.SKYRIM_STR.ToUpper())
+            {
+                logPath = this.docsGame + "\\Logs\\";
+            }
+            return logPath;
+        }
+
+        #endregion files
+
+            /// <summary>
+            /// Returns a valid profile name.
+            /// </summary>
+            /// <param name="name"></param>
+            /// <param name="inUse"></param>
+            /// <returns></returns>
+            public string safeNewProfileName(string name, List<string> inUse)
         {
             // check if name is empty
             if (name == null) name = "";
@@ -315,7 +391,7 @@ namespace ProfileManager.Objects
             // make sure is alphanumeric
             CSharp.alphaNumeric(name);
             //append to list of inUse Values
-            List<string> lg = SPConfig.listGames();
+            List<string> lg = SPConfig.listGameNames();
             if (lg != null)
             {
                 foreach (var item in lg)
@@ -358,7 +434,15 @@ namespace ProfileManager.Objects
         private string _nmmGame = "";
         private string _nmmBackup = "";
 
-        private void execUpdate(string steam, string appData, string myDocs, string nmm,
+        private string _gameExe;
+        private string _vortexExe = "";
+        private string _tesvEditExe = "";
+        private string _creationKitExe = "";
+        private string _skyrimLogsPath = "";
+        private string _skyrimIniFile = "";
+        
+        // update paths related with steam, appData, documents, NMM, and game/backup
+        private void execUpdate1(string steam, string appData, string myDocs, string nmm,
                                 string gameFolder, string backupFolder)
         {
             steam.Trim();
@@ -397,6 +481,27 @@ namespace ProfileManager.Objects
                 this._nmmGame = nmm + "\\" + gameFolder;
                 this._nmmBackup = nmm + "\\" + this._backupFolder;
             }
+        }
+
+        // Update information about aditional toosl Skyrim .ini and logs
+        private void execUpdate2(string vortex, string tesvEdit, string gameExe)
+        {
+            // Tools
+            if (File.Exists(vortex))
+            {
+                this._vortexExe = vortex;
+            }
+            if (File.Exists(tesvEdit))
+            {
+                this._tesvEditExe = tesvEdit;
+            }
+
+            // Game
+            this._gameExe =  gameExe;
+
+            // Skyrim
+            this._skyrimIniFile = this.docsGame + "\\" + Consts.FILE_SKYRIM_INI;
+            this._skyrimLogsPath = this.docsGame + "\\Logs\\";
         }
 
         #endregion private 

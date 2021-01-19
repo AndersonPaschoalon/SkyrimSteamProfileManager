@@ -15,7 +15,6 @@ namespace Spear
     {
         private FolderBrowserDialog folderDlg = new FolderBrowserDialog();
         private SettingsViewData settings { get; set; }
-        private readonly SettingsViewData defaultSettings;
         public bool saveSettings { get; private set; }
 
         private void openDir(string path)
@@ -31,22 +30,14 @@ namespace Spear
 
         private void updateSettings()
         {
-            this.settings.steam = this.textBoxSteam.Text;
-            this.settings.docs = this.textBoxDocs.Text;
-            this.settings.appData = this.textBoxAppData.Text;
-            this.settings.nmm = this.textBoxNmm.Text;
+            this.settings.vortex  = this.textBoxVortex.Text;
+            this.settings.tesvedit = this.textBoxTESVEdit.Text;
+            this.settings.nmm = this.textBoxNmm.Text; 
         }
 
 
         public FormSettings(SettingsViewData oldSets, string gameName)
         {
-            // default values
-            this.defaultSettings = new SettingsViewData {
-                appData = Environment.GetEnvironmentVariable("localappdata"),
-                docs = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\My Games\",
-                steam = @"C:\Program Files (x86)\Steam\steamapps\common",
-                nmm = "",
-            };
             // settings object
             this.settings = new SettingsViewData();
             // tools
@@ -54,9 +45,9 @@ namespace Spear
             this.saveSettings = false;
             InitializeComponent();
             // original settings
-            this.textBoxSteam.Text = oldSets.steam;
-            this.textBoxDocs.Text = oldSets.docs;
-            this.textBoxAppData.Text = oldSets.appData;
+            this.textBoxNmm.Text = oldSets.nmm;
+            this.textBoxVortex.Text = oldSets.vortex;
+            this.textBoxTESVEdit.Text = oldSets.tesvedit;
             this.textBoxNmm.Text = oldSets.nmm;
             this.Text = this.Text + " [" + gameName + "]";
         }
@@ -66,60 +57,7 @@ namespace Spear
             return this.settings;
         }
 
-        private void buttonSteam_Click(object sender, EventArgs e)
-        {
-            DialogResult result = this.folderDlg.ShowDialog();
-            if (result == DialogResult.OK)
-            {
-                this.textBoxSteam.Text = this.folderDlg.SelectedPath;
-                this.textBoxSteam.Text = folderDlg.SelectedPath;
-                Environment.SpecialFolder root = folderDlg.RootFolder;
-            }
-        }
-
-        private void buttonDocs_Click(object sender, EventArgs e)
-        {
-            DialogResult result = this.folderDlg.ShowDialog();
-            if (result == DialogResult.OK)
-            {
-                this.textBoxDocs.Text = this.folderDlg.SelectedPath;
-                this.textBoxDocs.Text = folderDlg.SelectedPath;
-                Environment.SpecialFolder root = folderDlg.RootFolder;
-            }
-        }
-
-        private void buttonAppData_Click(object sender, EventArgs e)
-        {
-            DialogResult result = this.folderDlg.ShowDialog();
-            if (result == DialogResult.OK)
-            {
-                this.textBoxAppData.Text = this.folderDlg.SelectedPath;
-                this.textBoxAppData.Text = folderDlg.SelectedPath;
-                Environment.SpecialFolder root = folderDlg.RootFolder;
-            }
-        }
-
-        private void buttonNmmInfo_Click(object sender, EventArgs e)
-        {
-            DialogResult result = this.folderDlg.ShowDialog();
-            if (result == DialogResult.OK)
-            {
-                this.textBoxNmm.Text = this.folderDlg.SelectedPath;
-                this.textBoxNmm.Text = folderDlg.SelectedPath;
-                Environment.SpecialFolder root = folderDlg.RootFolder;
-            }
-        }
-
-        //private void buttonNmmMod_Click(object sender, EventArgs e)
-        //{
-        //    DialogResult result = this.folderDlg.ShowDialog();
-        //    if (result == DialogResult.OK)
-        //    {
-        //        this.textBoxNmmMod.Text = this.folderDlg.SelectedPath;
-        //        this.textBoxNmmMod.Text = folderDlg.SelectedPath;
-        //        Environment.SpecialFolder root = folderDlg.RootFolder;
-        //    }
-        //}
+        #region save/cancel
 
         private void buttonSave_Click(object sender, EventArgs e)
         {
@@ -134,54 +72,54 @@ namespace Spear
             this.Close();
         }
 
-        private void buttonDefSteam_Click(object sender, EventArgs e)
+        #endregion save/cancel
+
+        private void buttonNmm_Click(object sender, EventArgs e)
         {
-            this.textBoxSteam.Text = defaultSettings.steam;
+            DialogResult result = this.folderDlg.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                this.textBoxNmm.Text = this.folderDlg.SelectedPath;
+                this.textBoxNmm.Text = folderDlg.SelectedPath;
+                Environment.SpecialFolder root = folderDlg.RootFolder;
+            }
         }
 
-        private void buttonDefDocs_Click(object sender, EventArgs e)
+        private void buttonVortex_Click(object sender, EventArgs e)
         {
-            this.textBoxDocs.Text = defaultSettings.docs;
+            DialogResult result = this.folderDlg.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                this.textBoxVortex.Text = this.folderDlg.SelectedPath;
+                this.textBoxVortex.Text = folderDlg.SelectedPath;
+                Environment.SpecialFolder root = folderDlg.RootFolder;
+            }
         }
 
-        private void buttonDefApp_Click(object sender, EventArgs e)
+        private void buttonTESVEdit_Click(object sender, EventArgs e)
         {
-            this.textBoxAppData.Text = defaultSettings.appData;
+            DialogResult result = this.folderDlg.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                this.textBoxTESVEdit.Text = this.folderDlg.SelectedPath;
+                this.textBoxTESVEdit.Text = folderDlg.SelectedPath;
+                Environment.SpecialFolder root = folderDlg.RootFolder;
+            }
         }
 
-        private void buttonDefNmmInfo_Click(object sender, EventArgs e)
-        {
-            this.textBoxNmm.Text = defaultSettings.nmm;
-        }
-
-        //private void buttonDefNmmMod_Click(object sender, EventArgs e)
-        //{
-        //    this.textBoxNmmMod.Text = defaultSettings.nmmMod;
-        //}
-
-        private void pictureBoxSteam_Click(object sender, EventArgs e)
-        {
-            this.openDir(this.textBoxSteam.Text);
-        }
-
-        private void pictureBoxDocs_Click(object sender, EventArgs e)
-        {
-            this.openDir(this.textBoxDocs.Text);
-        }
-
-        private void pictureBoxAppData_Click(object sender, EventArgs e)
-        {
-            this.openDir(this.textBoxAppData.Text);
-        }
-
-        private void pictureBoxNmmInfo_Click(object sender, EventArgs e)
+        private void pictureBoxNmm_Click(object sender, EventArgs e)
         {
             this.openDir(this.textBoxNmm.Text);
         }
 
-        //private void pictureBoxNmmMod_Click(object sender, EventArgs e)
-        //{
-        //    this.openDir(this.textBoxNmm.Text);
-        //}
+        private void pictureBoxVortex_Click(object sender, EventArgs e)
+        {
+            this.openDir(this.textBoxVortex.Text);
+        }
+
+        private void pictureBoxAppTESVEdit_Click(object sender, EventArgs e)
+        {
+            this.openDir(this.textBoxTESVEdit.Text);
+        }
     }
 }

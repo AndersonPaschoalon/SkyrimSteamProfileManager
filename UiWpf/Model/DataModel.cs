@@ -6,7 +6,6 @@ using System.Text;
 using System.Threading.Tasks;
 using ProfileManager;
 using ProfileManager.Enum;
-using ProfileManager.Objects;
 
 namespace UiWpf.Model
 {

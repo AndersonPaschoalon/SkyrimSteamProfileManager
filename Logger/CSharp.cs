@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using Microsoft.VisualBasic.FileIO;
 using Utils.Loggers;
 
@@ -162,13 +163,6 @@ namespace Utils
                 }
             }
             return outStr;
-        }
-
-        // TODO
-        // first char need to be a letter, the other alphanumeric
-        public static string varName(string val)
-        {
-            return val;
         }
 
         #endregion primitiveOperations
@@ -837,7 +831,6 @@ namespace Utils
             return !Directory.EnumerateFileSystemEntries(path).Any();
         }
 
-
         public static bool openDirectoryOnFileExplorer(string path)
         {
             if (Directory.Exists(path))
@@ -849,6 +842,32 @@ namespace Utils
                 return false;
             }
             return true;
+        }
+
+        public static bool execDirOrExe(string pathOrExe)
+        {
+            if (Directory.Exists(pathOrExe))
+            {
+                Process.Start("explorer.exe", pathOrExe);
+            }
+            else if (File.Exists(pathOrExe))
+            {
+                try
+                {
+                    System.Diagnostics.Process.Start(pathOrExe);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("ERROR", "Error starting process " + pathOrExe + ". Message: " + ex.Message, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return false;
+                }                
+            }
+            else
+            {
+                return false;
+            }
+            return true;
+
         }
 
         #endregion fileSystemOperations

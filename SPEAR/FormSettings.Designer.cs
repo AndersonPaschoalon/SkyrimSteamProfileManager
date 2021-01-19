@@ -29,294 +29,182 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormSettings));
-            this.groupBoxSteam = new System.Windows.Forms.GroupBox();
-            this.pictureBoxAppData = new System.Windows.Forms.PictureBox();
-            this.pictureBoxDocs = new System.Windows.Forms.PictureBox();
-            this.pictureBoxSteam = new System.Windows.Forms.PictureBox();
-            this.buttonDefApp = new System.Windows.Forms.Button();
-            this.buttonDefDocs = new System.Windows.Forms.Button();
-            this.buttonDefSteam = new System.Windows.Forms.Button();
-            this.textBoxAppData = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.buttonAppData = new System.Windows.Forms.Button();
-            this.textBoxDocs = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.buttonDocs = new System.Windows.Forms.Button();
-            this.textBoxSteam = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.buttonSteam = new System.Windows.Forms.Button();
-            this.groupBoxNMM = new System.Windows.Forms.GroupBox();
-            this.pictureBoxNmmInfo = new System.Windows.Forms.PictureBox();
-            this.buttonDefNmm = new System.Windows.Forms.Button();
+            this.groupBoxAppSettings = new System.Windows.Forms.GroupBox();
+            this.pictureBoxAppTESVEdit = new System.Windows.Forms.PictureBox();
+            this.pictureBoxVortex = new System.Windows.Forms.PictureBox();
+            this.pictureBoxNmm = new System.Windows.Forms.PictureBox();
+            this.textBoxTESVEdit = new System.Windows.Forms.TextBox();
+            this.labelTESVEdit = new System.Windows.Forms.Label();
+            this.buttonTESVEdit = new System.Windows.Forms.Button();
+            this.textBoxVortex = new System.Windows.Forms.TextBox();
+            this.labelVortex = new System.Windows.Forms.Label();
+            this.buttonVortex = new System.Windows.Forms.Button();
             this.textBoxNmm = new System.Windows.Forms.TextBox();
-            this.label4 = new System.Windows.Forms.Label();
+            this.labelNmm = new System.Windows.Forms.Label();
             this.buttonNmm = new System.Windows.Forms.Button();
             this.buttonSave = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.tabSettingsMain = new System.Windows.Forms.TabControl();
             this.tabConfiguration = new System.Windows.Forms.TabPage();
-            this.tabLogs = new System.Windows.Forms.TabPage();
+            this.tabAdvanced = new System.Windows.Forms.TabPage();
             this.buttonSaveLogSettings = new System.Windows.Forms.Button();
-            this.groupLogBackup = new System.Windows.Forms.GroupBox();
-            this.radioBkpNoLimit = new System.Windows.Forms.RadioButton();
-            this.radioBkp10 = new System.Windows.Forms.RadioButton();
-            this.radioBkp05 = new System.Windows.Forms.RadioButton();
             this.groupLoglevel = new System.Windows.Forms.GroupBox();
             this.radioError = new System.Windows.Forms.RadioButton();
             this.radioDebug = new System.Windows.Forms.RadioButton();
             this.radioWarn = new System.Windows.Forms.RadioButton();
             this.radioInfo = new System.Windows.Forms.RadioButton();
-            this.groupBoxSteam.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxAppData)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxDocs)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSteam)).BeginInit();
-            this.groupBoxNMM.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxNmmInfo)).BeginInit();
+            this.groupBoxAppSettings.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxAppTESVEdit)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxVortex)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxNmm)).BeginInit();
             this.tabSettingsMain.SuspendLayout();
             this.tabConfiguration.SuspendLayout();
-            this.tabLogs.SuspendLayout();
-            this.groupLogBackup.SuspendLayout();
+            this.tabAdvanced.SuspendLayout();
             this.groupLoglevel.SuspendLayout();
             this.SuspendLayout();
             // 
-            // groupBoxSteam
+            // groupBoxAppSettings
             // 
-            this.groupBoxSteam.Controls.Add(this.pictureBoxAppData);
-            this.groupBoxSteam.Controls.Add(this.pictureBoxDocs);
-            this.groupBoxSteam.Controls.Add(this.pictureBoxSteam);
-            this.groupBoxSteam.Controls.Add(this.buttonDefApp);
-            this.groupBoxSteam.Controls.Add(this.buttonDefDocs);
-            this.groupBoxSteam.Controls.Add(this.buttonDefSteam);
-            this.groupBoxSteam.Controls.Add(this.textBoxAppData);
-            this.groupBoxSteam.Controls.Add(this.label3);
-            this.groupBoxSteam.Controls.Add(this.buttonAppData);
-            this.groupBoxSteam.Controls.Add(this.textBoxDocs);
-            this.groupBoxSteam.Controls.Add(this.label2);
-            this.groupBoxSteam.Controls.Add(this.buttonDocs);
-            this.groupBoxSteam.Controls.Add(this.textBoxSteam);
-            this.groupBoxSteam.Controls.Add(this.label1);
-            this.groupBoxSteam.Controls.Add(this.buttonSteam);
-            this.groupBoxSteam.Location = new System.Drawing.Point(8, 6);
-            this.groupBoxSteam.Name = "groupBoxSteam";
-            this.groupBoxSteam.Size = new System.Drawing.Size(561, 184);
-            this.groupBoxSteam.TabIndex = 0;
-            this.groupBoxSteam.TabStop = false;
-            this.groupBoxSteam.Text = "Steam Settings";
+            this.groupBoxAppSettings.Controls.Add(this.pictureBoxAppTESVEdit);
+            this.groupBoxAppSettings.Controls.Add(this.pictureBoxVortex);
+            this.groupBoxAppSettings.Controls.Add(this.pictureBoxNmm);
+            this.groupBoxAppSettings.Controls.Add(this.textBoxTESVEdit);
+            this.groupBoxAppSettings.Controls.Add(this.labelTESVEdit);
+            this.groupBoxAppSettings.Controls.Add(this.buttonTESVEdit);
+            this.groupBoxAppSettings.Controls.Add(this.textBoxVortex);
+            this.groupBoxAppSettings.Controls.Add(this.labelVortex);
+            this.groupBoxAppSettings.Controls.Add(this.buttonVortex);
+            this.groupBoxAppSettings.Controls.Add(this.textBoxNmm);
+            this.groupBoxAppSettings.Controls.Add(this.labelNmm);
+            this.groupBoxAppSettings.Controls.Add(this.buttonNmm);
+            this.groupBoxAppSettings.Location = new System.Drawing.Point(8, 6);
+            this.groupBoxAppSettings.Name = "groupBoxAppSettings";
+            this.groupBoxAppSettings.Size = new System.Drawing.Size(561, 184);
+            this.groupBoxAppSettings.TabIndex = 0;
+            this.groupBoxAppSettings.TabStop = false;
+            this.groupBoxAppSettings.Text = "Tools Settings";
             // 
-            // pictureBoxAppData
+            // pictureBoxAppTESVEdit
             // 
-            this.pictureBoxAppData.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.pictureBoxAppData.Image = global::Spear.Properties.Resources._15_open_folder;
-            this.pictureBoxAppData.InitialImage = global::Spear.Properties.Resources._15_open_folder;
-            this.pictureBoxAppData.Location = new System.Drawing.Point(531, 142);
-            this.pictureBoxAppData.Name = "pictureBoxAppData";
-            this.pictureBoxAppData.Size = new System.Drawing.Size(18, 18);
-            this.pictureBoxAppData.TabIndex = 14;
-            this.pictureBoxAppData.TabStop = false;
-            this.pictureBoxAppData.Click += new System.EventHandler(this.pictureBoxAppData_Click);
+            this.pictureBoxAppTESVEdit.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.pictureBoxAppTESVEdit.Image = global::Spear.Properties.Resources._15_open_folder;
+            this.pictureBoxAppTESVEdit.InitialImage = global::Spear.Properties.Resources._15_open_folder;
+            this.pictureBoxAppTESVEdit.Location = new System.Drawing.Point(531, 142);
+            this.pictureBoxAppTESVEdit.Name = "pictureBoxAppTESVEdit";
+            this.pictureBoxAppTESVEdit.Size = new System.Drawing.Size(18, 18);
+            this.pictureBoxAppTESVEdit.TabIndex = 14;
+            this.pictureBoxAppTESVEdit.TabStop = false;
+            this.pictureBoxAppTESVEdit.Click += new System.EventHandler(this.pictureBoxAppTESVEdit_Click);
             // 
-            // pictureBoxDocs
+            // pictureBoxVortex
             // 
-            this.pictureBoxDocs.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.pictureBoxDocs.Image = global::Spear.Properties.Resources._15_open_folder;
-            this.pictureBoxDocs.InitialImage = global::Spear.Properties.Resources._15_open_folder;
-            this.pictureBoxDocs.Location = new System.Drawing.Point(531, 91);
-            this.pictureBoxDocs.Name = "pictureBoxDocs";
-            this.pictureBoxDocs.Size = new System.Drawing.Size(18, 18);
-            this.pictureBoxDocs.TabIndex = 13;
-            this.pictureBoxDocs.TabStop = false;
-            this.pictureBoxDocs.Click += new System.EventHandler(this.pictureBoxDocs_Click);
+            this.pictureBoxVortex.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.pictureBoxVortex.Image = global::Spear.Properties.Resources._15_open_folder;
+            this.pictureBoxVortex.InitialImage = global::Spear.Properties.Resources._15_open_folder;
+            this.pictureBoxVortex.Location = new System.Drawing.Point(531, 91);
+            this.pictureBoxVortex.Name = "pictureBoxVortex";
+            this.pictureBoxVortex.Size = new System.Drawing.Size(18, 18);
+            this.pictureBoxVortex.TabIndex = 13;
+            this.pictureBoxVortex.TabStop = false;
+            this.pictureBoxVortex.Click += new System.EventHandler(this.pictureBoxVortex_Click);
             // 
-            // pictureBoxSteam
+            // pictureBoxNmm
             // 
-            this.pictureBoxSteam.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.pictureBoxSteam.Image = global::Spear.Properties.Resources._15_open_folder;
-            this.pictureBoxSteam.InitialImage = global::Spear.Properties.Resources._15_open_folder;
-            this.pictureBoxSteam.Location = new System.Drawing.Point(531, 41);
-            this.pictureBoxSteam.Name = "pictureBoxSteam";
-            this.pictureBoxSteam.Size = new System.Drawing.Size(18, 18);
-            this.pictureBoxSteam.TabIndex = 12;
-            this.pictureBoxSteam.TabStop = false;
-            this.pictureBoxSteam.Click += new System.EventHandler(this.pictureBoxSteam_Click);
+            this.pictureBoxNmm.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.pictureBoxNmm.Image = global::Spear.Properties.Resources._15_open_folder;
+            this.pictureBoxNmm.InitialImage = global::Spear.Properties.Resources._15_open_folder;
+            this.pictureBoxNmm.Location = new System.Drawing.Point(531, 41);
+            this.pictureBoxNmm.Name = "pictureBoxNmm";
+            this.pictureBoxNmm.Size = new System.Drawing.Size(18, 18);
+            this.pictureBoxNmm.TabIndex = 12;
+            this.pictureBoxNmm.TabStop = false;
+            this.pictureBoxNmm.Click += new System.EventHandler(this.pictureBoxNmm_Click);
             // 
-            // buttonDefApp
+            // textBoxTESVEdit
             // 
-            this.buttonDefApp.Location = new System.Drawing.Point(456, 137);
-            this.buttonDefApp.Name = "buttonDefApp";
-            this.buttonDefApp.Size = new System.Drawing.Size(69, 23);
-            this.buttonDefApp.TabIndex = 11;
-            this.buttonDefApp.Text = "DEFAULT";
-            this.buttonDefApp.UseVisualStyleBackColor = true;
-            this.buttonDefApp.Click += new System.EventHandler(this.buttonDefApp_Click);
+            this.textBoxTESVEdit.Location = new System.Drawing.Point(87, 140);
+            this.textBoxTESVEdit.Name = "textBoxTESVEdit";
+            this.textBoxTESVEdit.Size = new System.Drawing.Size(438, 20);
+            this.textBoxTESVEdit.TabIndex = 8;
+            this.textBoxTESVEdit.Text = " ";
             // 
-            // buttonDefDocs
+            // labelTESVEdit
             // 
-            this.buttonDefDocs.Location = new System.Drawing.Point(456, 86);
-            this.buttonDefDocs.Name = "buttonDefDocs";
-            this.buttonDefDocs.Size = new System.Drawing.Size(69, 23);
-            this.buttonDefDocs.TabIndex = 10;
-            this.buttonDefDocs.Text = "DEFAULT";
-            this.buttonDefDocs.UseVisualStyleBackColor = true;
-            this.buttonDefDocs.Click += new System.EventHandler(this.buttonDefDocs_Click);
+            this.labelTESVEdit.AutoSize = true;
+            this.labelTESVEdit.Location = new System.Drawing.Point(6, 122);
+            this.labelTESVEdit.Name = "labelTESVEdit";
+            this.labelTESVEdit.Size = new System.Drawing.Size(53, 13);
+            this.labelTESVEdit.TabIndex = 7;
+            this.labelTESVEdit.Text = "TESVEdit";
             // 
-            // buttonDefSteam
+            // buttonTESVEdit
             // 
-            this.buttonDefSteam.Location = new System.Drawing.Point(456, 38);
-            this.buttonDefSteam.Name = "buttonDefSteam";
-            this.buttonDefSteam.Size = new System.Drawing.Size(69, 23);
-            this.buttonDefSteam.TabIndex = 9;
-            this.buttonDefSteam.Text = "DEFAULT";
-            this.buttonDefSteam.UseVisualStyleBackColor = true;
-            this.buttonDefSteam.Click += new System.EventHandler(this.buttonDefSteam_Click);
+            this.buttonTESVEdit.Location = new System.Drawing.Point(6, 138);
+            this.buttonTESVEdit.Name = "buttonTESVEdit";
+            this.buttonTESVEdit.Size = new System.Drawing.Size(75, 23);
+            this.buttonTESVEdit.TabIndex = 6;
+            this.buttonTESVEdit.Text = "Browse...";
+            this.buttonTESVEdit.UseVisualStyleBackColor = true;
+            this.buttonTESVEdit.Click += new System.EventHandler(this.buttonTESVEdit_Click);
             // 
-            // textBoxAppData
+            // textBoxVortex
             // 
-            this.textBoxAppData.Location = new System.Drawing.Point(87, 140);
-            this.textBoxAppData.Name = "textBoxAppData";
-            this.textBoxAppData.Size = new System.Drawing.Size(363, 20);
-            this.textBoxAppData.TabIndex = 8;
-            this.textBoxAppData.Text = " ";
+            this.textBoxVortex.Location = new System.Drawing.Point(87, 89);
+            this.textBoxVortex.Name = "textBoxVortex";
+            this.textBoxVortex.Size = new System.Drawing.Size(438, 20);
+            this.textBoxVortex.TabIndex = 5;
+            this.textBoxVortex.Text = " ";
             // 
-            // label3
+            // labelVortex
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(6, 122);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(336, 13);
-            this.label3.TabIndex = 7;
-            this.label3.Text = "AppData\\Local folder:  (hint: type %localappdata% on the file explorer)";
+            this.labelVortex.AutoSize = true;
+            this.labelVortex.Location = new System.Drawing.Point(6, 71);
+            this.labelVortex.Name = "labelVortex";
+            this.labelVortex.Size = new System.Drawing.Size(37, 13);
+            this.labelVortex.TabIndex = 4;
+            this.labelVortex.Text = "Vortex";
             // 
-            // buttonAppData
+            // buttonVortex
             // 
-            this.buttonAppData.Location = new System.Drawing.Point(6, 138);
-            this.buttonAppData.Name = "buttonAppData";
-            this.buttonAppData.Size = new System.Drawing.Size(75, 23);
-            this.buttonAppData.TabIndex = 6;
-            this.buttonAppData.Text = "Browse...";
-            this.buttonAppData.UseVisualStyleBackColor = true;
-            this.buttonAppData.Click += new System.EventHandler(this.buttonAppData_Click);
-            // 
-            // textBoxDocs
-            // 
-            this.textBoxDocs.Location = new System.Drawing.Point(87, 89);
-            this.textBoxDocs.Name = "textBoxDocs";
-            this.textBoxDocs.Size = new System.Drawing.Size(363, 20);
-            this.textBoxDocs.TabIndex = 5;
-            this.textBoxDocs.Text = " ";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(6, 71);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(143, 13);
-            this.label2.TabIndex = 4;
-            this.label2.Text = "Select My Documents folder:";
-            // 
-            // buttonDocs
-            // 
-            this.buttonDocs.Location = new System.Drawing.Point(6, 87);
-            this.buttonDocs.Name = "buttonDocs";
-            this.buttonDocs.Size = new System.Drawing.Size(75, 23);
-            this.buttonDocs.TabIndex = 3;
-            this.buttonDocs.Text = "Browse...";
-            this.buttonDocs.UseVisualStyleBackColor = true;
-            this.buttonDocs.Click += new System.EventHandler(this.buttonDocs_Click);
-            // 
-            // textBoxSteam
-            // 
-            this.textBoxSteam.Location = new System.Drawing.Point(87, 38);
-            this.textBoxSteam.Name = "textBoxSteam";
-            this.textBoxSteam.Size = new System.Drawing.Size(363, 20);
-            this.textBoxSteam.TabIndex = 2;
-            this.textBoxSteam.Text = " ";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(6, 20);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(153, 13);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "Select Steam\\Commom  folder:";
-            // 
-            // buttonSteam
-            // 
-            this.buttonSteam.Location = new System.Drawing.Point(6, 36);
-            this.buttonSteam.Name = "buttonSteam";
-            this.buttonSteam.Size = new System.Drawing.Size(75, 23);
-            this.buttonSteam.TabIndex = 0;
-            this.buttonSteam.Text = "Browse...";
-            this.buttonSteam.UseVisualStyleBackColor = true;
-            this.buttonSteam.Click += new System.EventHandler(this.buttonSteam_Click);
-            // 
-            // groupBoxNMM
-            // 
-            this.groupBoxNMM.Controls.Add(this.pictureBoxNmmInfo);
-            this.groupBoxNMM.Controls.Add(this.buttonDefNmm);
-            this.groupBoxNMM.Controls.Add(this.textBoxNmm);
-            this.groupBoxNMM.Controls.Add(this.label4);
-            this.groupBoxNMM.Controls.Add(this.buttonNmm);
-            this.groupBoxNMM.Location = new System.Drawing.Point(6, 196);
-            this.groupBoxNMM.Name = "groupBoxNMM";
-            this.groupBoxNMM.Size = new System.Drawing.Size(563, 107);
-            this.groupBoxNMM.TabIndex = 1;
-            this.groupBoxNMM.TabStop = false;
-            this.groupBoxNMM.Text = "(Optional) NMM Settings";
-            // 
-            // pictureBoxNmmInfo
-            // 
-            this.pictureBoxNmmInfo.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.pictureBoxNmmInfo.Image = global::Spear.Properties.Resources._15_open_folder;
-            this.pictureBoxNmmInfo.InitialImage = global::Spear.Properties.Resources._15_open_folder;
-            this.pictureBoxNmmInfo.Location = new System.Drawing.Point(533, 47);
-            this.pictureBoxNmmInfo.Name = "pictureBoxNmmInfo";
-            this.pictureBoxNmmInfo.Size = new System.Drawing.Size(18, 18);
-            this.pictureBoxNmmInfo.TabIndex = 15;
-            this.pictureBoxNmmInfo.TabStop = false;
-            this.pictureBoxNmmInfo.Click += new System.EventHandler(this.pictureBoxNmmInfo_Click);
-            // 
-            // buttonDefNmm
-            // 
-            this.buttonDefNmm.Location = new System.Drawing.Point(458, 41);
-            this.buttonDefNmm.Name = "buttonDefNmm";
-            this.buttonDefNmm.Size = new System.Drawing.Size(69, 23);
-            this.buttonDefNmm.TabIndex = 15;
-            this.buttonDefNmm.Text = "DEFAULT";
-            this.buttonDefNmm.UseVisualStyleBackColor = true;
-            this.buttonDefNmm.Click += new System.EventHandler(this.buttonDefNmmInfo_Click);
+            this.buttonVortex.Location = new System.Drawing.Point(6, 87);
+            this.buttonVortex.Name = "buttonVortex";
+            this.buttonVortex.Size = new System.Drawing.Size(75, 23);
+            this.buttonVortex.TabIndex = 3;
+            this.buttonVortex.Text = "Browse...";
+            this.buttonVortex.UseVisualStyleBackColor = true;
+            this.buttonVortex.Click += new System.EventHandler(this.buttonVortex_Click);
             // 
             // textBoxNmm
             // 
-            this.textBoxNmm.Location = new System.Drawing.Point(87, 44);
+            this.textBoxNmm.Location = new System.Drawing.Point(87, 38);
             this.textBoxNmm.Name = "textBoxNmm";
-            this.textBoxNmm.Size = new System.Drawing.Size(365, 20);
-            this.textBoxNmm.TabIndex = 5;
+            this.textBoxNmm.Size = new System.Drawing.Size(438, 20);
+            this.textBoxNmm.TabIndex = 2;
             this.textBoxNmm.Text = " ";
             // 
-            // label4
+            // labelNmm
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(5, 26);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(65, 13);
-            this.label4.TabIndex = 4;
-            this.label4.Text = "NMM folder:";
+            this.labelNmm.AutoSize = true;
+            this.labelNmm.Location = new System.Drawing.Point(6, 20);
+            this.labelNmm.Name = "labelNmm";
+            this.labelNmm.Size = new System.Drawing.Size(62, 13);
+            this.labelNmm.TabIndex = 1;
+            this.labelNmm.Text = "NMM folder";
             // 
             // buttonNmm
             // 
-            this.buttonNmm.Location = new System.Drawing.Point(5, 42);
+            this.buttonNmm.Location = new System.Drawing.Point(6, 36);
             this.buttonNmm.Name = "buttonNmm";
             this.buttonNmm.Size = new System.Drawing.Size(75, 23);
-            this.buttonNmm.TabIndex = 3;
+            this.buttonNmm.TabIndex = 0;
             this.buttonNmm.Text = "Browse...";
             this.buttonNmm.UseVisualStyleBackColor = true;
-            this.buttonNmm.Click += new System.EventHandler(this.buttonNmmInfo_Click);
+            this.buttonNmm.Click += new System.EventHandler(this.buttonNmm_Click);
             // 
             // buttonSave
             // 
             this.buttonSave.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.buttonSave.Location = new System.Drawing.Point(464, 309);
+            this.buttonSave.Location = new System.Drawing.Point(464, 196);
             this.buttonSave.Name = "buttonSave";
             this.buttonSave.Size = new System.Drawing.Size(75, 23);
             this.buttonSave.TabIndex = 9;
@@ -327,7 +215,7 @@
             // buttonCancel
             // 
             this.buttonCancel.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.buttonCancel.Location = new System.Drawing.Point(365, 309);
+            this.buttonCancel.Location = new System.Drawing.Point(373, 196);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 10;
@@ -338,94 +226,47 @@
             // tabSettingsMain
             // 
             this.tabSettingsMain.Controls.Add(this.tabConfiguration);
-            this.tabSettingsMain.Controls.Add(this.tabLogs);
+            this.tabSettingsMain.Controls.Add(this.tabAdvanced);
             this.tabSettingsMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabSettingsMain.Location = new System.Drawing.Point(0, 0);
             this.tabSettingsMain.Name = "tabSettingsMain";
             this.tabSettingsMain.SelectedIndex = 0;
-            this.tabSettingsMain.Size = new System.Drawing.Size(605, 370);
-            this.tabSettingsMain.TabIndex = 13;
+            this.tabSettingsMain.Size = new System.Drawing.Size(605, 254);
+            this.tabSettingsMain.TabIndex = 0;
             // 
             // tabConfiguration
             // 
-            this.tabConfiguration.Controls.Add(this.groupBoxSteam);
-            this.tabConfiguration.Controls.Add(this.groupBoxNMM);
+            this.tabConfiguration.Controls.Add(this.groupBoxAppSettings);
             this.tabConfiguration.Controls.Add(this.buttonCancel);
             this.tabConfiguration.Controls.Add(this.buttonSave);
             this.tabConfiguration.Location = new System.Drawing.Point(4, 22);
             this.tabConfiguration.Name = "tabConfiguration";
             this.tabConfiguration.Padding = new System.Windows.Forms.Padding(3);
-            this.tabConfiguration.Size = new System.Drawing.Size(597, 344);
+            this.tabConfiguration.Size = new System.Drawing.Size(597, 228);
             this.tabConfiguration.TabIndex = 0;
-            this.tabConfiguration.Text = "Game Configuration";
+            this.tabConfiguration.Text = "Tools Configuration";
             this.tabConfiguration.UseVisualStyleBackColor = true;
             // 
-            // tabLogs
+            // tabAdvanced
             // 
-            this.tabLogs.Controls.Add(this.buttonSaveLogSettings);
-            this.tabLogs.Controls.Add(this.groupLogBackup);
-            this.tabLogs.Controls.Add(this.groupLoglevel);
-            this.tabLogs.Location = new System.Drawing.Point(4, 22);
-            this.tabLogs.Name = "tabLogs";
-            this.tabLogs.Padding = new System.Windows.Forms.Padding(3);
-            this.tabLogs.Size = new System.Drawing.Size(597, 389);
-            this.tabLogs.TabIndex = 1;
-            this.tabLogs.Text = "Logs";
-            this.tabLogs.UseVisualStyleBackColor = true;
+            this.tabAdvanced.Controls.Add(this.buttonSaveLogSettings);
+            this.tabAdvanced.Controls.Add(this.groupLoglevel);
+            this.tabAdvanced.Location = new System.Drawing.Point(4, 22);
+            this.tabAdvanced.Name = "tabAdvanced";
+            this.tabAdvanced.Padding = new System.Windows.Forms.Padding(3);
+            this.tabAdvanced.Size = new System.Drawing.Size(597, 228);
+            this.tabAdvanced.TabIndex = 1;
+            this.tabAdvanced.Text = "Advanced";
+            this.tabAdvanced.UseVisualStyleBackColor = true;
             // 
             // buttonSaveLogSettings
             // 
-            this.buttonSaveLogSettings.Location = new System.Drawing.Point(133, 237);
+            this.buttonSaveLogSettings.Location = new System.Drawing.Point(253, 313);
             this.buttonSaveLogSettings.Name = "buttonSaveLogSettings";
             this.buttonSaveLogSettings.Size = new System.Drawing.Size(75, 23);
             this.buttonSaveLogSettings.TabIndex = 6;
             this.buttonSaveLogSettings.Text = "SAVE";
             this.buttonSaveLogSettings.UseVisualStyleBackColor = true;
-            // 
-            // groupLogBackup
-            // 
-            this.groupLogBackup.Controls.Add(this.radioBkpNoLimit);
-            this.groupLogBackup.Controls.Add(this.radioBkp10);
-            this.groupLogBackup.Controls.Add(this.radioBkp05);
-            this.groupLogBackup.Location = new System.Drawing.Point(8, 131);
-            this.groupLogBackup.Name = "groupLogBackup";
-            this.groupLogBackup.Size = new System.Drawing.Size(200, 100);
-            this.groupLogBackup.TabIndex = 5;
-            this.groupLogBackup.TabStop = false;
-            this.groupLogBackup.Text = "Log Backup";
-            // 
-            // radioBkpNoLimit
-            // 
-            this.radioBkpNoLimit.AutoSize = true;
-            this.radioBkpNoLimit.Location = new System.Drawing.Point(4, 66);
-            this.radioBkpNoLimit.Name = "radioBkpNoLimit";
-            this.radioBkpNoLimit.Size = new System.Drawing.Size(63, 17);
-            this.radioBkpNoLimit.TabIndex = 2;
-            this.radioBkpNoLimit.TabStop = true;
-            this.radioBkpNoLimit.Text = "No Limit";
-            this.radioBkpNoLimit.UseVisualStyleBackColor = true;
-            // 
-            // radioBkp10
-            // 
-            this.radioBkp10.AutoSize = true;
-            this.radioBkp10.Location = new System.Drawing.Point(4, 43);
-            this.radioBkp10.Name = "radioBkp10";
-            this.radioBkp10.Size = new System.Drawing.Size(37, 17);
-            this.radioBkp10.TabIndex = 1;
-            this.radioBkp10.TabStop = true;
-            this.radioBkp10.Text = "10";
-            this.radioBkp10.UseVisualStyleBackColor = true;
-            // 
-            // radioBkp05
-            // 
-            this.radioBkp05.AutoSize = true;
-            this.radioBkp05.Location = new System.Drawing.Point(4, 20);
-            this.radioBkp05.Name = "radioBkp05";
-            this.radioBkp05.Size = new System.Drawing.Size(37, 17);
-            this.radioBkp05.TabIndex = 0;
-            this.radioBkp05.TabStop = true;
-            this.radioBkp05.Text = "05";
-            this.radioBkp05.UseVisualStyleBackColor = true;
             // 
             // groupLoglevel
             // 
@@ -488,24 +329,19 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(605, 370);
+            this.ClientSize = new System.Drawing.Size(605, 254);
             this.Controls.Add(this.tabSettingsMain);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormSettings";
             this.Text = "Edit Settings";
-            this.groupBoxSteam.ResumeLayout(false);
-            this.groupBoxSteam.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxAppData)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxDocs)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSteam)).EndInit();
-            this.groupBoxNMM.ResumeLayout(false);
-            this.groupBoxNMM.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxNmmInfo)).EndInit();
+            this.groupBoxAppSettings.ResumeLayout(false);
+            this.groupBoxAppSettings.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxAppTESVEdit)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxVortex)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxNmm)).EndInit();
             this.tabSettingsMain.ResumeLayout(false);
             this.tabConfiguration.ResumeLayout(false);
-            this.tabLogs.ResumeLayout(false);
-            this.groupLogBackup.ResumeLayout(false);
-            this.groupLogBackup.PerformLayout();
+            this.tabAdvanced.ResumeLayout(false);
             this.groupLoglevel.ResumeLayout(false);
             this.groupLoglevel.PerformLayout();
             this.ResumeLayout(false);
@@ -514,42 +350,29 @@
 
         #endregion
 
-        private System.Windows.Forms.GroupBox groupBoxSteam;
-        private System.Windows.Forms.TextBox textBoxSteam;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Button buttonSteam;
-        private System.Windows.Forms.GroupBox groupBoxNMM;
-        private System.Windows.Forms.TextBox textBoxAppData;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Button buttonAppData;
-        private System.Windows.Forms.TextBox textBoxDocs;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Button buttonDocs;
+        private System.Windows.Forms.GroupBox groupBoxAppSettings;
         private System.Windows.Forms.TextBox textBoxNmm;
-        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label labelNmm;
         private System.Windows.Forms.Button buttonNmm;
+        private System.Windows.Forms.TextBox textBoxTESVEdit;
+        private System.Windows.Forms.Label labelTESVEdit;
+        private System.Windows.Forms.Button buttonTESVEdit;
+        private System.Windows.Forms.TextBox textBoxVortex;
+        private System.Windows.Forms.Button buttonVortex;
         private System.Windows.Forms.Button buttonSave;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.TabControl tabSettingsMain;
         private System.Windows.Forms.TabPage tabConfiguration;
-        private System.Windows.Forms.TabPage tabLogs;
+        private System.Windows.Forms.TabPage tabAdvanced;
         private System.Windows.Forms.Button buttonSaveLogSettings;
-        private System.Windows.Forms.GroupBox groupLogBackup;
-        private System.Windows.Forms.RadioButton radioBkpNoLimit;
-        private System.Windows.Forms.RadioButton radioBkp10;
-        private System.Windows.Forms.RadioButton radioBkp05;
         private System.Windows.Forms.GroupBox groupLoglevel;
         private System.Windows.Forms.RadioButton radioError;
         private System.Windows.Forms.RadioButton radioDebug;
         private System.Windows.Forms.RadioButton radioWarn;
         private System.Windows.Forms.RadioButton radioInfo;
-        private System.Windows.Forms.Button buttonDefApp;
-        private System.Windows.Forms.Button buttonDefDocs;
-        private System.Windows.Forms.Button buttonDefSteam;
-        private System.Windows.Forms.PictureBox pictureBoxSteam;
-        private System.Windows.Forms.PictureBox pictureBoxAppData;
-        private System.Windows.Forms.PictureBox pictureBoxDocs;
-        private System.Windows.Forms.PictureBox pictureBoxNmmInfo;
-        private System.Windows.Forms.Button buttonDefNmm;
+        private System.Windows.Forms.PictureBox pictureBoxNmm;
+        private System.Windows.Forms.PictureBox pictureBoxAppTESVEdit;
+        private System.Windows.Forms.PictureBox pictureBoxVortex;
+        private System.Windows.Forms.Label labelVortex;
     }
 }
