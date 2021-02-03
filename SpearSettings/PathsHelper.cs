@@ -56,8 +56,12 @@ namespace SpearSettings
         {
             this._game = gameSettings.game;
             this.execUpdate1(settings.steamPath, settings.appDataPath, settings.documentsPath,
-                             settings.nmmPath, gameSettings.gameFolder, gameSettings.backupFolder);
-            this.execUpdate2(settings.vortexPath, settings.tesvEditPath, gameSettings.gameExe);
+                             gameSettings.gameFolder, gameSettings.backupFolder, 
+                             gameSettings.boolDocumentsPathIsOptional, gameSettings.boolAppDataPathIsOptional);
+            this.execUpdate2(settings.nmmPath2, gameSettings.nmmGameFolder, 
+                              settings.vortexPath2, gameSettings.vortexGameFolder);
+            this.execUpdate3(settings.vortexExe, settings.nmmExe, settings.tesvEditExe, gameSettings.gameExe);
+            this.execUpdate4(gameSettings.gameLogPath, gameSettings.gameLogExt);
         }
 
         public int checkSettings()
@@ -103,14 +107,17 @@ namespace SpearSettings
         #region integrity_files 
 
         // active integrity helpers
-        public string activeIntegrityFilePath()
+        public string activeIntegrityFilePath
         {
-            return this.steamGame + "\\" + Consts.FILE_INTEGRITYFILE;
+            get 
+            {
+                return this.steamGame + "\\" + Consts.FILE_INTEGRITYFILE;
+            }
         }
 
         public bool activeIntegrityFile()
         {
-            string intFile = this.activeIntegrityFilePath();
+            string intFile = this.activeIntegrityFilePath;
             if (File.Exists(intFile))
             {
                 return true;
@@ -122,7 +129,7 @@ namespace SpearSettings
         {
             if (this.activeIntegrityFile())
             {
-                string intFile = this.activeIntegrityFilePath();
+                string intFile = this.activeIntegrityFilePath;
                 string integrityFileContent = File.ReadAllText(intFile);
                 return integrityFileContent;
             }
@@ -138,7 +145,7 @@ namespace SpearSettings
         public bool updateActiveIntegrityFile(SPProfile prof, out string errMsg, out string errPath)
         {
             string content = prof.name + "," + prof.color + "," + prof.creationDate;
-            string filePath = this.activeIntegrityFilePath();
+            string filePath = this.activeIntegrityFilePath;
             try
             {
                 File.WriteAllText(filePath, content);
@@ -158,7 +165,7 @@ namespace SpearSettings
         {
             try
             {
-                File.Delete(this.activeIntegrityFilePath());
+                File.Delete(this.activeIntegrityFilePath);
             }
             catch (Exception ex)
             {
@@ -251,6 +258,7 @@ namespace SpearSettings
         { 
             return this._appDirBackup + "\\" + prof + "\\" + this._gameFolder; 
         }
+        public bool isAppdataDirOptional { get { return this._isAppDirOptional; } }
 
         #endregion appData
 
@@ -268,14 +276,18 @@ namespace SpearSettings
         { 
             return this._docsBackup + "\\" + prof + "\\" + this._gameFolder; 
         }
+        public bool isDocsDirOptional { get { return this._isDocsOptional; } }
 
         #endregion documents
 
-        #region NMM
+        #region NMM&Vortex
 
         // nmmMod
         public string nmm { get { return this._nmm; } }
         public string nmmGame { get { return this._nmmGame; } }
+
+        public string nmmGameFolder { get { return this._nmmGameFolder; } }
+
         public string nmmBkp { get { return this._nmmBackup; } }
         public string nmmBkpProf(string prof)
         {
@@ -283,104 +295,342 @@ namespace SpearSettings
         }
         public string nmmBkpProfGame(string prof)
         {
-            return (this.nmmEmpty) ? "" : this._nmmBackup + "\\" + prof + "\\" + this._gameFolder;
+            return (this.nmmEmpty) ? "" : this._nmmBackup + "\\" + prof + "\\" + this._nmmGameFolder;
         }
         public bool nmmEmpty { get; private set; }
 
+        // Vortex
+        public string vortex { get { return this._vortex; } }
+        public string vortexGame { get { return this._vortexGame; } }
+        public string vortexGameFolder { get { return this._vortexGameFolder; } }
+        public string vortexBkp { get { return this._vortexBackup; } }
+        public string vortexBkpProf(string prof)
+        {
+            return (this.vortexEmpty) ? "" : this._vortexBackup + "\\" + prof;
+        }
+        public string vortexBkpProfGame(string prof)
+        {
+            return (this.vortexEmpty) ? "" : this._vortexBackup + "\\" + prof + "\\" + this._vortexGameFolder;
+        }
+        public bool vortexEmpty { get; private set; }
+
+
         public bool optionalAreSet()
         {
-            if (nmmEmpty)
+            if (this.nmmEmpty && this.vortexEmpty)
             {
                 return false;
             }
             return true;
         }
 
-        #endregion NMM
+        #endregion NMM&Vortex
+
+        #region Exe
+
+        public string gameExe
+        {
+            get
+            {
+                return this.steamGame + "\\" + this._gameExe;
+            }
+        }
+
+        public string nmmExe { get { return this._nmmExe; } }
+
+        public string vortexExe { get { return this._vortexExe; } }
+
+        public string tesvEditExe { get { return this._tesvEditExe; } }
+
+        public string creationKitExe
+        {
+            get
+            {
+                string creationKit = "";
+                if (this.gameName().ToUpper().Contains(Consts.SKYRIM_STR.ToUpper()))
+                {
+                    creationKit = this.steamGame + "\\" + Consts.EXE_CREATION_KIT;
+                }
+                return creationKit;
+            }
+        }
+
+
+        #endregion Exe
 
         #region files
 
-        public string gitignore()
+        public string gitignore
         {
-            return this.steamGame + "\\" + Consts.FILE_GITIGNORE;
-        }
-
-        public string gameExe()
-        {
-            return this.steamGame + "\\" + this._gameExe;
-        }
-
-        public List<string> gameLogsList()
-        {
-            List<string> listLogs = new List<string>();
-            string logPath;
-            // logfiles for skyrim
-            if (this.gameName().ToUpper() == Consts.SKYRIM_STR.ToUpper())
+            get 
             {
-                logPath = this.skyrimLogPath();
-                if (File.Exists(logPath))
+                return this.steamGame + "\\" + Consts.FILE_GITIGNORE;
+            }
+        }
+
+        public List<string> gameLogsList
+        {
+            get 
+            {
+                List<string> listLogs = new List<string>();
+                string logPath;
+                if (!this._gameLogsPath.Trim().Equals("") &&
+                    !this._gameLogsExt.Trim().Equals("") &&
+                    Directory.Exists(this._gameLogsPath.Trim()))
                 {
-                    foreach (string file in Directory.EnumerateFiles(logPath,
-                                                                     "*.*",
-                                                                     System.IO.SearchOption.AllDirectories))
+                    try
                     {
-                        if (file.EndsWith(".log"))
+                        foreach (string file in Directory.EnumerateFiles(this._gameLogsPath,
+                                                                         "*.*",
+                                                                         System.IO.SearchOption.AllDirectories))
                         {
-                            listLogs.Add(file);
+                            if (file.EndsWith(this._gameLogsExt.Trim()))
+                            {
+                                listLogs.Add(file);
+                            }
                         }
                     }
+                    catch (Exception ex)
+                    {
+                    }
                 }
-
+                return listLogs;
             }
-            return listLogs;
         }
 
-        public string creationKitExe()
+        public string gameLogsPath
         {
-            string creationKit = "";
-            if (this.gameName().ToUpper() == Consts.SKYRIM_STR.ToUpper())
+            get 
             {
-                creationKit = this.steamGame + "\\" + Consts.EXE_CREATION_KIT;
+                return this._gameLogsPath.Trim();
             }
-            return creationKit;
-        }
-
-
-        public string nmmExe()
-        {
-            // TODO retornar valor correto
-            return this.nmm;
-        }
-
-        public string vortex()
-        {
-            return this._vortexExe;
-        }
-
-        public string tesvedit()
-        {
-            return this._tesvEditExe;
-        }
-
-        public string skyrimLogPath()
-        {
-            string logPath = "";
-            if (this.gameName().ToUpper() == Consts.SKYRIM_STR.ToUpper())
-            {
-                logPath = this.docsGame + "\\Logs\\";
-            }
-            return logPath;
         }
 
         #endregion files
 
-            /// <summary>
-            /// Returns a valid profile name.
-            /// </summary>
-            /// <param name="name"></param>
-            /// <param name="inUse"></param>
-            /// <returns></returns>
-            public string safeNewProfileName(string name, List<string> inUse)
+        #region pathsList
+
+        public List<string> getOptionalPaths_BkpProfGame(string profileName)
+        {
+            List<string> optBkpPaths = new List<string>();
+
+            // if is optional, add
+            if (this._isDocsOptional)
+            {
+                optBkpPaths.Add(this.appDataBkpProfGame(profileName));
+            }
+            if (this._isAppDirOptional)
+            {
+                optBkpPaths.Add(this.docsBkpProfGame(profileName));
+            }
+            // if not empty, add
+            if (!this.nmmBkpProfGame(profileName).Trim().Equals("") &&
+                !this.nmm.Trim().Equals(""))
+            {
+                optBkpPaths.Add(this.nmmBkpProfGame(profileName));
+            }
+            if (!this.vortexBkpProfGame(profileName).Trim().Equals(""))
+            {
+                optBkpPaths.Add(this.vortexBkpProfGame(profileName));
+            }
+            return optBkpPaths;
+        }
+
+        public List<string> getMandatoryPaths_BkpProfGame(string profileName)
+        {
+            List<string> manBkpPaths = new List<string>();
+
+            // always mandatory
+            manBkpPaths.Add(this.steamBkpProfGame(profileName));
+            // if not optional add
+            if (!this._isDocsOptional)
+            {
+                manBkpPaths.Add(this.appDataBkpProfGame(profileName));
+            }
+            if (!this._isAppDirOptional)
+            {
+                manBkpPaths.Add(this.docsBkpProfGame(profileName));
+            }
+            return manBkpPaths;
+        }
+
+        public List<string> getAllPaths_BkpProfGame(string profileName)
+        {
+            List<string> list = new List<string>();
+            list.AddRange(this.getMandatoryPaths_BkpProfGame(profileName));
+            list.AddRange(this.getOptionalPaths_BkpProfGame(profileName));
+            return list;
+        }
+
+        public List<string> getOptionalPaths_BkpProf(string profileName)
+        {
+            List<string> optBkpPaths = new List<string>();
+
+            // if is optional, add
+            if (this._isDocsOptional)
+            {
+                optBkpPaths.Add(this.appDataBkpProf(profileName));
+            }
+            if (this._isAppDirOptional)
+            {
+                optBkpPaths.Add(this.docsBkpProf(profileName));
+            }
+            // if not empty, add
+            if (!this.nmmBkpProf(profileName).Trim().Equals(""))
+            {
+                optBkpPaths.Add(this.nmmBkpProf(profileName));
+            }
+            if (!this.vortexBkpProf(profileName).Trim().Equals(""))
+            {
+                optBkpPaths.Add(this.vortexBkpProf(profileName));
+            }
+            return optBkpPaths;
+        }
+
+        public List<string> getMandatoryPaths_BkpProf(string profileName)
+        {
+            List<string> manBkpPaths = new List<string>();
+
+            // always mandatory
+            manBkpPaths.Add(this.steamBkpProf(profileName));
+            // if not optional add
+            if (!this._isDocsOptional)
+            {
+                manBkpPaths.Add(this.appDataBkpProf(profileName));
+            }
+            if (!this._isAppDirOptional)
+            {
+                manBkpPaths.Add(this.docsBkpProf(profileName));
+            }
+            return manBkpPaths;
+        }
+
+        public List<string> getAllPaths_BkpProf(string profileName)
+        {
+            List<string> list = new List<string>();
+            list.AddRange(this.getMandatoryPaths_BkpProf(profileName));
+            list.AddRange(this.getOptionalPaths_BkpProf(profileName));
+            return list;
+        }
+
+        public List<string> getOptionalPaths_App()
+        {
+            List<string> optAppPaths = new List<string>();
+
+            // if is optional, add
+            if (this._isDocsOptional)
+            {
+                optAppPaths.Add(this.appData);
+            }
+            if (this._isAppDirOptional)
+            {
+                optAppPaths.Add(this.docs);
+            }
+            // if not empty, add
+            if (!this.nmm.Trim().Equals(""))
+            {
+                optAppPaths.Add(this.nmm);
+            }
+            if (!this.vortex.Trim().Equals(""))
+            {
+                optAppPaths.Add(this.vortex);
+            }
+
+            return optAppPaths;
+        }
+
+        public List<string> getMandatoryPaths_App()
+        {
+            List<string> manAppPaths = new List<string>();
+
+            // always mandatory
+            manAppPaths.Add(this.steam);
+            // if not optional add
+            if (!this._isDocsOptional)
+            {
+                manAppPaths.Add(this.appData);
+            }
+            if (!this._isAppDirOptional)
+            {
+                manAppPaths.Add(this.docs);
+            }
+
+            return manAppPaths;
+        }
+
+        public List<string> getAllPaths_App()
+        {
+            List<string> list = new List<string>();
+            list.AddRange(this.getMandatoryPaths_App());
+            list.AddRange(this.getOptionalPaths_App());
+            return list;
+        }
+
+        public List<string> getOptionalPaths_AppGame()
+        {
+            List<string> optAppPaths = new List<string>();
+
+            // if is optional, add
+            if (this._isDocsOptional)
+            {
+                optAppPaths.Add(this.appDataGame);
+            }
+            if (this._isAppDirOptional)
+            {
+                optAppPaths.Add(this.docsGame);
+            }
+            // if not empty, add
+            if (!this.nmm.Trim().Equals(""))
+            {
+                optAppPaths.Add(this.nmmGame);
+            }
+            if (!this.vortex.Trim().Equals(""))
+            {
+                optAppPaths.Add(this.vortexGame);
+            }
+
+            return optAppPaths;
+        }
+
+        public List<string> getMandatoryPaths_AppGame()
+        {
+            List<string> manAppPaths = new List<string>();
+
+            // always mandatory
+            manAppPaths.Add(this.steamGame);
+            // if not optional add
+            if (!this._isDocsOptional)
+            {
+                manAppPaths.Add(this.appDataGame);
+            }
+            if (!this._isAppDirOptional)
+            {
+                manAppPaths.Add(this.docsGame);
+            }
+
+            return manAppPaths;
+        }
+
+        public List<string> getAllPaths_AppGame()
+        {
+            List<string> list = new List<string>();
+            list.AddRange(this.getMandatoryPaths_AppGame());
+            list.AddRange(this.getOptionalPaths_AppGame());
+            return list;
+        }
+
+
+        #endregion pathsList
+
+        #region profile
+
+        /// <summary>
+        /// Returns a valid profile name.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="inUse"></param>
+        /// <returns></returns>
+        public string safeNewProfileName(string name, List<string> inUse)
         {
             // check if name is empty
             if (name == null) name = "";
@@ -412,6 +662,8 @@ namespace SpearSettings
             return name;
         }
 
+        #endregion profile
+
         #region private 
 
         private string _game;
@@ -425,35 +677,45 @@ namespace SpearSettings
         private string _appData = "";
         private string _appDirGame = "";
         private string _appDirBackup = "";
+        private bool _isAppDirOptional = false;
 
         private string _docs = "";
         private string _docsGame = "";
         private string _docsBackup = "";
+        private bool _isDocsOptional = false;
 
         private string _nmm = "";
+        private string _nmmGameFolder = "";
         private string _nmmGame = "";
         private string _nmmBackup = "";
 
-        private string _gameExe;
+        private string _vortex = "";
+        private string _vortexGameFolder = "";
+        private string _vortexGame = "";
+        private string _vortexBackup = "";
+
+        private string _gameExe = "";
+        private string _nmmExe = "";
         private string _vortexExe = "";
         private string _tesvEditExe = "";
-        private string _creationKitExe = "";
-        private string _skyrimLogsPath = "";
-        private string _skyrimIniFile = "";
+        private string _gameLogsPath = "";
+        private string _gameLogsExt = "";
         
         // update paths related with steam, appData, documents, NMM, and game/backup
-        private void execUpdate1(string steam, string appData, string myDocs, string nmm,
-                                string gameFolder, string backupFolder)
+        private void execUpdate1(string steam, string appData, string myDocs,
+                                string gameFolder, string backupFolder, 
+                                bool isDocOpt, bool isAppOpt)
         {
             steam.Trim();
             appData.Trim();
             myDocs.Trim();
-            nmm.Trim();
             gameFolder = CSharp.alphaNumeric(gameFolder);
             backupFolder = CSharp.alphaNumeric(backupFolder);
 
             this._gameFolder = gameFolder;
             this._backupFolder = backupFolder;
+            this._isAppDirOptional = isAppOpt;
+            this._isDocsOptional = isDocOpt;
 
             if (!steam.Trim().Equals(""))
             {
@@ -473,35 +735,60 @@ namespace SpearSettings
                 this._docsGame = myDocs + "\\" + gameFolder;
                 this._docsBackup = myDocs + "\\" + this._backupFolder;
             }
+        }
 
-            this._nmm = nmm;
-            this.nmmEmpty = (nmm.Trim().Equals("")) ? true : false;
+        private void execUpdate2(string nmmPath, string nmmGameFolder,
+                                 string vortexPath, string vortexGameFolder)
+        {
+            this._nmm = nmmPath.Trim();
+            this._nmmGameFolder = nmmGameFolder.Trim();
+            this._vortex = vortexPath.Trim();
+            this._vortexGameFolder = vortexGameFolder.Trim();
+
+            // NMM
+            this.nmmEmpty = (this._nmm.Equals("")) ? true : false;
             if (!this.nmmEmpty)
             {
-                this._nmmGame = nmm + "\\" + gameFolder;
-                this._nmmBackup = nmm + "\\" + this._backupFolder;
+                this._nmmGame = this._nmm + "\\" + _nmmGameFolder;
+                this._nmmBackup = this._nmm + "\\" + this._backupFolder;
+            }
+            // Vortex
+            this.vortexEmpty = (this._vortex.Equals("")) ? true : false;
+            if (!this.vortexEmpty)
+            {
+                this._vortexGame = this._vortex + "\\" + this._vortexGameFolder;
+                this._vortexBackup = this._vortex + "\\" + this._backupFolder;
             }
         }
 
-        // Update information about aditional toosl Skyrim .ini and logs
-        private void execUpdate2(string vortex, string tesvEdit, string gameExe)
+        // Update information about exe files
+        private void execUpdate3(string vortexExe, string nmmExe, string tesvEditExe, string gameExe)
         {
             // Tools
-            if (File.Exists(vortex))
+            if (File.Exists(vortexExe))
             {
-                this._vortexExe = vortex;
+                this._vortexExe = vortexExe;
             }
-            if (File.Exists(tesvEdit))
+            if (File.Exists(nmmExe))
             {
-                this._tesvEditExe = tesvEdit;
+                this._nmmExe = nmmExe;
             }
-
+            if (File.Exists(tesvEditExe))
+            {
+                this._tesvEditExe = tesvEditExe;
+            }
             // Game
             this._gameExe =  gameExe;
+        }
 
-            // Skyrim
-            this._skyrimIniFile = this.docsGame + "\\" + Consts.FILE_SKYRIM_INI;
-            this._skyrimLogsPath = this.docsGame + "\\Logs\\";
+        // game logs
+        private void execUpdate4(string gameLogPath, string gameLogEx)
+        {
+            if (Directory.Exists(gameLogPath))
+            {
+                this._gameLogsPath = gameLogPath;
+                this._gameExe = gameLogEx;
+            }
         }
 
         #endregion private 

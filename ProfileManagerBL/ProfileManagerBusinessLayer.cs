@@ -221,47 +221,28 @@ namespace ProfileManagerBL
 
             // Tools Launch //////////////////////////////////////////////////
             SettingsViewData settings = action_getSettings();
-            if (File.Exists(settings.nmm) || Directory.Exists(settings.nmm))
+            eop.launchNMM = File.Exists(settings.nmmExe);
+            eop.launchVortex = File.Exists(settings.vortexExe);
+            eop.skyrimLaunchTESVEdit = File.Exists(settings.tesveditExe);
+            eop.launchGame = File.Exists(this.paths.gameExe);
+            eop.skyrimLaunchCreationKit = File.Exists(this.paths.creationKitExe);
+            // logs logs
+            eop.skyrimCleanLogs = false;
+            if (!this.paths.gameLogsPath.Trim().Equals(""))
             {
-                eop.launchNMM = true;
+                eop.skyrimCleanLogs = true;
             }
-            if (File.Exists(settings.vortex) || Directory.Exists(settings.vortex))
+            List<string> listlogs = this.paths.gameLogsList;
+            eop.skyrimOpenLogs = false;
+            foreach (var item in listlogs)
             {
-                eop.launchVortex = true;
+                if (File.Exists(item))
+                {
+                    eop.skyrimOpenLogs = true;
+                    break;
+                }
             }
-            if (File.Exists(settings.tesvedit) || Directory.Exists(settings.tesvedit))
-            {
-                eop.skyrimLaunchTESVEdit = true;
-            }
-            eop.launchGame = File.Exists(this.paths.gameExe());
 
-            // Tools Skyrim ///////////////////////////////////////////////////
-            if (this.gameName() == Consts.SKYRIM_STR)
-            {
-                if (this.paths.skyrimLogPath() != "" && Directory.Exists(this.paths.skyrimLogPath()))
-                {
-                    eop.skyrimCleanLogs = true;
-                }
-                // check if creation kit exe exist
-                eop.skyrimLaunchCreationKit = File.Exists(this.paths.creationKitExe());
-                // skyrim logs
-                List<string> listlogs = this.paths.gameLogsList();
-                eop.skyrimOpenLogs = false;
-                foreach (var item in listlogs)
-                {
-                    if (File.Exists(item))
-                    {
-                        eop.skyrimOpenLogs = true;
-                        break;
-                    }
-                }
-            }
-            else
-            {
-                eop.skyrimCleanLogs = false;
-                eop.skyrimLaunchCreationKit = false;
-                eop.skyrimOpenLogs = false;
-            }
             return eop;
         }
 
@@ -297,25 +278,43 @@ namespace ProfileManagerBL
 
         public SettingsViewData action_getSettings()
         {
-            SettingsViewData settings = new SettingsViewData();
-            SPSettings spsettings = manager.getProfileSettings();
-            settings.nmm = spsettings.nmmPath;
-            settings.vortex = spsettings.vortexPath;
-            settings.tesvedit = spsettings.tesvEditPath;
-            return settings;
+            SettingsViewData settingsView = new SettingsViewData();
+            SPConfig config = SPConfig.loadConfig();
+            this.settings = config.settings;
+
+            settingsView.nmmPath = this.settings.nmmPath2;
+            settingsView.vortexPath = this.settings.vortexPath2;
+
+            settingsView.nmmGameFolder = this.gameSettings.nmmGameFolder;
+            settingsView.vortexGameFolder = this.gameSettings.vortexGameFolder;
+
+            settingsView.nmmExe = this.settings.nmmExe;
+            settingsView.vortexExe = this.settings.vortexExe;
+            settingsView.tesveditExe = this.settings.tesvEditExe;
+
+            return settingsView;
         }
 
-        public int action_updateSettings(SettingsViewData s)
+        public int action_updateSettings(SettingsViewData s, out string errMsg)
         {
             int ret = Errors.SUCCESS;
+            errMsg = "";
             try
             {
-                this.manager.updateSettings(s.nmm, s.tesvedit, s.vortex);
+                ret = this.manager.updateSettings(s.nmmPath, 
+                                                  s.vortexPath, 
+                                                  s.nmmGameFolder, 
+                                                  s.vortexGameFolder,
+                                                  s.nmmExe, 
+                                                  s.vortexExe, 
+                                                  s.tesveditExe, 
+                                                  out errMsg);
                 this.manager.reloadState();
             }
             catch (Exception ex)
             {
                 log.Error("** EXCEPTION Message:" + ex.Message + ", StackTrace:" + ex.StackTrace);
+                errMsg = ex.Message;
                 return Errors.ERR_UNKNOWN;
             }
             return ret;
@@ -471,7 +470,7 @@ namespace ProfileManagerBL
             bool ret = false;
             if (this.tool_gitignoreDetected())
             {
-                this.openTxtFile(this.paths.gitignore());
+                this.openTxtFile(this.paths.gitignore);
                 errMsg = "";
                 ret = true;
             }
@@ -485,12 +484,52 @@ namespace ProfileManagerBL
         public bool tool_openGameFolder(out string errMsg)
         {
             errMsg = "";
+            if (this.paths.steamGame == null || this.paths.steamGame.Trim().Equals(""))
+            {
+                errMsg = "Game folder not defined!";
+                return false;
+            }
             bool ret = CSharp.openDirectoryOnFileExplorer(this.paths.steamGame);
             if (!ret)
             {
-                errMsg = "Could not open game folder.";
+                errMsg = "Could not open game folder: <" + this.paths.steamGame + ">";
+                return false;
             }
-            return ret;
+            return true;
+        }
+
+        public bool tool_openGameAppData(out string errMsg)
+        {
+            errMsg = "";
+            if (this.paths.appDataGame == null || this.paths.appDataGame.Trim().Equals(""))
+            {
+                errMsg = "AppData folder not defined!";
+                return false;
+            }
+            bool ret = CSharp.openDirectoryOnFileExplorer(this.paths.appDataGame);
+            if (!ret)
+            {
+                errMsg = "Could not open AppData folder: <" + this.paths.appDataGame + ">";
+                return false;
+            }
+            return true;
+        }
+
+        public bool tool_openGameDocuments(out string errMsg)
+        {
+            errMsg = "";
+            if (this.paths.docsGame == null || this.paths.docsGame.Trim().Equals(""))
+            {
+                errMsg = "Game documents folder not defined!";
+                return false;
+            }
+            bool ret = CSharp.openDirectoryOnFileExplorer(this.paths.docsGame);
+            if (!ret)
+            {
+                errMsg = "Could not open Game documents folder: <" + this.paths.docsGame + ">";
+                return false;
+            }
+            return true;
         }
 
         public bool tool_exportLogs(string dstPath, out string errMsg)
@@ -511,10 +550,10 @@ namespace ProfileManagerBL
             return true;
         }
 
-        public bool tool_openSkyrimLogs(out string errMsg)
+        public bool tool_openGameLogs(out string errMsg)
         {
             errMsg = "";
-            List<string> logFiles = this.paths.gameLogsList();
+            List<string> logFiles = this.paths.gameLogsList;
             foreach (var item in logFiles)
             {
                 this.openTxtFile(item);
@@ -525,7 +564,7 @@ namespace ProfileManagerBL
         public bool tool_launchCreationKit(out string errMsg)
         {
             errMsg = "";
-            string creationKitExe = this.paths.creationKitExe();
+            string creationKitExe = this.paths.creationKitExe;
             if (File.Exists(creationKitExe))
             {
                 System.Diagnostics.Process.Start(creationKitExe);
@@ -541,9 +580,9 @@ namespace ProfileManagerBL
         public bool tool_launchGame(out string errMsg)
         {
             errMsg = "";
-            if (File.Exists(this.paths.gameExe()))
+            if (File.Exists(this.paths.gameExe))
             {
-                System.Diagnostics.Process.Start(this.paths.gameExe());
+                System.Diagnostics.Process.Start(this.paths.gameExe);
             }
             else
             {
@@ -556,7 +595,7 @@ namespace ProfileManagerBL
         public bool tool_launchVortex(out string errMsg)
         {
             errMsg = "";
-            string vortexExe = this.paths.vortex();
+            string vortexExe = this.paths.vortexExe;
             if (File.Exists(vortexExe))
             {
                 System.Diagnostics.Process.Start(vortexExe);
@@ -572,7 +611,7 @@ namespace ProfileManagerBL
         public bool tool_launchTesvEdit(out string errMsg)
         {
             errMsg = "";
-            string tesveditExe = this.paths.tesvedit();
+            string tesveditExe = this.paths.tesvEditExe;
             if (File.Exists(tesveditExe))
             {
                 System.Diagnostics.Process.Start(tesveditExe);
@@ -588,7 +627,7 @@ namespace ProfileManagerBL
         public bool tool_launchNmm(out string errMsg)
         {
             errMsg = "";
-            string nmm = this.paths.nmmExe();
+            string nmm = this.paths.nmmExe;
             if (File.Exists(nmm))
             {
                 System.Diagnostics.Process.Start(nmm);

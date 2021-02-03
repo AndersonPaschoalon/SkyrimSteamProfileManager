@@ -54,6 +54,9 @@ namespace Utils
         public const int ERR_NMMMODGAME_DIRRECTORY_MISSING = 208;
         public const int ERR_NMMDIRRECTORY_MISSING = 209;
         public const int ERR_NMMBKP_DIRRECTORY_MISSING = 210;
+        public const int ERR_CANNOT_SAVE_SETTINGS = 211;
+        public const int ERR_CANNOT_CREATE_DIRECTORY = 212;
+        public const int ERR_INCONSISTENT_SRC_DST_DIR_NUMBER = 213;
         // invalid arguments
         public const int ERR_INVALID_GAME = 200;
         public const int ERR_INVALID_GAME_FOLDER = 201;
@@ -231,6 +234,18 @@ namespace Utils
                 case ERR_NMMBKP_DIRRECTORY_MISSING:
                     {
                         return "ERR_NMMBKP_DIRRECTORY_MISSING";
+                    }
+                case ERR_CANNOT_SAVE_SETTINGS:
+                    {
+                        return "ERR_CANNOT_SAVE_SETTINGS";
+                    }
+                case ERR_CANNOT_CREATE_DIRECTORY:
+                    {
+                        return "ERR_CANNOT_CREATE_DIRECTORY";
+                    }
+                case ERR_INCONSISTENT_SRC_DST_DIR_NUMBER:
+                    {
+                        return "ERR_INCONSISTENT_SRC_DST_DIR_NUMBER";
                     }
                 // NOT DEFINED
                 default:

@@ -19,8 +19,6 @@ namespace SpearSettings
 
     public class SPSettings
     {
-        //[XmlAttribute("game")]
-        //public string game { get; set; }
 
         [XmlAttribute("steamPath")]
         public string steamPath { get; set; }
@@ -32,13 +30,19 @@ namespace SpearSettings
         public string appDataPath { get; set; }
 
         [XmlAttribute("nmmPath")]
-        public string nmmPath { get; set; }
+        public string nmmPath2 { get; set; }
 
         [XmlAttribute("vortexPath")]
-        public string vortexPath { get; set; }
+        public string vortexPath2 { get; set; }
 
-        [XmlAttribute("tesvEditPath")]
-        public string tesvEditPath { get; set; }
+        [XmlAttribute("nmmExe")]
+        public string nmmExe { get; set; }
+
+        [XmlAttribute("vortexExe")]
+        public string vortexExe { get; set; }
+
+        [XmlAttribute("tesvEditExe")]
+        public string tesvEditExe { get; set; }
 
         [XmlAttribute("dateFormat")]
         public string dateFormat { get; set; }

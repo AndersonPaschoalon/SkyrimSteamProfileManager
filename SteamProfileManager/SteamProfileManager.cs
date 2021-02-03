@@ -69,99 +69,37 @@ namespace ProfileManager
             return this.settings.dateFormat;
         }
 
-        /*
         /// <summary>
-        /// This method is used to configure the application for the first time, or to update the configuration.
-        /// In case of success updates the app settings, otherwise returns an error code, and informs wich parameter
-        /// caused the problem. This methods is ment be be called by the User Interface
+        /// Function used to save settings allowed to be changed by the user.
         /// </summary>
-        /// <param name="newSteamPath"></param>
-        /// <param name="newDocumentsPath"></param>
-        /// <param name="newAppDataPath"></param>
-        /// <param name="nmmPath"></param>
+        /// <param name="nmmPath">path for the NMM folder where the mods are stored</param>
+        /// <param name="vortexPath">path for the Vortex folder where the mods are stored</param>
+        /// <param name="nmmGameFolder">name of the folder for the game on nmmPath</param>
+        /// <param name="vortexGameFolder">name of the folder for the game on vortexPath</param>
+        /// <param name="nmmExe">full path and file for NMM exe</param>
+        /// <param name="vortexExe">full path and file for vortex exe</param>
+        /// <param name="tesveditExe">full path and file for TESVEdit exe</param>
+        /// <param name="errMsg"></param>
         /// <returns></returns>
-        public int updateSettings(string newSteamPath, string newDocumentsPath, string newAppDataPath, string nmmPath)
-        {
-            log.Debug("## manager.updateSettings() ####################################################");
-
-            List<string> mandatoryPaths = new List<string>{
-                newSteamPath,
-                newDocumentsPath,
-                newAppDataPath
-            };
-            List<string> optionalPaths = new List<string>{nmmPath};
-
-            // check if any optional is not null (this should not be null)
-            bool optionalNotNull = CSharp.checkNotNull(optionalPaths);
-            if (!optionalNotNull)
-            {
-                log.Warn("OPTIONAL FIELDS ARE NULL");
-                return Errors.ERR_INVALID_SETTINGS;
-            }
-            // check if any optional is not empty
-            bool optionalNotEmpty = CSharp.checkNotEmpty(optionalPaths);
-            if (optionalNotEmpty)
-            {
-                // once they are not empty, they become mandatory
-                foreach (var item in optionalPaths)
-                {
-                    mandatoryPaths.Add(item);
-                }
-                log.Debug("mandatoryPaths: " + CSharp.listToCsv(mandatoryPaths));
-            }
-            else
-            {
-                log.Info("Optional are EMPTY");
-            }
-            // check if mandatory are valid directories
-            string errString = "";
-            if (!CSharp.checkDirs(mandatoryPaths, out errString))
-            {
-                MessageBox.Show("Path " + errString + " does not exist!", "ERROR: INVALID PATH!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                log.Warn("** ONE OF THE MANDATORY PATHS DOES NOT EXIST! ERR:" + errString);
-                return Errors.ERR_INVALID_SETTINGS;
-            }
-            else
-            {
-                log.Debug("all mandatory paths are ok");
-            }
-
-            // Settings are OK. update settings 
-            this.settings.appDataPath = newAppDataPath;
-            this.settings.steamPath = newSteamPath;
-            this.settings.documentsPath = newDocumentsPath;
-            this.settings.nmmPath = nmmPath;
-            //this.settings.nmmInfoPath = nmmInfoPath;
-            //this.settings.nmmModPath = nmmModPath;
-
-
-            // update path helper
-            this.paths.update(this.settings);
-
-            // create backup direcotories
-            this.createBackupsRoot();
-
-            // save settings
-            SPConfig config = SPConfig.loadConfig();
-            config.updateSettings(this.theGame, this.settings);
-            config.saveConfig();
-
-            // update app state
-            this.applicationState = this.discoverApplicationState();
-
-            return Errors.SUCCESS;
-        }
-        */
-
-        public int updateSettings(string nmmPath, string tesvedit, string vortex)
+        public int updateSettings(string nmmPath, string vortexPath,  
+                                  string nmmGameFolder, string vortexGameFolder, 
+                                  string nmmExe, string vortexExe, string tesveditExe, 
+                                  out string errMsg)
         {
             log.Debug("## manager.updateSettings() ####################################################");
             if (nmmPath == null) nmmPath = "";
-            if (tesvedit == null) tesvedit = "";
-            if (vortex == null) vortex = "";
+            if (vortexPath == null) vortexPath = "";
+            if (nmmGameFolder == null) nmmGameFolder = "";
+            if (vortexGameFolder == null) vortexGameFolder = "";
+            if (nmmExe == null) nmmExe = "";
+            if (vortexExe == null) vortexExe = "";
+            if (tesveditExe == null) tesveditExe = "";
 
-            List<string> settingsPaths = new List<string> { nmmPath, tesvedit, vortex };
-            List<string> paths = new List<string> { nmmPath };
+            List<string> paths = new List<string> { nmmPath, 
+                                                    vortexPath , 
+                                                    nmmPath + "\\" + nmmGameFolder, 
+                                                    vortexPath + "\\" + vortexGameFolder };
+            List<string> tools = new List<string> { nmmExe, vortexExe, tesveditExe };
 
             // check if mandatory are valid directories
             string errString = "";
@@ -169,17 +107,24 @@ namespace ProfileManager
             {
                 MessageBox.Show("Path " + errString + " does not exist!", "ERROR: INVALID PATH!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 log.Warn("** ONE OF THE MANDATORY PATHS DOES NOT EXIST! ERR:" + errString);
-                return Errors.ERR_INVALID_SETTINGS;
+                errMsg = "Path " + errString + " does not exist!";
+                return Errors.ERR_PATH_NOT_EXIST;
             }
             else
             {
                 log.Debug("all paths are ok");
             }
 
-            // Settings are OK. update settings 
-            this.settings.nmmPath = nmmPath;
-            this.settings.tesvEditPath = tesvedit;
-            this.settings.vortexPath = vortex;
+            // Settings are OK
+            // update paths
+            this.settings.nmmPath2 = nmmPath;
+            this.settings.vortexPath2 = vortexPath;
+            this.gameSettings.nmmGameFolder = nmmGameFolder;
+            this.gameSettings.vortexGameFolder = vortexGameFolder;
+            // update tools
+            this.settings.nmmExe = nmmExe;
+            this.settings.vortexExe = vortexExe;
+            this.settings.tesvEditExe = tesveditExe;
 
             // update path helper
             this.paths.update(this.settings, this.gameSettings);
@@ -187,15 +132,21 @@ namespace ProfileManager
             // create backup direcotories
             this.createBackupsRoot();
 
-            // save settings
+            // save settings on xml
             SPConfig config = SPConfig.loadConfig();
-            config.updateSettings(this.settings);
-            config.saveConfig();
+            config.updateSettings(this.settings, this.theGame, this.gameSettings);
+            bool ret = config.saveConfig();
 
             // update app state
             this.applicationState = this.discoverApplicationState();
 
-            return Errors.SUCCESS;
+            if (ret)
+            {
+                errMsg = "";
+                return Errors.SUCCESS;
+            }
+            errMsg = "Error saving configuration";
+            return Errors.ERR_CANNOT_SAVE_SETTINGS;
         }
 
         /// <summary>
@@ -267,7 +218,7 @@ namespace ProfileManager
         /// </summary>
         /// <param name="profileName">Alpanumeric string</param>
         /// <returns></returns>
-        public int activateDesactivatedProfile(string profileName)
+        public int activateDesactivatedProfile(string profileName, out string outErrMsg)
         {
             log.Debug("## manager.activateDesactivatedProfile() #######################################");
             log.Debug("# activateDesactivatedProfile() profileName:" + profileName);
@@ -302,26 +253,13 @@ namespace ProfileManager
             }
 
             log.Debug("STEP 3: moving folders from backup to root dir...");
-            //string[] sourceDirs = { 
-            //        this.paths.steamBkpProfGame(profileName),      // steam
-            //        this.paths.appDataBkpProfGame(profileName),    // appdata
-            //        this.paths.docsBkpProfGame(profileName),       // docs
-            //        this.paths.nmmInfoBkpProfGame(profileName),    //
-            //        this.paths.nmmModBkpProfGame(profileName)      //
-            //};
-            //string[] destinationDirs = {
-            //    this.paths.steam,
-            //    this.paths.appData,
-            //    this.paths.docs,
-            //    this.paths.nmmInfo,
-            //    this.paths.nmmMod
-            //};
+
             string[] destinationDirs;
             string[] sourceDirs;
             if (this.paths.optionalAreSet())
             {
                 destinationDirs = new string[]  {
-                    this.paths.steam,
+                    this.,
                     this.paths.appData,
                     this.paths.docs,
                     this.paths.nmm
@@ -382,89 +320,87 @@ namespace ProfileManager
         /// Desactivate an active profile. If cannot complete the operation, does nothing and return an error code.
         /// </summary>
         /// <returns></returns>
-        public int desactivateActiveProfile(string profileName)
+        public int desactivateActiveProfile(string profileName, out string outMsg)
         {
             log.Debug("## manager.desactivateActiveProfile() ##########################################");
             log.Debug("# desactivateActiveProfile() profileName:" + profileName);
+            int ret = Errors.SUCCESS;
+            string id = "";
+            string name = "";
+            string color = "";
+            string errMsg = "";
+
             // check state
             this.updateManagerState();
             if ((this.applicationState != SPMState.ACTIVE_AND_DESACTIVATED_PROFILES) &&
                 (this.applicationState != SPMState.ACTIVE_ONLY))
             {
-                log.Warn("-- invalid state for desactivateActiveProfile operation! State:" + this.applicationState);
+                outMsg = "Invalid state for desactivateActiveProfile operation! State:" + this.applicationState;
+                log.Error(" ** " + outMsg);
                 return Errors.ERR_INVALID_STATE_FOR_REQUESTED_OPERATION;
             }
+
             // check if integrity file information matches
             profileName.Trim();
-            string id = "";
-            string name = "";
-            string color = "";
             if (!this.paths.activeIntegrityFile())
             {
-                log.Error("* INTEGRITY FILE FOR PROFILE " + profileName + " DOES NOT EXIST. CANNOT COMPLETE ACTION");
+                outMsg = "INTEGRITY FILE FOR PROFILE " + profileName + " DOES NOT EXIST. CANNOT COMPLETE ACTION.";
+                log.Error(" ** " + outMsg);
                 return Errors.ERR_FILE_NOT_EXIST;
             }
             List<string> intItem = this.paths.activeIntegrityFileItems();
             if (intItem.Count < Consts.INTEGRITY_FILE_ITEMS)
             {
-                log.Error("* INTEGRITY FILE FOR PROFILE " + profileName + " IS NOT ON THE RIGHT FORMAT");
+                outMsg = "INTEGRITY FILE FOR PROFILE " + profileName + " IS NOT ON THE RIGHT FORMAT.";
+                log.Error(" ** " + outMsg);
                 return Errors.ERR_ACTIVE_PROFILE_CORRUPTED;
             }
-            //int ret = this.readIntegrityFile(out name, out color);
             if (intItem[0].Trim() != profileName)
             {
-                log.Warn("active profile corrupted");
+                outMsg = "Active profile corrupted. Error parsing integrity file.";
+                log.Warn(" ** " + outMsg);
                 this.paths.deleteActiveIntegrityFile();
                 this.updateManagerState();
                 return Errors.ERR_ACTIVE_PROFILE_CORRUPTED;
             }
-            log.Debug("-- integrity file OK! " + id + ", " + name + ", " + color);
+            log.Debug(" -- integrity file OK! " + id + ", " + name + ", " + color);
+
             // create backup dir if does not exit
-            this.createBackupProfilesFolder(profileName);
+            ret = this.createBackupProfilesFolder(profileName, out errMsg);
+            if (ret != Errors.SUCCESS)
+            {
+                outMsg = "Could not create backup profile Folder: " + errMsg;
+                log.Error(" ** " + outMsg);
+                return ret;
+            }
+            log.Debug(" -- createBackupProfilesFolder OK!");
+
             // move directories to backup dir   sourceDirs
-            string[] destinationDirs;
-            string[] sourceDirs;
-            if (this.paths.optionalAreSet())
+            string[] destinationDirs = this.paths.getAllPaths_BkpProf(profileName).ToArray();
+            string[] sourceDirs = this.paths.getAllPaths_AppGame().ToArray();
+            if (destinationDirs.Length != sourceDirs.Length)
             {
-                destinationDirs = new string[]  {
-                    this.paths.steamBkpProf(profileName),      // steam
-                    this.paths.appDataBkpProf(profileName),    // appdata
-                    this.paths.docsBkpProf(profileName),       // docs
-                    this.paths.nmmBkpProf(profileName),    //
-                };
-                sourceDirs = new string[] {
-                    this.paths.steamGame,
-                    this.paths.appDataGame,
-                    this.paths.docsGame,
-                    this.paths.nmmGame,
-                };
+                outMsg = "List of source and destination directories are inconsistent.";
+                log.Error(" ** Error: " + outMsg);
+                log.Error(" ** destinationDirs.Length:" + destinationDirs.Length + ", sourceDirs.Length:" + sourceDirs.Length);
+                log.Error(" ** Source      Dirs:" + CSharp.arrayToCsv(sourceDirs));
+                log.Error(" ** Destination Dirs:" + CSharp.arrayToCsv(destinationDirs));
+                return Errors.ERR_INCONSISTENT_SRC_DST_DIR_NUMBER;
             }
-            else
-            {
-                log.Info(" -- Optional dirs are not set. They will not be moved.");
-                destinationDirs = new string[]  {
-                    this.paths.steamBkpProf(profileName),      // steam
-                    this.paths.appDataBkpProf(profileName),    // appdata
-                    this.paths.docsBkpProf(profileName)       // docs
-                };
-                sourceDirs = new string[] {
-                    this.paths.steamGame,
-                    this.paths.appDataGame,
-                    this.paths.docsGame
-                };
-            }
-            string errMsg = "";
             string errSrcDir = "";
             string errDstDir = "";
             bool sucess = CSharp.stackMv(sourceDirs, destinationDirs, true, LogMethod.LOGGER,
                                          out errMsg, out errSrcDir, out errDstDir);
             if (!sucess)
             {
+                outMsg = errMsg + " errSrcDir:<" + errSrcDir + ">" + ", errDstDir:<" + errDstDir + ">";
+                log.Error("** outMsg: " + outMsg);
                 log.Error("** errMsg: " + errMsg);
                 log.Error("** errSrcDir:" + errSrcDir);
                 log.Error("** errDstDir: " + errDstDir);
                 return Errors.ERR_MOVING_DIRECTORIES;
             }
+            outMsg = "";
             return Errors.SUCCESS;
         }
 
@@ -474,34 +410,48 @@ namespace ProfileManager
         /// <param name="activeProf"></param>
         /// <param name="desactivatedProf"></param>
         /// <returns></returns>
-        public int switchProfile(string activeProf, string desactivatedProf)
+        public int switchProfile(string activeProf, string desactivatedProf, out string errMsg)
         {
             log.Debug("## manager.switchProfile() #####################################################");
             log.Debug("# switchProfile() activeProf:" + activeProf + ", desactivatedProf:" + desactivatedProf);
+            int ret;
+            //string errMsg = "";
+
             // check state
             this.updateManagerState();
             if (this.applicationState != SPMState.ACTIVE_AND_DESACTIVATED_PROFILES)
             {
-                log.Warn("-- invalid state for desactivateActiveProfile operation! State:" + this.applicationState);
+                errMsg = "Switch Error: Invalid state for desactivateActiveProfile operation! State:" + this.applicationState;
+                log.Error(" ** Error after this.updateManagerState()");
+                log.Error(" ** " + errMsg);
                 return Errors.ERR_INVALID_STATE_FOR_REQUESTED_OPERATION;
             }
 
-            int ret;
+            // desactivate profile
             activeProf.Trim();
             desactivatedProf.Trim();
-            ret = this.desactivateActiveProfile(activeProf);
+            ret = this.desactivateActiveProfile(activeProf, out errMsg);
             if (ret != Errors.SUCCESS)
             {
-                log.Error("-- Error desactivating profile activeProf:" + activeProf + ", ret:" + ret);
+                errMsg = "Switch Error: " + errMsg;
+                log.Error(" ** Error @ this.desactivateActiveProfile()" + ", ret:" + ret);
+                log.Error(" ** errMsg:" + errMsg);
+                log.Error(" ** Error desactivating profile activeProf:" + activeProf + ", ret:" + ret);
                 return ret;
             }
 
-            ret = this.activateDesactivatedProfile(desactivatedProf);
+            // activate profile
+            ret = this.activateDesactivatedProfile(desactivatedProf, out errMsg);
             if (ret != Errors.SUCCESS)
             {
-                log.Error("-- Error activating profile desactivatedProf:" + desactivatedProf + ", ret:" + ret);
-                log.Info("-- UNDOING THE LAST DESACTIVATION!!");
-                this.activateDesactivatedProfile(activeProf);
+                string errMsg2 = "";
+                int ret2 = 0;
+                errMsg = "Switch Error: " + errMsg;
+                log.Error(" ** Error @this.activateDesactivatedProfile()" + ", ret:" + ret);
+                log.Error(" ** " + errMsg + ", ret:" +  ret);
+                log.Info(" -- UNDOING THE LAST DESACTIVATION!!");
+                ret2 = this.activateDesactivatedProfile(activeProf, out errMsg2);
+                log.Info(" -- errMsg2:" + errMsg2 + ", ret2:" + ret2);
                 return ret;
             }
 
@@ -782,18 +732,35 @@ namespace ProfileManager
             }
         }
 
-        private void createBackupProfilesFolder(string profName)
+        private int createBackupProfilesFolder(string profName, out string errMsg)
         {
             log.Debug(" -- createBackupProfilesFolder");
-            Directory.CreateDirectory(this.paths.steamBkpProf(profName));
-            Directory.CreateDirectory(this.paths.docsBkpProf(profName));
-            Directory.CreateDirectory(this.paths.appDataBkpProf(profName));
-            if (this.paths.optionalAreSet())
+            List<string> listDirs = this.paths.getAllPaths_BkpProfGame(profName);
+            log.Debug(" -- listDirs:{" + CSharp.listToCsv(listDirs) + "}");
+
+            foreach (var dir in listDirs)
             {
-                log.Debug("creating directory paths.nmmBkpProf(profName):" +
-                          this.paths.nmmBkpProf(profName));
-                Directory.CreateDirectory(this.paths.nmmBkpProf(profName));
+                try
+                {
+                    if (!dir.Trim().Equals(""))
+                    {
+                        Directory.CreateDirectory(dir);
+                    }
+                    else
+                    {
+                        log.Warn(" ** WARNING ** createBackupProfilesFolder ELEMENT IS EMPTY");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    log.Error(" ** Error -- creating backup directory for path:<" + dir + ">");
+                    log.Error(" ** Error -- Message:" + ex.Message + ", StackTrace:" + ex.StackTrace);
+                    errMsg = dir;
+                    return Errors.ERR_CANNOT_CREATE_DIRECTORY;
+                }
             }
+            errMsg = "";
+            return Errors.SUCCESS;
         }
 
         /// <summary>
@@ -946,7 +913,7 @@ namespace ProfileManager
             else if (this.settings.appDataPath == null   || this.settings.appDataPath.Trim().Equals("") ||
                      this.settings.documentsPath == null || this.settings.documentsPath.Trim().Equals("") ||
                      this.settings.steamPath == null     || this.settings.steamPath.Trim().Equals("") ||
-                     this.settings.nmmPath == null       ||
+                     this.settings.nmmPath2 == null       ||
                      this.gameSettings.gameFolder == null   || this.gameSettings.gameFolder.Trim().Equals("") ||
                      this.gameSettings.game == null         || this.gameSettings.game.Trim().Equals("") ||
                      this.gameSettings.gameExe == null      || this.gameSettings.gameExe.Trim().Equals("") ||

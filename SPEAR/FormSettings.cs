@@ -30,9 +30,19 @@ namespace Spear
 
         private void updateSettings()
         {
-            this.settings.vortex  = this.textBoxVortex.Text;
-            this.settings.tesvedit = this.textBoxTESVEdit.Text;
-            this.settings.nmm = this.textBoxNmm.Text; 
+            this.settings.nmmPath = this.textBoxNmm.Text;
+            this.settings.nmmGameFolder = this.textBoxNmmGameFolder.Text;
+
+            this.settings.vortexPath = this.textBoxVortex.Text;
+            this.settings.vortexGameFolder = this.textBoxVortexGameFolder.Text;
+
+            this.settings.nmmExe = this.textBoxNmmExe.Text;
+            this.settings.vortexExe = this.textBoxVortexExe.Text;
+            //this.settings.tesveditExe this.textBoxTESVEdit.Text;
+
+            //this.settings.vortexExe  = this.textBoxVortex;
+            //this.settings.tesvedit = this.textBoxTESVEdit.Text;
+            //this.settings.nmm = this.textBoxNmm.Text; 
         }
 
 
@@ -45,10 +55,16 @@ namespace Spear
             this.saveSettings = false;
             InitializeComponent();
             // original settings
-            this.textBoxNmm.Text = oldSets.nmm;
-            this.textBoxVortex.Text = oldSets.vortex;
-            this.textBoxTESVEdit.Text = oldSets.tesvedit;
-            this.textBoxNmm.Text = oldSets.nmm;
+            // paths
+            this.textBoxNmm.Text = oldSets.nmmPath;
+            this.textBoxVortex.Text = oldSets.vortexPath;
+            this.textBoxNmmGameFolder.Text = oldSets.vortexGameFolder;
+            this.textBoxVortexGameFolder.Text = oldSets.vortexGameFolder;
+            // exe
+            this.textBoxNmmExe.Text = oldSets.nmmExe;
+            this.textBoxVortexExe.Text = oldSets.vortexExe;
+            this.textBoxTESVEdit.Text = oldSets.tesveditExe;
+            // title bar
             this.Text = this.Text + " [" + gameName + "]";
         }
 
@@ -120,6 +136,16 @@ namespace Spear
         private void pictureBoxAppTESVEdit_Click(object sender, EventArgs e)
         {
             this.openDir(this.textBoxTESVEdit.Text);
+        }
+
+        private void textBoxVortexGameFolder_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBoxTESVEdit_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

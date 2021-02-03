@@ -10,13 +10,23 @@ namespace ProfileManagerBL.ViewModel
     {
         public SettingsViewData()
         {
-            this.nmm = "";
-            this.vortex = "";
-            this.tesvedit = "";            
+            this.nmmPath = "";
+            this.vortexPath = "";
+            this.nmmGameFolder = "";
+            this.vortexGameFolder = "";
+            this.nmmExe = "";
+            this.vortexExe = "";
+            this.tesveditExe = "";
         }
 
-        public string nmm { get; set; }
-        public string vortex { get; set; }
-        public string tesvedit { get; set; }
+        // paths
+        public string nmmPath { get; set; }
+        public string vortexPath { get; set; }
+        public string nmmGameFolder { get; set; }
+        public string vortexGameFolder { get; set; }
+        // tools
+        public string nmmExe { get; set; }
+        public string vortexExe { get; set; }
+        public string tesveditExe { get; set; }
     }
 }

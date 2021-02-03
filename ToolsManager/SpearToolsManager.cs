@@ -76,10 +76,6 @@ namespace ToolsManager
         [PrincipalPermission(SecurityAction.Demand, Role = @"BUILTIN\Administrators")]
         public static void killAllSteam()
         {
-            // batch commands
-            // taskkill / f / im Steam.exe
-            // taskkill / f / im SteamService.exe
-            // taskkill / f / im steamwebhelper.exe
             string killSteam = "taskkill /f /im Steam.exe";
             string killSteamService = "taskkill /f /im SteamService.exe";
             string killSteamHelper = "taskkill /f /im steamwebhelper.exe";
@@ -90,7 +86,7 @@ namespace ToolsManager
 
         public bool gitignoreDetected()
         {
-            string gitignorePath = this.paths.gitignore();
+            string gitignorePath = this.paths.gitignore;
             if (File.Exists(gitignorePath))
             {
                 return true;
@@ -105,7 +101,7 @@ namespace ToolsManager
         public bool createGitignore(out string errMsg)
         {
             log.Debug(" -- createGitignore()");
-            string gitignorePath = this.paths.gitignore();
+            string gitignorePath = this.paths.gitignore;
             String gitignoreContent = "";
             try
             {
@@ -140,7 +136,7 @@ namespace ToolsManager
         public bool deleteGitignore(out string errMsg)
         {
             log.Debug(" -- deleteGitignore()");
-            string gitignorePath = this.paths.gitignore();
+            string gitignorePath = this.paths.gitignore;
             if (File.Exists(gitignorePath))
             {
                 File.Delete(gitignorePath);

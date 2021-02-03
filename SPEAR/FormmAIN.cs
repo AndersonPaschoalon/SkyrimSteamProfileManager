@@ -65,13 +65,19 @@ namespace Spear
         // update settings after saving data
         private void configureToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            string errMsg = "";
             SettingsViewData oldSvd = this.managerBusinessLayer.action_getSettings();
             FormSettings settings = new FormSettings(oldSvd, this.managerBusinessLayer.gameName());
             settings.ShowDialog();
             if (settings.saveSettings)
             {
-                this.managerBusinessLayer.action_updateSettings(settings.getSettings());
+                int ret = this.managerBusinessLayer.action_updateSettings(settings.getSettings(), out errMsg);
+                if(ret != Errors.SUCCESS)
+                {
+                    MessageBox.Show(errMsg, "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
+
         }
 
         private void FormMain_Load(object sender, EventArgs e)
@@ -607,11 +613,7 @@ namespace Spear
 
         private void toolStripButtonOpenGameFolder_Click(object sender, EventArgs e)
         {
-            string errMsg = "";
-            if (!this.managerBusinessLayer.tool_openGameFolder(out errMsg))
-            {
-                MessageBox.Show(errMsg, "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+
         }
 
         private void toolStripButtonPlayGame_Click(object sender, EventArgs e)
@@ -654,7 +656,7 @@ namespace Spear
         {
             log.Debug(" -- skyrimOpenLogsToolStripMenuItem_Click");
             string errMsg = "";
-            if (!this.managerBusinessLayer.tool_openSkyrimLogs(out errMsg))
+            if (!this.managerBusinessLayer.tool_openGameLogs(out errMsg))
             {
                 MessageBox.Show(errMsg, "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
@@ -666,15 +668,6 @@ namespace Spear
             MessageBox.Show("TODO", "TODO", MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
 
-        private void skyrimLaunchCreationKitToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            log.Debug(" -- skyrimLaunchCreationKitToolStripMenuItem_Click");
-            string errMsg = "";
-            if (!this.managerBusinessLayer.tool_launchCreationKit(out errMsg))
-            {
-                MessageBox.Show(errMsg, "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
 
         private void skyrimLaunchTESVEditToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -714,6 +707,54 @@ namespace Spear
             {
                 MessageBox.Show(errMsg, "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void creationKitSkyrimToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            log.Debug(" -- skyrimLaunchCreationKitToolStripMenuItem_Click");
+            string errMsg = "";
+            if (!this.managerBusinessLayer.tool_launchCreationKit(out errMsg))
+            {
+                MessageBox.Show(errMsg, "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void creationKitSkyrimSEToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("TODO", "TODO", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        }
+
+        private void openGameAppDataFolderToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("TODO", "TODO", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        }
+
+        private void openGameFolderToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string errMsg = "";
+            if (!this.managerBusinessLayer.tool_openGameFolder(out errMsg))
+            {
+                MessageBox.Show(errMsg, "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void openGameDocumentsFolderToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string errMsg = "";
+            if (!this.managerBusinessLayer.tool_openGameDocuments(out errMsg))
+            {
+                MessageBox.Show(errMsg, "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void openNMMGameFolderToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("TODO", "TODO", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        }
+
+        private void openVortexGameFolderToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("TODO", "TODO", MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
     }
 }
