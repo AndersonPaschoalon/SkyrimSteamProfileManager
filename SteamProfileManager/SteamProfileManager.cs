@@ -226,13 +226,15 @@ namespace ProfileManager
             this.updateManagerState();
             if (this.applicationState != SPMState.DESACTIVATED_ONLY)
             {
-                log.Warn("-- invalid state for requested operation. This operation may only be completed if the aplication state is SPMState.DESACTIVATED_ONLY.");
+                outErrMsg = "Invalid state for requested operation. This operation may only be completed if the aplication state is SPMState.DESACTIVATED_ONLY.";
+                log.Warn(" -- " + outErrMsg);
                 return Errors.ERR_INVALID_STATE_FOR_REQUESTED_OPERATION;
             }
             profileName = profileName.Trim();
             if (profileName == null || profileName.Equals(""))
             {
-                log.Warn("-- profile name is empty");
+                outErrMsg = "profile name is empty";
+                log.Warn(" -- " + outErrMsg);
                 return Errors.ERR_INVALID_PROFILE_NAME;
             }
 
@@ -248,18 +250,18 @@ namespace ProfileManager
             }
             if (profToActivate == null)
             {
-                log.Warn("-- specified profile could not be found, ERR_INVALID_PROFILE_NAME");
+                outErrMsg = "Specified profile could not be found, ERR_INVALID_PROFILE_NAME";
+                log.Warn(" -- " + outErrMsg);
                 return Errors.ERR_INVALID_PROFILE_NAME;
             }
 
             log.Debug("STEP 3: moving folders from backup to root dir...");
-
             string[] destinationDirs;
             string[] sourceDirs;
             if (this.paths.optionalAreSet())
             {
                 destinationDirs = new string[]  {
-                    this.,
+                    this.paths.steam,
                     this.paths.appData,
                     this.paths.docs,
                     this.paths.nmm
@@ -293,9 +295,11 @@ namespace ProfileManager
                                          out errMsg, out errSrcDir, out errDstDir);
             if (!sucess)
             {
-                log.Error("** errMsg: " + errMsg);
-                log.Error("** errSrcDir:" + errSrcDir);
-                log.Error("** errDstDir: " + errDstDir);
+                outErrMsg = "Error moving directories: SrcDir<" + errSrcDir + ">, DstDir<" + errDstDir + ">. Error Message:" + errMsg;
+                log.Error(" ** " + outErrMsg);
+                log.Error(" ** errMsg: " + errMsg);
+                log.Error(" ** errSrcDir:" + errSrcDir);
+                log.Error(" ** errDstDir: " + errDstDir);
                 return Errors.ERR_MOVING_DIRECTORIES;
             }
 
@@ -304,8 +308,9 @@ namespace ProfileManager
             errPath = "";
             if (!this.paths.updateActiveIntegrityFile(profToActivate, out errMsg, out errPath))
             {
-                log.Error("Could not create intregrity file");
-                log.Error("** ERROR errMsg:" + errMsg + ", errPath:" + errPath);
+                outErrMsg = "Could not create intregrity file. Message:"  + errMsg + ". Error Path:" + errPath;
+                log.Error(" ** outErrMsg:" + outErrMsg);
+                log.Error(" ** ERROR errMsg:" + errMsg + ", errPath:" + errPath);
                 return Errors.ERR_CANNOT_CREATE_INTEGRITY_FILE;
             }
 
@@ -313,6 +318,7 @@ namespace ProfileManager
             profToActivate.isReady = true;
             this.updateManagerState();
 
+            outErrMsg = "";
             return Errors.SUCCESS;
         }
 

@@ -2,6 +2,10 @@
 
 Application for managing more than one  Steam's instalation of a game on the same computer
 
+## Board
+
+https://trello.com/b/MnF6K0F9/spear
+
 ## Version Roadmap
 
 ### v0.1.1.x : Pre-Alpha version. [Main Features]
@@ -12,9 +16,9 @@ Application for managing more than one  Steam's instalation of a game on the sam
 				2. Game list of tags, with info about each new game configurable
 				3. Information cannot be edited by the user
 		[ok] * Settings changes: The user may edit NMM  game folder, TESVEdit exe, vortex exe info only
-		[  ] * separete tools and profile operations on different projects ProfileManager and ToolsManager
-		[  ] * ProfileManagerBL should use ProfileManager and ToolsManager
-		[  ] * Settings objects must be on a diffferent DLL
+		[ok] * separete tools and profile operations on different projects ProfileManager and ToolsManager
+		[ok] * ProfileManagerBL should use ProfileManager and ToolsManager
+		[ok] * Settings objects must be on a diffferent DLL
 	[GIT]
 		[ok] * Open Gitignore file
 		[  ] * Create gitignore backup before delete
