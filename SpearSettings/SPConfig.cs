@@ -135,7 +135,7 @@ namespace SpearSettings
         /// </summary>
         /// <param name="filename"></param>
         /// <returns></returns>
-        public bool saveConfig(string filename)
+        public bool saveConfig(string filename, out string errMsg)
         {
             try
             {
@@ -147,10 +147,12 @@ namespace SpearSettings
                     newXml = textWriter.ToString();
                     File.WriteAllText(filename, newXml);
                 }
+                errMsg = "";
                 return true;
             }
             catch (Exception ex)
             {
+                errMsg = ex.Message;
                 log.Warn("Error serializing SPSettings XML back to file " + filename + 
                          ". Message:" + ex.Message + ", StackTrace:" + ex.StackTrace);
             }
@@ -161,10 +163,10 @@ namespace SpearSettings
         /// Save current loaded configuration on the default configuration file.
         /// </summary>
         /// <returns></returns>
-        public bool saveConfig()
+        public bool saveConfig(out string errMsg)
         {
             string configFile = PathsHelper.getConfigFileName();
-            return this.saveConfig(configFile);
+            return this.saveConfig(configFile, out errMsg);
         }
 
         public SPGame selectGame(string game)
@@ -179,7 +181,7 @@ namespace SpearSettings
             return null;
         }
 
-        public bool updateSettings(SPSettings appSettings, string game, SPGame gameSettings)
+        public int updateSettings(SPSettings appSettings, string game, SPGame gameSettings, out string errMsg)
         {
             bool upGame = false;
             bool upApp = false;
@@ -200,9 +202,16 @@ namespace SpearSettings
 
             if (upApp == true && upGame == true)
             {
-                return true;
+                errMsg = "";
+                return Errors.SUCCESS;
             }
-            return false;
+            if (!upGame)
+            {
+                errMsg = "Invalid game name <" + game + ">";
+                return Errors.ERR_INVALID_GAME_NAME_3;
+            }
+            errMsg = "Invalid settings";
+            return Errors.ERR_ARGUMENT_NULL;
         }
 
         public bool updateSettings(SPSettings appSettings)
@@ -227,6 +236,7 @@ namespace SpearSettings
 
         private void systemDefaults()
         {
+            string errMsg = "";
             bool saveSettings = false;
             if (this.settings.steamPath == null || this.settings.steamPath.Trim().Equals(""))
             {
@@ -250,7 +260,7 @@ namespace SpearSettings
             if (saveSettings)
             {
                 log.Debug("SAVE defaults settings");
-                this.saveConfig();
+                this.saveConfig(out errMsg);
             }
         }
 

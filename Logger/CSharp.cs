@@ -21,6 +21,18 @@ namespace Utils
         LOGGER
     }
 
+    public enum Err
+    {
+        SUCCESS,
+        PATH_TOO_LONG,
+        DIRECTORY_NOT_FOUND,
+        IO_EXCEPTION,
+        UNAUTHORIZED_ACCESS,
+        ARGUMENT_NULL,
+        ARGUMENT_EXCEPTION,
+        ERR_UNKNOWN
+    }
+
     public class CSharp
     {
         #region private
@@ -230,18 +242,18 @@ namespace Utils
 
         #region fileSystemOperations
 
-        public static int safeMove(string sourceDirName, string destDirName)
+        public static Err safeMove(string sourceDirName, string destDirName)
         {
             LogMethod logMethod = LogMethod.NONE;
             return safeMove(sourceDirName, destDirName, logMethod);
         }
 
-        public static int safeMove(string sourceDirName, string destDirName, LogMethod logMethod)
+        public static Err safeMove(string sourceDirName, string destDirName, LogMethod logMethod)
         {
             try
             {
                 Directory.Move(sourceDirName, destDirName);
-                return Errors.SUCCESS;
+                return Err.SUCCESS;
             }
             catch (PathTooLongException ex)
             {
@@ -255,10 +267,7 @@ namespace Utils
                     Console.WriteLine("The specified path, file name, or both exceed the system-defined maximum length.");
                     Console.WriteLine("** Message:" + ex.Message + ", StackTrace:" + ex.StackTrace);
                 }
-
-
-
-                return Errors.PATH_TOO_LONG;
+                return Err.PATH_TOO_LONG;
             }
             catch (DirectoryNotFoundException ex)
             {
@@ -273,7 +282,7 @@ namespace Utils
                     Console.WriteLine("The path specified by sourceDirName is invalid (for example, it is on an unmapped drive).");
                 }
 
-                return Errors.DIRECTORY_NOT_FOUND;
+                return Err.DIRECTORY_NOT_FOUND;
             }
             catch (IOException ex)
             {
@@ -294,7 +303,7 @@ namespace Utils
                     Console.WriteLine("** Message:" + ex.Message + ", StackTrace:" + ex.StackTrace);
                 }
 
-                return Errors.IO_EXCEPTION;
+                return Err.IO_EXCEPTION;
             }
             catch (UnauthorizedAccessException ex)
             {
@@ -308,7 +317,7 @@ namespace Utils
                     Console.WriteLine("The caller does not have the required permission.");
                     Console.WriteLine("** Message:" + ex.Message + ", StackTrace:" + ex.StackTrace);
                 }
-                return Errors.UNAUTHORIZED_ACCESS;
+                return Err.UNAUTHORIZED_ACCESS;
             }
             catch (ArgumentNullException ex)
             {
@@ -322,7 +331,7 @@ namespace Utils
                     Console.WriteLine("sourceDirName or destDirName is null.");
                     Console.WriteLine("** Message:" + ex.Message + ", StackTrace:" + ex.StackTrace);
                 }
-                return Errors.ARGUMENT_NULL;
+                return Err.ARGUMENT_NULL;
             }
             catch (ArgumentException ex)
             {
@@ -340,7 +349,7 @@ namespace Utils
                              " the GetInvalidPathChars() method.");
                     Console.WriteLine("** Message:" + ex.Message + ", StackTrace:" + ex.StackTrace);
                 }
-                return Errors.ARGUMENT_EXCEPTION;
+                return Err.ARGUMENT_EXCEPTION;
             }
             catch (Exception ex)
             {
@@ -353,7 +362,7 @@ namespace Utils
                     Console.WriteLine("** Message:" + ex.Message + ", StackTrace:" + ex.StackTrace);
                 }
             }
-            return Errors.ERR_UNKNOWN;
+            return Err.ERR_UNKNOWN;
         }
 
         /// <summary>

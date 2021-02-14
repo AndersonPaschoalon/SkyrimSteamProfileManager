@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SpearSettings;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -28,5 +29,20 @@ namespace ProfileManagerBL.ViewModel
         public string nmmExe { get; set; }
         public string vortexExe { get; set; }
         public string tesveditExe { get; set; }
+
+        public UserSettings userSettings 
+        { 
+            get
+            {
+                UserSettings us = new UserSettings(this.nmmPath, 
+                                                   this.vortexPath,
+                                                   this.nmmGameFolder,
+                                                   this.vortexGameFolder,
+                                                   this.nmmExe,
+                                                   this.vortexExe,
+                                                   this.tesveditExe);
+                return us;
+            } 
+        }
     }
 }

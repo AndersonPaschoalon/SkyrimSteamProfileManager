@@ -43,17 +43,21 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Consts.cs" />
+    <Compile Include="Errors.cs" />
+    <Compile Include="ListPaths.cs" />
     <Compile Include="PathsHelper.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="SettingsFactory.cs" />
     <Compile Include="SPConfig.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SPGame.cs" />
     <Compile Include="SPProfile.cs" />
     <Compile Include="SPSettings.cs" />
+    <Compile Include="UserSettings.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Logger\Utils.csproj">

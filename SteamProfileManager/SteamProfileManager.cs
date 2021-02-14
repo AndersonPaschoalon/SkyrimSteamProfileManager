@@ -23,14 +23,13 @@ namespace ProfileManager
     public class SteamProfileManager
     {
         // readonly
-        private readonly ILogger log;
-        private readonly string theGame;
-        private readonly SPGame gameSettings;
+        private readonly ILogger              log;
+        private readonly string               theGame;
+        private readonly PathsHelper          paths; // helper for generating the right names of the paths
+        private readonly IntegrityFileHandler integrityFile;
         // app state
-        private PathsHelper paths;                  // helper for generating the right names of the paths
-        private SPSettings settings;
-        private SPMState applicationState = SPMState.NOT_CONFIGURED;
-        private SPProfile activeProfile;            // current active profile (if exist)
+        private SPMState        applicationState = SPMState.NOT_CONFIGURED;
+        private SPProfile       activeProfile;      // current active profile (if exist)
         private List<SPProfile> listDesactivated;   // list of desactivated profiles
 
         public SteamProfileManager(string gameName)
@@ -43,111 +42,18 @@ namespace ProfileManager
             log.Info("");
             log.Debug("-- load settings");
 
-            SPConfig config = SPConfig.loadConfig();
-            if (config != null)
+            if (SettingsFactory.gameExist(gameName))
             {
-                log.Debug("-- config.selectSettings() game:" + gameName);
-                this.settings = config.settings;
                 this.theGame = gameName;
-                this.gameSettings = config.selectGame(gameName);
-                this.paths = new PathsHelper(this.settings, this.gameSettings);
-            }
-            else
-            {
-                log.Warn("COULD NOT LOAD CONFIGURATION FILE");
-                this.settings = null;
-                this.gameSettings = null;
+                log.Debug("-- config.selectSettings() game:" + this.theGame);
+                this.paths = SettingsFactory.getPathsHelper(this.theGame);
+                this.integrityFile = new IntegrityFileHandler(this.paths);
             }
             this.createBackupsRoot();
             this.updateManagerState();
         }
 
         #region interface_methods
-
-        public string dateFormat()
-        {
-            return this.settings.dateFormat;
-        }
-
-        /// <summary>
-        /// Function used to save settings allowed to be changed by the user.
-        /// </summary>
-        /// <param name="nmmPath">path for the NMM folder where the mods are stored</param>
-        /// <param name="vortexPath">path for the Vortex folder where the mods are stored</param>
-        /// <param name="nmmGameFolder">name of the folder for the game on nmmPath</param>
-        /// <param name="vortexGameFolder">name of the folder for the game on vortexPath</param>
-        /// <param name="nmmExe">full path and file for NMM exe</param>
-        /// <param name="vortexExe">full path and file for vortex exe</param>
-        /// <param name="tesveditExe">full path and file for TESVEdit exe</param>
-        /// <param name="errMsg"></param>
-        /// <returns></returns>
-        public int updateSettings(string nmmPath, string vortexPath,  
-                                  string nmmGameFolder, string vortexGameFolder, 
-                                  string nmmExe, string vortexExe, string tesveditExe, 
-                                  out string errMsg)
-        {
-            log.Debug("## manager.updateSettings() ####################################################");
-            if (nmmPath == null) nmmPath = "";
-            if (vortexPath == null) vortexPath = "";
-            if (nmmGameFolder == null) nmmGameFolder = "";
-            if (vortexGameFolder == null) vortexGameFolder = "";
-            if (nmmExe == null) nmmExe = "";
-            if (vortexExe == null) vortexExe = "";
-            if (tesveditExe == null) tesveditExe = "";
-
-            List<string> paths = new List<string> { nmmPath, 
-                                                    vortexPath , 
-                                                    nmmPath + "\\" + nmmGameFolder, 
-                                                    vortexPath + "\\" + vortexGameFolder };
-            List<string> tools = new List<string> { nmmExe, vortexExe, tesveditExe };
-
-            // check if mandatory are valid directories
-            string errString = "";
-            if (!CSharp.checkDirs(paths, out errString))
-            {
-                MessageBox.Show("Path " + errString + " does not exist!", "ERROR: INVALID PATH!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                log.Warn("** ONE OF THE MANDATORY PATHS DOES NOT EXIST! ERR:" + errString);
-                errMsg = "Path " + errString + " does not exist!";
-                return Errors.ERR_PATH_NOT_EXIST;
-            }
-            else
-            {
-                log.Debug("all paths are ok");
-            }
-
-            // Settings are OK
-            // update paths
-            this.settings.nmmPath2 = nmmPath;
-            this.settings.vortexPath2 = vortexPath;
-            this.gameSettings.nmmGameFolder = nmmGameFolder;
-            this.gameSettings.vortexGameFolder = vortexGameFolder;
-            // update tools
-            this.settings.nmmExe = nmmExe;
-            this.settings.vortexExe = vortexExe;
-            this.settings.tesvEditExe = tesveditExe;
-
-            // update path helper
-            this.paths.update(this.settings, this.gameSettings);
-
-            // create backup direcotories
-            this.createBackupsRoot();
-
-            // save settings on xml
-            SPConfig config = SPConfig.loadConfig();
-            config.updateSettings(this.settings, this.theGame, this.gameSettings);
-            bool ret = config.saveConfig();
-
-            // update app state
-            this.applicationState = this.discoverApplicationState();
-
-            if (ret)
-            {
-                errMsg = "";
-                return Errors.SUCCESS;
-            }
-            errMsg = "Error saving configuration";
-            return Errors.ERR_CANNOT_SAVE_SETTINGS;
-        }
 
         /// <summary>
         /// Creates an active profile from existing instalation. If there is already an active profile,
@@ -164,21 +70,21 @@ namespace ProfileManager
             if (this.applicationState != SPMState.INACTIVE_PROFILE)
             {
                 log.Debug("-- activateInactiveProfile() operation can only be executed if the application state is SPMState.INACTIVE_PROFILE");
-                return Errors.ERR_INVALID_STATE_FOR_REQUESTED_OPERATION;
+                return Errors.ERR_INVALID_STATE_FOR_REQUESTED_OPERATION_1;
             }
 
             // Create profile object
             if (profileName.Trim() == Consts.INACTIVE_NAME)
             {
                 // name already in use
-                return Errors.ERR_PROFILE_NAME_ALREADY_EXISTS;
+                return Errors.ERR_PROFILE_NAME_ALREADY_EXISTS_1;
             }
             foreach (var item in this.listDesactivated)
             {
                 if (profileName.Trim() == item.name.Trim())
                 {
                     // name already in use
-                    return Errors.ERR_PROFILE_NAME_ALREADY_EXISTS;
+                    return Errors.ERR_PROFILE_NAME_ALREADY_EXISTS_2;
                 }
             }
             if (this.activeProfile != null)
@@ -186,7 +92,7 @@ namespace ProfileManager
                 if (this.activeProfile.name.Trim() == profileName.Trim())
                 {
                     // name already in use
-                    return Errors.ERR_PROFILE_NAME_ALREADY_EXISTS;
+                    return Errors.ERR_PROFILE_NAME_ALREADY_EXISTS_3;
                 }
             }
             SPProfile newProfile = new SPProfile();
@@ -199,16 +105,16 @@ namespace ProfileManager
             log.Debug("-- creating integrity file for profile " + newProfile.name);
             string errMsg = "";
             string errPath = "";
-            if (!this.paths.updateActiveIntegrityFile(newProfile, out errMsg, out errPath))
+            //if (!this.paths.updateActiveIntegrityFile(newProfile, out errMsg, out errPath))
+            if (!this.integrityFile.updateActiveIntegrityFile(newProfile, out errMsg, out errPath))
             {
                 log.Error("Could not create intregrity file");
                 log.Error("** ERROR errMsg:"+ errMsg + ", errPath:" + errPath);
-                return Errors.ERR_CANNOT_CREATE_INTEGRITY_FILE;
+                return Errors.ERR_CANNOT_CREATE_INTEGRITY_FILE_1;
             }
-
             // update Manager state
-            this.updateManagerState();
 
+            this.updateManagerState();
             return Errors.SUCCESS;
         }
 
@@ -228,21 +134,21 @@ namespace ProfileManager
             {
                 outErrMsg = "Invalid state for requested operation. This operation may only be completed if the aplication state is SPMState.DESACTIVATED_ONLY.";
                 log.Warn(" -- " + outErrMsg);
-                return Errors.ERR_INVALID_STATE_FOR_REQUESTED_OPERATION;
+                return Errors.ERR_INVALID_STATE_FOR_REQUESTED_OPERATION_5;
             }
             profileName = profileName.Trim();
             if (profileName == null || profileName.Equals(""))
             {
                 outErrMsg = "profile name is empty";
                 log.Warn(" -- " + outErrMsg);
-                return Errors.ERR_INVALID_PROFILE_NAME;
+                return Errors.ERR_INVALID_PROFILE_NAME_1;
             }
 
             log.Debug("STEP 2: search profile to activate...");
             SPProfile profToActivate = null;
             foreach (var item in this.listDesactivated)
             {
-                if (item.name.Trim() == profileName)
+                if (item.name.Trim() == profileName.Trim())
                 {
                     profToActivate = item;
                     break;
@@ -252,12 +158,31 @@ namespace ProfileManager
             {
                 outErrMsg = "Specified profile could not be found, ERR_INVALID_PROFILE_NAME";
                 log.Warn(" -- " + outErrMsg);
-                return Errors.ERR_INVALID_PROFILE_NAME;
+                return Errors.ERR_INVALID_PROFILE_NAME_2;
             }
 
             log.Debug("STEP 3: moving folders from backup to root dir...");
-            string[] destinationDirs;
-            string[] sourceDirs;
+            ListPaths listPathsDst = this.paths.getAllPaths_App();
+            ListPaths listPathsSrc = this.paths.getAllPaths_BkpProfGame(profileName);
+            // check consinstency
+            string errLabel1 = "";
+            string errLabel2 = "";
+            if (!listPathsSrc.checkLabels(listPathsDst, out errLabel1, out errLabel2))
+            {
+                outErrMsg = "sourceType: " + errLabel1 + ", destination:" + errLabel2;
+                log.Error(" ** Source and destination folder are mislabeled!!");
+                log.Error(" ** errLabel1:" + errLabel1);
+                log.Error(" ** errLabel2:" + errLabel2);
+                log.Error(" ** outErrMsg:" + outErrMsg);
+                return Errors.ERR_SOURCE_DESTINATION_DONT_MATCH_ACTIVATEDESACTIVATED;
+            }
+            string[] destinationDirs = listPathsDst.vecPaths;
+            string[] sourceDirs = listPathsSrc.vecPaths;
+            // this.paths.steam,
+            //string[] destinationDirs = this.paths.getAllPaths_App().vecPaths;
+            // this.paths.steamBkpProfGame(profileName),
+            //string[] sourceDirs = this.paths.getAllPaths_BkpProfGame(profileName).vecPaths;
+            /*
             if (this.paths.optionalAreSet())
             {
                 destinationDirs = new string[]  {
@@ -287,6 +212,7 @@ namespace ProfileManager
                     this.paths.docsBkpProfGame(profileName)        // docs
                 };
             }
+            */
             string errMsg = "";
             string errSrcDir = "";
             string errDstDir = "";
@@ -300,18 +226,19 @@ namespace ProfileManager
                 log.Error(" ** errMsg: " + errMsg);
                 log.Error(" ** errSrcDir:" + errSrcDir);
                 log.Error(" ** errDstDir: " + errDstDir);
-                return Errors.ERR_MOVING_DIRECTORIES;
+                return Errors.ERR_MOVING_DIRECTORIES_1;
             }
 
             log.Debug("STEP 4: create integrity file...");
             errMsg = "";
             errPath = "";
-            if (!this.paths.updateActiveIntegrityFile(profToActivate, out errMsg, out errPath))
+            //if (!this.paths.updateActiveIntegrityFile(profToActivate, out errMsg, out errPath))
+            if (!this.integrityFile.updateActiveIntegrityFile(profToActivate, out errMsg, out errPath))
             {
                 outErrMsg = "Could not create intregrity file. Message:"  + errMsg + ". Error Path:" + errPath;
                 log.Error(" ** outErrMsg:" + outErrMsg);
                 log.Error(" ** ERROR errMsg:" + errMsg + ", errPath:" + errPath);
-                return Errors.ERR_CANNOT_CREATE_INTEGRITY_FILE;
+                return Errors.ERR_CANNOT_CREATE_INTEGRITY_FILE_2;
             }
 
             log.Debug("STEP 5: update manager state...");
@@ -335,6 +262,7 @@ namespace ProfileManager
             string name = "";
             string color = "";
             string errMsg = "";
+            bool retVal = false;
 
             // check state
             this.updateManagerState();
@@ -343,31 +271,35 @@ namespace ProfileManager
             {
                 outMsg = "Invalid state for desactivateActiveProfile operation! State:" + this.applicationState;
                 log.Error(" ** " + outMsg);
-                return Errors.ERR_INVALID_STATE_FOR_REQUESTED_OPERATION;
+                return Errors.ERR_INVALID_STATE_FOR_REQUESTED_OPERATION_2;
             }
 
             // check if integrity file information matches
             profileName.Trim();
-            if (!this.paths.activeIntegrityFile())
-            {
+            if (!this.integrityFile.activeIntegrityFileExists())
+                {
                 outMsg = "INTEGRITY FILE FOR PROFILE " + profileName + " DOES NOT EXIST. CANNOT COMPLETE ACTION.";
                 log.Error(" ** " + outMsg);
                 return Errors.ERR_FILE_NOT_EXIST;
             }
-            List<string> intItem = this.paths.activeIntegrityFileItems();
+            List<string> intItem = this.integrityFile.activeIntegrityFileItems();
             if (intItem.Count < Consts.INTEGRITY_FILE_ITEMS)
             {
                 outMsg = "INTEGRITY FILE FOR PROFILE " + profileName + " IS NOT ON THE RIGHT FORMAT.";
                 log.Error(" ** " + outMsg);
-                return Errors.ERR_ACTIVE_PROFILE_CORRUPTED;
+                return Errors.ERR_ACTIVE_PROFILE_CORRUPTED_1;
             }
             if (intItem[0].Trim() != profileName)
             {
                 outMsg = "Active profile corrupted. Error parsing integrity file.";
                 log.Warn(" ** " + outMsg);
-                this.paths.deleteActiveIntegrityFile();
+                retVal = this.integrityFile.deleteActiveIntegrityFile(out errMsg);
+                if (!retVal)
+                {
+                    log.Error(" ** ERROR @ this.integrityFile.deleteActiveIntegrityFile(). Could not delete integrity file. Message: " + errMsg);
+                }
                 this.updateManagerState();
-                return Errors.ERR_ACTIVE_PROFILE_CORRUPTED;
+                return Errors.ERR_ACTIVE_PROFILE_CORRUPTED_2;
             }
             log.Debug(" -- integrity file OK! " + id + ", " + name + ", " + color);
 
@@ -381,9 +313,29 @@ namespace ProfileManager
             }
             log.Debug(" -- createBackupProfilesFolder OK!");
 
+            ListPaths listPathsDst = this.paths.getAllPaths_BkpProf(profileName);
+            ListPaths listPathsSrc = this.paths.getAllPaths_AppGame();
+            // check consinstency
+            string errLabel1 = "";
+            string errLabel2 = "";
+            if (!listPathsSrc.checkLabels(listPathsDst, out errLabel1, out errLabel2))
+            {
+                outMsg = "sourceType: " + errLabel1 + ", destination:" + errLabel2;
+                log.Error(" ** Source and destination folder are mislabeled!!");
+                log.Error(" ** errLabel1:" + errLabel1);
+                log.Error(" ** errLabel2:" + errLabel2);
+                log.Error(" ** outErrMsg:" + outMsg);
+                return Errors.ERR_SOURCE_DESTINATION_DONT_MATCH_DESACTIVATEACTIVE;
+            }
+            string[] destinationDirs = listPathsDst.vecPaths;
+            string[] sourceDirs = listPathsSrc.vecPaths;
+
+            /*
             // move directories to backup dir   sourceDirs
-            string[] destinationDirs = this.paths.getAllPaths_BkpProf(profileName).ToArray();
-            string[] sourceDirs = this.paths.getAllPaths_AppGame().ToArray();
+            string[] destinationDirs = this.paths.getAllPaths_BkpProf(profileName).vecPaths;
+            string[] sourceDirs = this.paths.getAllPaths_AppGame().vecPaths;
+            // string[] destinationDirs = this.paths.getAllPaths_BkpProf(profileName).ToArray();
+            // string[] sourceDirs = this.paths.getAllPaths_AppGame().ToArray();
             if (destinationDirs.Length != sourceDirs.Length)
             {
                 outMsg = "List of source and destination directories are inconsistent.";
@@ -393,6 +345,8 @@ namespace ProfileManager
                 log.Error(" ** Destination Dirs:" + CSharp.arrayToCsv(destinationDirs));
                 return Errors.ERR_INCONSISTENT_SRC_DST_DIR_NUMBER;
             }
+            */
+
             string errSrcDir = "";
             string errDstDir = "";
             bool sucess = CSharp.stackMv(sourceDirs, destinationDirs, true, LogMethod.LOGGER,
@@ -404,7 +358,7 @@ namespace ProfileManager
                 log.Error("** errMsg: " + errMsg);
                 log.Error("** errSrcDir:" + errSrcDir);
                 log.Error("** errDstDir: " + errDstDir);
-                return Errors.ERR_MOVING_DIRECTORIES;
+                return Errors.ERR_MOVING_DIRECTORIES_2;
             }
             outMsg = "";
             return Errors.SUCCESS;
@@ -418,10 +372,11 @@ namespace ProfileManager
         /// <returns></returns>
         public int switchProfile(string activeProf, string desactivatedProf, out string errMsg)
         {
+            int ret;
+            int ret2 = 0;
+            string errMsg2 = "";
             log.Debug("## manager.switchProfile() #####################################################");
             log.Debug("# switchProfile() activeProf:" + activeProf + ", desactivatedProf:" + desactivatedProf);
-            int ret;
-            //string errMsg = "";
 
             // check state
             this.updateManagerState();
@@ -430,7 +385,7 @@ namespace ProfileManager
                 errMsg = "Switch Error: Invalid state for desactivateActiveProfile operation! State:" + this.applicationState;
                 log.Error(" ** Error after this.updateManagerState()");
                 log.Error(" ** " + errMsg);
-                return Errors.ERR_INVALID_STATE_FOR_REQUESTED_OPERATION;
+                return Errors.ERR_INVALID_STATE_FOR_REQUESTED_OPERATION_3;
             }
 
             // desactivate profile
@@ -450,8 +405,6 @@ namespace ProfileManager
             ret = this.activateDesactivatedProfile(desactivatedProf, out errMsg);
             if (ret != Errors.SUCCESS)
             {
-                string errMsg2 = "";
-                int ret2 = 0;
                 errMsg = "Switch Error: " + errMsg;
                 log.Error(" ** Error @this.activateDesactivatedProfile()" + ", ret:" + ret);
                 log.Error(" ** " + errMsg + ", ret:" +  ret);
@@ -476,17 +429,18 @@ namespace ProfileManager
         /// <returns></returns>
         public int editProfile(string profNameOld, string profNameNew, string colorNew, out string errMsgRet)
         {
-            log.Debug("## manager.editProfile() #######################################################");
-            log.Debug("# editProfile() profNameOld:" + profNameOld + ", profNameNew:" + profNameNew);
-            log.Debug("* profNameOld:" + profNameOld);
-            log.Debug("* profNameNew:" + profNameNew);
-            log.Debug("* colorNew:" + colorNew);
             bool ret = false;
             string errMsg = "";
             string errDir = "";
             string errName = "";
             string errPath = "";
-            
+
+            log.Debug("## manager.editProfile() #######################################################");
+            log.Debug("# editProfile() profNameOld:" + profNameOld + ", profNameNew:" + profNameNew);
+            log.Debug("* profNameOld:" + profNameOld);
+            log.Debug("* profNameNew:" + profNameNew);
+            log.Debug("* colorNew:" + colorNew);
+
             // check state
             this.updateManagerState();
             if ((this.applicationState != SPMState.ACTIVE_AND_DESACTIVATED_PROFILES) &&
@@ -495,7 +449,7 @@ namespace ProfileManager
             {
                 log.Warn("-- invalid state for requested operation editProfile. State:" + this.applicationState);
                 errMsgRet = "Invalid state for Edit operation. State:" + this.applicationState;
-                return Errors.ERR_INVALID_STATE_FOR_REQUESTED_OPERATION;
+                return Errors.ERR_INVALID_STATE_FOR_REQUESTED_OPERATION_4;
             }
 
             profNameNew = this.safeNewName(profNameNew);
@@ -512,10 +466,10 @@ namespace ProfileManager
 
                 if (profileType == 1) // ACTIVE profile
                 {
-                    ret = this.paths.updateActiveIntegrityFile(prof, out errMsg, out errPath);
+                    ret = this.integrityFile.updateActiveIntegrityFile(prof, out errMsg, out errPath);
                     if (ret)
                     {
-                        log.Info("Success Updating integrity file! New Integrity File:{" + paths.activeIntegrityFileContent() + "}");
+                        log.Info("Success Updating integrity file! New Integrity File:{" + this.integrityFile.activeIntegrityFileContent() + "}");
                         errMsgRet = "SUCCESS";
                         return Errors.SUCCESS;
                     }
@@ -524,11 +478,23 @@ namespace ProfileManager
                         log.Error("** CANNOT UPDATE ACTIVE INTEGRITY FILE");
                         log.Error("** errMsg:" + errMsg + ", errPath:" + errPath);
                         errMsgRet = "SUCCESS";
-                        return Errors.ERR_CANNOT_CREATE_INTEGRITY_FILE;
+                        return Errors.ERR_CANNOT_CREATE_INTEGRITY_FILE_3;
                     }
                 }
                 else if (profileType == 2) // DESACTIVATED profile 
                 {
+                    List<string> dirsToCheck = this.paths.getAllPaths_BkpProf(profNameOld).listPaths;
+                    List<string> names = new List<string>();
+                    int nDirs = dirsToCheck.Count;
+                    for (int i = 0; i < nDirs; i++)
+                    {
+                        names.Add(profNameNew);
+                    }
+                    log.Debug(" -- editProfile for DESACTIVATED profile ");
+                    log.Debug(" -- dirsToCheck:{" + CSharp.listToCsv(dirsToCheck) + "}");
+                    log.Debug(" -- names:{" + CSharp.listToCsv(names) + "}");
+
+                    /*
                     List<string> dirsToCheck = new List<string>{
                         this.paths.steamBkpProf(profNameOld),
                         this.paths.docsBkpProf(profNameOld),
@@ -546,6 +512,7 @@ namespace ProfileManager
                         names.Add(profNameNew);
                         names.Add(profNameNew);
                     }
+                    */
                     errMsg = "";
                     errDir = "";
                     errName = "";
@@ -554,17 +521,17 @@ namespace ProfileManager
                     if (ret)
                     {
                         // update integrity file
-                        ret = this.paths.updateDesactivatedIntegrityFile(prof, out errMsg, out errPath);
+                        ret = this.integrityFile.updateDesactivatedIntegrityFile(prof, out errMsg, out errPath);
                         if (ret)
                         {
-                            log.Info("Success Updating integrity file! New Integrity File:{" + paths.activeIntegrityFileContent() + "}");
+                            log.Info("Success Updating integrity file! New Integrity File:{" + this.integrityFile.activeIntegrityFileContent() + "}");
                         }
                         else
                         {
                             log.Error("** CANNOT UPDATE ACTIVE INTEGRITY FILE");
                             log.Error("** errMsg:" + errMsg + ", errPath:" + errPath);
                             errMsgRet = errMsg;
-                            return Errors.ERR_CANNOT_CREATE_INTEGRITY_FILE;
+                            return Errors.ERR_CANNOT_CREATE_INTEGRITY_FILE_4;
                         }
                     }
                     else
@@ -572,7 +539,7 @@ namespace ProfileManager
                         log.Error("** ERROR RENAMING DIRECTORIES errMsg:" + errMsg +
                             ", errDir:" + errDir + ", errName:" + errName);
                         errMsgRet = errMsg;
-                        return Errors.ERR_MOVING_DIRECTORIES;
+                        return Errors.ERR_MOVING_DIRECTORIES_3;
                     }
                 }
                 this.updateManagerState();
@@ -581,7 +548,7 @@ namespace ProfileManager
             }
             log.Warn("-- invalid profile name profNameOld:" + profNameOld);
             errMsgRet = "SUCCESS";
-            return Errors.ERR_INVALID_PROFILE_NAME;
+            return Errors.ERR_INVALID_PROFILE_NAME_3;
         }
 
         /// <summary>
@@ -653,15 +620,6 @@ namespace ProfileManager
             return this.applicationState;
         }
 
-        /// <summary>
-        /// Return the object SPSettings of the current loaded game
-        /// </summary>
-        /// <returns></returns>
-        public SPSettings getProfileSettings()
-        {
-            return this.settings;
-        }
-
         #endregion interface_methods
 
         #region app_state
@@ -683,6 +641,7 @@ namespace ProfileManager
             return this.activeProfile;
         }
 
+        // ok
         public SPProfile getInactiveProfile()
         {
             if ((this.applicationState == SPMState.NO_PROFILE) ||
@@ -725,24 +684,37 @@ namespace ProfileManager
 
         #region aux 
 
+        // Backup folder sided with the instalation folders. Ex: for an skyrim instalation 
+        // root folder: ".\Steam\" 
+        // backup root: ".\Steam\SkyrimBackups\"
         private void createBackupsRoot()
         {
             log.Debug(" -- createBackupsRoot");
-            Directory.CreateDirectory(this.paths.steamBkp);
-            Directory.CreateDirectory(this.paths.docsBkp);
-            Directory.CreateDirectory(this.paths.appDataBkp);
-            if (this.paths.optionalAreSet())
+            List<string> pathsList = this.paths.getAllPaths_AppBkp().listPaths;
+            log.Debug(" -- createBackupsRoot:{" + CSharp.listToCsv(pathsList) + "}");
+            foreach (var item in pathsList)
             {
-                log.Debug("creating directory this.paths.nmm:" + this.paths.nmm);
-                Directory.CreateDirectory(this.paths.nmm);
+                if (!item.Trim().Equals(""))
+                {
+                    log.Debug(" -- creating directory " + item);
+                    Directory.CreateDirectory(item);
+                }
+                else
+                {
+                    log.Warn(" ** WARNING ** createBackupsRoot ELEMENT IS EMPTY");
+                }
             }
         }
 
+        // folders with the profile name inside backup folder. For example, for Skyrim instalation, for
+        // a profile nammed Vanilla:
+        //     game instalation: .\Steam\
+        // BackupProfilesFolder: .\Steam\SkyrimBackups\Vanilla\
         private int createBackupProfilesFolder(string profName, out string errMsg)
         {
             log.Debug(" -- createBackupProfilesFolder");
-            List<string> listDirs = this.paths.getAllPaths_BkpProfGame(profName);
-            log.Debug(" -- listDirs:{" + CSharp.listToCsv(listDirs) + "}");
+            List<string> listDirs = this.paths.getAllPaths_BkpProf(profName).listPaths;
+            log.Debug(" -- createBackupProfilesFolder:{" + CSharp.listToCsv(listDirs) + "}");
 
             foreach (var dir in listDirs)
             {
@@ -780,8 +752,8 @@ namespace ProfileManager
         private SPMState discoverApplicationState()
         {
             bool isInstalled = true;
-            bool configStatus = this.checkConfig();
-            if (!configStatus)
+            int configStatus = SettingsFactory.checkConfig(this.theGame);
+            if (configStatus != Errors.SUCCESS)
             {
                 // settings are not ok
                 return SPMState.NOT_CONFIGURED;
@@ -789,7 +761,7 @@ namespace ProfileManager
             else
             {
                 // load desactivated installations
-                this.listDesactivated = SPProfile.loadDesactivatedProfiles(this.paths.steamBkp, this.gameSettings.gameFolder);
+                this.listDesactivated = SPProfile.loadDesactivatedProfiles(this.paths.steamBkp,  this.paths.gameFolderName);
                 // load active instalations
                 if (!Directory.Exists(this.paths.steamGame))
                 {
@@ -900,54 +872,6 @@ namespace ProfileManager
             return safeNewName;
         }
 
-        #endregion aux 
-
-        #region checkHelpers
-
-        /// <summary>
-        /// Check settings. If it fails, the application settings are not valid of corrupted, and the application MUST be
-        /// re-configurad to work properly and safaty.
-        /// </summary>
-        /// <returns></returns>
-        private bool checkConfig()
-        {
-            if (this.settings == null)
-            {
-                log.Error("this.config.settings object not initialized!");
-                return false;
-            }
-            else if (this.settings.appDataPath == null   || this.settings.appDataPath.Trim().Equals("") ||
-                     this.settings.documentsPath == null || this.settings.documentsPath.Trim().Equals("") ||
-                     this.settings.steamPath == null     || this.settings.steamPath.Trim().Equals("") ||
-                     this.settings.nmmPath2 == null       ||
-                     this.gameSettings.gameFolder == null   || this.gameSettings.gameFolder.Trim().Equals("") ||
-                     this.gameSettings.game == null         || this.gameSettings.game.Trim().Equals("") ||
-                     this.gameSettings.gameExe == null      || this.gameSettings.gameExe.Trim().Equals("") ||
-                     this.gameSettings.backupFolder == null || this.gameSettings.backupFolder.Trim().Equals("")
-                     )
-            {
-                log.Warn("Invalid AppSettings or Game Settings, settings must be initialized before used");
-                return false;
-            }
-            else if (!Directory.Exists(this.settings.appDataPath))
-            {
-                log.Warn("* DIRECTORY " + this.settings.appDataPath + " DOES NOT EXIT!");
-                return false;
-            }
-            else if (!Directory.Exists(this.settings.documentsPath))
-            {
-                log.Warn("* DIRECTORY " + this.settings.documentsPath + " DOES NOT EXIT!");
-                return false;
-            }
-            else if (!Directory.Exists(this.settings.steamPath))
-            {
-                log.Warn("* DIRECTORY " + this.settings.steamPath + " DOES NOT EXIT!");
-                return false;
-            }
-            // arquivo de configuração está ok no formato. 
-            // agora entradas redundantes ou invalidas devem ser eliminadas se existirem. 
-            return true;
-        }
 
         /// <summary>
         /// Updates the Steam Profile Manager instance state, reloading all class members 
@@ -963,7 +887,7 @@ namespace ProfileManager
             log.Debug("State: " + this.applicationState.ToString());
             if (this.activeProfile != null)
             {
-                log.Debug("Active Profile => name:" + this.activeProfile.name + ", isReady:" + this.activeProfile.isReady );
+                log.Debug("Active Profile => name:" + this.activeProfile.name + ", isReady:" + this.activeProfile.isReady);
             }
             else
             {
@@ -976,8 +900,7 @@ namespace ProfileManager
                           ", isReady:" + item.isReady);
             }
         }
-
-        #endregion checkHelpers
+        #endregion aux 
 
         #endregion private_methos
 

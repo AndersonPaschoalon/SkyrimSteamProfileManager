@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Utils
+namespace SpearSettings
 {
     public static class Errors
     {
@@ -12,60 +12,64 @@ namespace Utils
         // SUCCESS
         public const int SUCCESS = 000;
         // GENERAL ERROS
-        public const int ERR_READ_WRITE_PERM = 001;
-        public const int ERR_PATH_NOT_EXIST = 002;
-        public const int ERR_FILE_NOT_EXIST = 003;
-        public const int ARGUMENT_EXCEPTION = 004;
-        public const int ARGUMENT_NULL = 005;
-        public const int UNAUTHORIZED_ACCESS = 006;
-        public const int IO_EXCEPTION = 007;
-        public const int DIRECTORY_NOT_FOUND = 008;
-        public const int PATH_TOO_LONG = 009;
-        public const int ERR_MOVING_DIRECTORIES = 010;
-        // PROFILES OPERATION ERRORS
-        public const int ERR_INACTIVE_PROFILE_DOES_NOT_EXIST = 100;
-        public const int ERR_INACTIVE_PROFILE_CORRUPETED = 101;
-        public const int ERR_CANNOT_CREATE_BACKUP_OF_ACTIVE = 102;
-        public const int ERR_ACTIVE_PROFILE_ALREADY_EXISTS = 103;
-        public const int ERR_INVALID_PROFILE_NAME = 104;
-        public const int ERR_PROFILE_NAME_ALREADY_EXISTS = 105;
-        public const int ERR_NO_INSTALLATION_TO_CREATE_PROFILE = 106;
-        public const int ERR_INVALID_COLOR_NAME = 107;
-        public const int ERR_CANNOT_CREATE_INTEGRITY_FILE = 108;
-        public const int ERR_INVALID_SETTINGS = 109;
-        public const int ERR_INVALID_STATE_FOR_REQUESTED_OPERATION = 110;
-        public const int ERR_PARSING_INTEGRITY_FILE = 111;
-        public const int ERR_COULD_NOT_OPEN_INTEGRIY_FILE = 112;
-        public const int ERR_ACTIVE_PROFILE_CORRUPTED = 113;
-        public const int ERR_STEAM_DIRRECTORY_MISSING = 114;
-        public const int ERR_DOCUMENTS_DIRRECTORY_MISSING = 115;
-        public const int ERR_APPDATA_DIRRECTORY_MISSING = 116;
-        public const int ERR_STEAMBKP_DIRRECTORY_MISSING = 117;
-        public const int ERR_DOCUMENTSBKP_DIRRECTORY_MISSING = 118;
-        public const int ERR_APPDATABKP_DIRRECTORY_MISSING = 119;
-        public const int ERR_STEAMGAME_DIRRECTORY_MISSING = 200;
-        public const int ERR_DOCUMENTSGAME_DIRRECTORY_MISSING = 201;
-        public const int ERR_APPDATAGAME_DIRRECTORY_MISSING = 202;
-        public const int ERR_NMMINFO_DIRRECTORY_MISSING = 203;
-        public const int ERR_NMMINFOBKP_DIRRECTORY_MISSING = 204;
-        public const int ERR_NMMINFOGAME_DIRRECTORY_MISSING = 205;
-        public const int ERR_NMMMOD_DIRRECTORY_MISSING = 206;
-        public const int ERR_NMMMODBKP_DIRRECTORY_MISSING = 207;
-        public const int ERR_NMMMODGAME_DIRRECTORY_MISSING = 208;
-        public const int ERR_NMMDIRRECTORY_MISSING = 209;
-        public const int ERR_NMMBKP_DIRRECTORY_MISSING = 210;
-        public const int ERR_CANNOT_SAVE_SETTINGS = 211;
-        public const int ERR_CANNOT_CREATE_DIRECTORY = 212;
-        public const int ERR_INCONSISTENT_SRC_DST_DIR_NUMBER = 213;
-        // invalid arguments
-        public const int ERR_INVALID_GAME = 200;
-        public const int ERR_INVALID_GAME_FOLDER = 201;
-        // NOT DEFINED
-        public const int ERR_UNKNOWN = 9999;
-
+        public const int ERR_PATH_NOT_EXIST = 001;
+        public const int ERR_FILE_NOT_EXIST = 002;
+        public const int ERR_ARGUMENT_NULL = 003;
+        public const int ERR_MOVING_DIRECTORIES_1 = 004;
+        public const int ERR_MOVING_DIRECTORIES_2 = 005;
+        public const int ERR_MOVING_DIRECTORIES_3 = 006;
+        public const int ERR_INVALID_PROFILE_NAME_1 = 007;
+        public const int ERR_INVALID_PROFILE_NAME_2 = 008;
+        public const int ERR_INVALID_PROFILE_NAME_3 = 009;
+        public const int ERR_PROFILE_NAME_ALREADY_EXISTS_1 = 010;
+        public const int ERR_PROFILE_NAME_ALREADY_EXISTS_2 = 011;
+        public const int ERR_PROFILE_NAME_ALREADY_EXISTS_3 = 012;
+        public const int ERR_CANNOT_CREATE_INTEGRITY_FILE_1 = 013;
+        public const int ERR_CANNOT_CREATE_INTEGRITY_FILE_2 = 014;
+        public const int ERR_CANNOT_CREATE_INTEGRITY_FILE_3 = 015;
+        public const int ERR_CANNOT_CREATE_INTEGRITY_FILE_4 = 116;
+        public const int ERR_INVALID_STATE_FOR_REQUESTED_OPERATION_1 = 017;
+        public const int ERR_INVALID_STATE_FOR_REQUESTED_OPERATION_2 = 018;
+        public const int ERR_INVALID_STATE_FOR_REQUESTED_OPERATION_3 = 019;
+        public const int ERR_INVALID_STATE_FOR_REQUESTED_OPERATION_4 = 020;
+        public const int ERR_INVALID_STATE_FOR_REQUESTED_OPERATION_5 = 021;
+        public const int ERR_ACTIVE_PROFILE_CORRUPTED_1 = 022;
+        public const int ERR_ACTIVE_PROFILE_CORRUPTED_2 = 023;
+        public const int ERR_STEAM_DIRRECTORY_MISSING_1 = 024;
+        public const int ERR_STEAM_DIRRECTORY_MISSING_2 = 025;
+        public const int ERR_DOCUMENTS_DIRRECTORY_MISSING_1 = 026;
+        public const int ERR_DOCUMENTS_DIRRECTORY_MISSING_2 = 027;
+        public const int ERR_APPDATA_DIRRECTORY_MISSING_1 = 028;
+        public const int ERR_APPDATA_DIRRECTORY_MISSING_2 = 028;
+        public const int ERR_STEAMBKP_DIRRECTORY_MISSING = 029;
+        public const int ERR_DOCUMENTSBKP_DIRRECTORY_MISSING = 030;
+        public const int ERR_APPDATABKP_DIRRECTORY_MISSING = 031;
+        public const int ERR_NMMDIRRECTORY_MISSING = 032;
+        public const int ERR_NMMBKP_DIRRECTORY_MISSING = 033;
+        public const int ERR_CANNOT_CREATE_DIRECTORY = 034;
+        public const int ERR_INCONSISTENT_SRC_DST_DIR_NUMBER = 035;
+        public const int ERR_INVALID_GAME_NAME_1 = 036;
+        public const int ERR_INVALID_GAME_NAME_2 = 037;
+        public const int ERR_INVALID_GAME_NAME_3 = 038;
+        public const int ERR_SAVING_CONFIGURATION_FILE = 039;
+        public const int ERR_INVALID_GAME_FOLDER = 040;
+        public const int ERR_INVALID_GAME_EXE = 041;
+        public const int ERR_INVALID_BACKUP_FOLDER = 042;
+        public const int ERR_EXCEPTION_1 = 043;
+        public const int ERR_EXCEPTION_2 = 044;
+        public const int ERR_EXCEPTION_3 = 045;
+        public const int ERR_EXCEPTION_4 = 046;
+        public const int ERR_EXCEPTION_5 = 046;
+        public const int ERR_EXCEPTION_6 = 046;
+        public const int ERR_VORTEXDIRRECTORY_MISSING = 047;
+        public const int ERR_VORTEXBKP_DIRRECTORY_MISSING = 048;
+        public const int ERR_SOURCE_DESTINATION_DONT_MATCH_ACTIVATEDESACTIVATED = 049;
+        public const int ERR_SOURCE_DESTINATION_DONT_MATCH_DESACTIVATEACTIVE = 050;
 
         public static string errMsg(int errNumber)
         {
+            return errNumber.ToString();
+            /*
             switch (errNumber)
             {
                 //SUCCESS
@@ -253,6 +257,7 @@ namespace Utils
                         return "ERR_UNKNOWN";
                     }
             }
+            */
         }
     }
 }

@@ -21,7 +21,7 @@ namespace ProfileManagerBL
         // settings
         private readonly string gameStr;
         private PathsHelper paths;                  // helper for generating the right names of the paths
-        private readonly SPGame gameSettings;
+        private SPGame gameSettings;
         private SPSettings settings;
         // manager
         private SteamProfileManager manager;
@@ -118,7 +118,7 @@ namespace ProfileManagerBL
 
         public string dateFormat()
         {
-            return this.manager.dateFormat();
+            return SettingsFactory.dateFormat();
         }
 
         public EnabledOp allowedOperations()
@@ -301,21 +301,26 @@ namespace ProfileManagerBL
             errMsg = "";
             try
             {
-                ret = this.manager.updateSettings(s.nmmPath, 
-                                                  s.vortexPath, 
-                                                  s.nmmGameFolder, 
-                                                  s.vortexGameFolder,
-                                                  s.nmmExe, 
-                                                  s.vortexExe, 
-                                                  s.tesveditExe, 
+                UserSettings us = s.userSettings;
+                ret = SettingsFactory.userUpdaterHelper(this.gameName(), 
+                                                  us, 
+                                                  ref this.paths, 
+                                                  ref this.settings, 
+                                                  ref this.gameSettings, 
                                                   out errMsg);
+                if (ret != Errors.SUCCESS)
+                {
+                    return ret;
+                }
+                this.manager = new SteamProfileManager(this.gameName());
                 this.manager.reloadState();
+                this.tools = new SpearToolsManager(this.gameName());
             }
             catch (Exception ex)
             {
                 log.Error("** EXCEPTION Message:" + ex.Message + ", StackTrace:" + ex.StackTrace);
                 errMsg = ex.Message;
-                return Errors.ERR_UNKNOWN;
+                return Errors.ERR_EXCEPTION_1;
             }
             return ret;
         }
@@ -331,7 +336,7 @@ namespace ProfileManagerBL
             {
                 log.Error("** EXCEPTION Message:" + ex.Message + ", StackTrace:" + ex.StackTrace);
                 errMsg = ex.Message;
-                return Errors.ERR_UNKNOWN;
+                return Errors.ERR_EXCEPTION_5;
             }
             return ret;
         }
@@ -347,56 +352,59 @@ namespace ProfileManagerBL
             catch (Exception ex)
             {
                 log.Error("** EXCEPTION Message:" + ex.Message + ", StackTrace:" + ex.StackTrace);
-                return Errors.ERR_UNKNOWN;
+                return Errors.ERR_EXCEPTION_6;
             }
             return ret;
         }
 
-        public int action_activateDesactivated(ProfileViewData p)
+        public int action_activateDesactivated(ProfileViewData p, out string errMsg)
         {
             int ret = Errors.SUCCESS;
             try
             {
-                ret = manager.activateDesactivatedProfile(p.name);
+                ret = manager.activateDesactivatedProfile(p.name, out errMsg);
                 this.manager.reloadState();
             }
             catch (Exception ex)
             {
                 log.Error("** EXCEPTION Message:" + ex.Message + ", StackTrace:" + ex.StackTrace);
-                return Errors.ERR_UNKNOWN;
+                errMsg = ex.Message;
+                return Errors.ERR_EXCEPTION_2;
             }
             return ret;
         }
 
-        public int action_desactivateProfile(ProfileViewData p)
+        public int action_desactivateProfile(ProfileViewData p, out string errMsg)
         {
             int ret = Errors.SUCCESS;
             try
             {
-                ret = manager.desactivateActiveProfile(p.name);
+                ret = manager.desactivateActiveProfile(p.name, out errMsg);
                 this.manager.reloadState();
             }
             catch (Exception ex)
             {
                 log.Error("** EXCEPTION Message:" + ex.Message + ", StackTrace:" + ex.StackTrace);
-                return Errors.ERR_UNKNOWN;
+                errMsg = ex.Message;
+                return Errors.ERR_EXCEPTION_3;
             }
             return ret;
 
         }
 
-        public int action_switchProfiles(ProfileViewData ap, ProfileViewData dp)
+        public int action_switchProfiles(ProfileViewData ap, ProfileViewData dp, out string errMsg)
         {
             int ret = Errors.SUCCESS;
             try
             {
-                ret = manager.switchProfile(ap.name, dp.name);
+                ret = manager.switchProfile(ap.name, dp.name, out errMsg);
                 this.manager.reloadState();
             }
             catch (Exception ex)
             {
                 log.Error("** EXCEPTION Message:" + ex.Message + ", StackTrace:" + ex.StackTrace);
-                return Errors.ERR_UNKNOWN;
+                errMsg = ex.Message;
+                return Errors.ERR_EXCEPTION_4;
             }
             return ret;
         }

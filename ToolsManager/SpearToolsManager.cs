@@ -15,15 +15,11 @@ namespace ToolsManager
 {
     public class SpearToolsManager
     {
-        // const 
-        //private const string FILE_GITIGNORE = ".gitignore";
         private readonly ILogger log;
-        // readonly
         private readonly string theGame;
         private readonly SPGame gameSettings;
-        // app state
-        private PathsHelper paths;                  // helper for generating the right names of the paths
-        private SPSettings settings;
+        private readonly PathsHelper paths;                  // helper for generating the right names of the paths
+        private readonly SPSettings settings;
 
         public SpearToolsManager(string gameName)
         {

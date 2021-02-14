@@ -8,12 +8,14 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.IO;
+using System.IO.Compression;
 using Utils;
 using Utils.Loggers;
 using ProfileManagerBL;
 using ProfileManagerBL.ViewModel;
-using System.IO;
-using System.IO.Compression;
+using SpearSettings;
+
 using ToolsManager;
 
 namespace Spear
@@ -439,6 +441,7 @@ namespace Spear
             this.actionBeforeStartDisableAllActions();
             // * EXECUTE ACTION
             int ret = 0;
+            string errMsg = "";
             ProfileViewData pvd = getSelected(this.lpa, this.lpd);
             if (pvd != null)
             {
@@ -475,8 +478,8 @@ namespace Spear
                 }
                 else // ProfileType.DESACTIVATED
                 {
-                    ret = this.managerBusinessLayer.action_activateDesactivated(pvd);
-                    this.analyzeReturn(ret, "");
+                    ret = this.managerBusinessLayer.action_activateDesactivated(pvd, out errMsg);
+                    this.analyzeReturn(ret, errMsg);
                 }
             }
             // * POST ACTION FORM UPDATE
@@ -486,10 +489,11 @@ namespace Spear
 
         private void toolStripButtonDesactivate_Click(object sender, EventArgs e)
         {
+            string errMsg = "";
             this.actionBeforeStartDisableAllActions();
             ProfileViewData pvd = getSelected(this.lpa);
-            int ret = this.managerBusinessLayer.action_desactivateProfile(pvd);
-            this.analyzeReturn(ret, "");
+            int ret = this.managerBusinessLayer.action_desactivateProfile(pvd, out errMsg);
+            this.analyzeReturn(ret, errMsg);
             // * POST ACTION FORM UPDATE
             this.postActionUpdate();
             this.updateToolStripButtons();
@@ -497,12 +501,13 @@ namespace Spear
 
         private void toolStripButtonSwitch_Click(object sender, EventArgs e)
         {
+            string errMsg = "";
             int ret = Errors.SUCCESS;
             this.actionBeforeStartDisableAllActions();
             ProfileViewData pvdAc = getSelected(this.lpa);
             ProfileViewData pvdDe = getSelected(this.lpd);
-            ret = this.managerBusinessLayer.action_switchProfiles(pvdAc, pvdDe);
-            this.analyzeReturn(ret, "");
+            ret = this.managerBusinessLayer.action_switchProfiles(pvdAc, pvdDe, out errMsg);
+            this.analyzeReturn(ret, errMsg);
             // * POST ACTION FORM UPDATE
             this.postActionUpdate();
             this.updateToolStripButtons();
@@ -587,6 +592,7 @@ namespace Spear
 
         private void toolStripComboBoxSelectGame_Click(object sender, EventArgs e)
         {
+            MessageBox.Show("toolStripComboBoxSelectGame_Click", "TODO2", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void toolStripButtonGitThrash_Click(object sender, EventArgs e)
@@ -613,7 +619,7 @@ namespace Spear
 
         private void toolStripButtonOpenGameFolder_Click(object sender, EventArgs e)
         {
-
+            MessageBox.Show("TODO", "TODO", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void toolStripButtonPlayGame_Click(object sender, EventArgs e)
