@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-//using ProfileManager.Enum;
 using Utils;
 
 namespace SpearSettings
@@ -148,121 +147,6 @@ namespace SpearSettings
             return this.steamBkpProfGame(prof) + "\\" + Consts.FILE_INTEGRITYFILE;
         }
 
-        /*
-        // transform into property
-        public bool activeIntegrityFileExists()
-        {
-            string intFile = this.activeIntegrityFilePath;
-            if (File.Exists(intFile))
-            {
-                return true;
-            }
-            return false;
-        }
-
-        // delete
-        public string activeIntegrityFileContent()
-        {
-            if (this.activeIntegrityFileExists())
-            {
-                string intFile = this.activeIntegrityFilePath;
-                string integrityFileContent = File.ReadAllText(intFile);
-                return integrityFileContent;
-            }
-            return "";
-        }
-
-        // delete 
-        public List<string> activeIntegrityFileItems()
-        {
-            string content = this.activeIntegrityFileContent();
-            return CSharp.csvToList(content);
-        }
-
-        // delte 
-        public bool updateActiveIntegrityFile(SPProfile prof, out string errMsg, out string errPath)
-        {
-            string content = prof.name + "," + prof.color + "," + prof.creationDate;
-            string filePath = this.activeIntegrityFilePath;
-            try
-            {
-                File.WriteAllText(filePath, content);
-                errMsg = "SUCCESS";
-                errPath = "";
-                return true;
-            }
-            catch (Exception ex)
-            {
-                errMsg = ex.Message;
-                errPath = filePath;
-                return false;
-            }
-        }
-
-        // delete
-        public bool deleteActiveIntegrityFile()
-        {
-            try
-            {
-                File.Delete(this.activeIntegrityFilePath);
-            }
-            catch (Exception ex)
-            {
-                return false;
-            }
-            return true;
-        }
-
-        public bool desactivatedIntegrityFileExists(string prof)
-        {
-            string intFile = this.desactivatedIntegrityFilePath(prof);
-            if (File.Exists(intFile))
-            {
-                return true;
-            }
-            return false;
-        }
-
-        // delete
-        public string desactivatedIntegrityFileContent(string prof)
-        {
-            if (this.desactivatedIntegrityFileExists(prof))
-            {
-                string intFile = this.desactivatedIntegrityFilePath(prof);
-                string integrityFileContent = File.ReadAllText(intFile);
-                return integrityFileContent;
-            }
-            return "";
-        }
-
-        // delete
-        public List<string> desactivatedIntegrityFileItems(string prof)
-        {
-            string content = this.desactivatedIntegrityFileContent(prof);
-            return CSharp.csvToList(content);
-        }
-
-        // delete 
-        public bool updateDesactivatedIntegrityFile(SPProfile prof, out string errMsg, out string errPath)
-        {
-            string content = prof.name + "," + prof.color + "," + prof.creationDate;
-            string filePath = this.desactivatedIntegrityFilePath(prof.name);
-            try
-            {
-                File.WriteAllText(filePath, content);
-                errMsg = "SUCCESS";
-                errPath = "";
-                return true;
-            }
-            catch (Exception ex)
-            {
-                errMsg = ex.Message;
-                errPath = filePath;
-                return false;
-            }
-        }
-        */
-
         #endregion integrity_files 
 
         #region steam 
@@ -271,12 +155,21 @@ namespace SpearSettings
         public string steamGame { get { return this._steamGame; } }
         public string steamBkp { get { return this._steamBackup; } }
         public string steamBkpProf(string prof)
-        { 
-            return this._steamBackup + "\\" + prof; 
+        {
+            if (!this._steamBackup.Trim().Equals("") && !prof.Trim().Equals(""))
+            {
+                return this._steamBackup + "\\" + prof;
+            }
+            return "";
+
         }
         public string steamBkpProfGame(string prof) 
-        { 
-            return this._steamBackup + "\\" + prof + "\\" + this._gameFolder; 
+        {
+            if (!this._steamBackup.Trim().Equals("") && !prof.Trim().Equals("") && !this._gameFolder.Trim().Equals(""))
+            {
+                return this._steamBackup + "\\" + prof + "\\" + this._gameFolder;
+            }
+            return "";
         }
 
         #endregion steam 
@@ -288,12 +181,20 @@ namespace SpearSettings
         public string appDataGame { get { return this._appDirGame; } }
         public string appDataBkp { get { return this._appDirBackup; } }
         public string appDataBkpProf(string prof) 
-        { 
-            return this._appDirBackup + "\\" + prof; 
+        {
+            if (!prof.Trim().Equals("") && !this._appDirBackup.Trim().Equals(""))
+            {
+                return this._appDirBackup + "\\" + prof;
+            }
+            return "";
         }
         public string appDataBkpProfGame(string prof) 
-        { 
-            return this._appDirBackup + "\\" + prof + "\\" + this._gameFolder; 
+        {
+            if (!prof.Trim().Equals("") && !this._appDirBackup.Trim().Equals("") && !this._gameFolder.Trim().Equals(""))
+            {
+                return this._appDirBackup + "\\" + prof + "\\" + this._gameFolder;
+            }
+            return "";
         }
         public bool isAppdataDirOptional { get { return this._isAppDataOptional; } }
 
@@ -306,12 +207,20 @@ namespace SpearSettings
         public string docsGame { get { return this._docsGame; } }
         public string docsBkp { get { return this._docsBackup; } }
         public string docsBkpProf(string prof) 
-        { 
-            return this._docsBackup + "\\" + prof; 
+        {
+            if (!prof.Trim().Equals("") && !this._docsBackup.Trim().Equals(""))
+            {
+                return this._docsBackup + "\\" + prof;
+            }
+            return "";
         }
         public string docsBkpProfGame(string prof) 
-        { 
-            return this._docsBackup + "\\" + prof + "\\" + this._gameFolder; 
+        {
+            if (!prof.Trim().Equals("") && !this._docsBackup.Trim().Equals("") && !this._gameFolder.Trim().Equals(""))
+            {
+                return this._docsBackup + "\\" + prof + "\\" + this._gameFolder;
+            }
+            return "";
         }
         public bool isDocsDirOptional { get { return this._isDocsOptional; } }
 
@@ -320,7 +229,17 @@ namespace SpearSettings
         #region NMM&Vortex
 
         // nmmMod
-        public string nmm { get { return this._nmm; } }
+        public string nmm 
+        { 
+            get 
+            {
+                if (!this._nmmGameFolder.Trim().Equals(""))
+                {
+                    return this._nmm;
+                }
+                return "";
+            } 
+        }
         public string nmmGame { get { return this._nmmGame; } }
 
         public string nmmGameFolder { get { return this._nmmGameFolder; } }
@@ -328,12 +247,15 @@ namespace SpearSettings
         public string nmmBkp { get { return this._nmmBackup; } }
         public string nmmBkpProf(string prof)
         {
-            // TODO 
-            return (this.nmmEmpty) ? "" : this._nmmBackup + "\\" + prof;
+            if (!this.nmmEmpty && !this._nmmGameFolder.Trim().Equals("") && !prof.Trim().Equals("") && !this._nmmBackup.Trim().Equals(""))
+            {
+                return this._nmmBackup + "\\" + prof;
+            }
+            return "";
         }
         public string nmmBkpProfGame(string prof)
         {
-            if (!this.nmmEmpty && !this._nmmGameFolder.Trim().Equals(""))
+            if (!this.nmmEmpty && !this._nmmGameFolder.Trim().Equals("") && !prof.Trim().Equals("") && this._nmmBackup.Trim().Equals(""))
             { 
                 return this._nmmBackup + "\\" + prof + "\\" + this._nmmGameFolder;
             }
@@ -348,13 +270,19 @@ namespace SpearSettings
         public string vortexBkp { get { return this._vortexBackup; } }
         public string vortexBkpProf(string prof)
         {
-            // TODO 
-            return (this.vortexEmpty) ? "" : this._vortexBackup + "\\" + prof;
+            if (!this.vortexEmpty && !this._vortexGameFolder.Trim().Equals("") && !prof.Trim().Equals(""))
+            {
+                return this._vortexBackup + "\\" + prof;
+            }
+            return "";
         }
         public string vortexBkpProfGame(string prof)
         {
-            // TODO 
-            return (this.vortexEmpty) ? "" : this._vortexBackup + "\\" + prof + "\\" + this._vortexGameFolder;
+            if (!this.vortexEmpty && !this._vortexGameFolder.Trim().Equals("") && !prof.Trim().Equals(""))
+            {
+                return this._vortexBackup + "\\" + prof + "\\" + this._vortexGameFolder;
+            }
+            return "";
         }
         public bool vortexEmpty { get; private set; }
 
@@ -897,8 +825,14 @@ namespace SpearSettings
             if (!steam.Trim().Equals(""))
             {
                 this._steam = steam;
-                this._steamGame = steam + "\\" + gameFolder;
-                this._steamBackup = steam + "\\" + this._backupFolder;
+                if (!this._gameFolder.Trim().Equals(""))
+                {
+                    this._steamGame = steam + "\\" + this._gameFolder;
+                }
+                if (!this._backupFolder.Trim().Equals(""))
+                {
+                    this._steamBackup = steam + "\\" + this._backupFolder;
+                }   
             }
             if (!appData.Trim().Equals(""))
             {
@@ -926,15 +860,27 @@ namespace SpearSettings
             this.nmmEmpty = (this._nmm.Trim().Equals("")) ? true : false;
             if (!this.nmmEmpty)
             {
-                this._nmmGame = this._nmm + "\\" + _nmmGameFolder;
-                this._nmmBackup = this._nmm + "\\" + this._backupFolder;
+                if (!this._nmmGameFolder.Trim().Equals("") && !this._nmm.Trim().Equals(""))
+                {
+                    this._nmmGame = this._nmm + "\\" + this._nmmGameFolder;
+                }
+                if (!this._backupFolder.Trim().Equals("") && !this._nmm.Trim().Equals(""))
+                {
+                    this._nmmBackup = this._nmm + "\\" + this._backupFolder;
+                }
             }
             // Vortex
             this.vortexEmpty = (this._vortex.Trim().Equals("")) ? true : false;
             if (!this.vortexEmpty)
             {
-                this._vortexGame = this._vortex + "\\" + this._vortexGameFolder;
-                this._vortexBackup = this._vortex + "\\" + this._backupFolder;
+                if (!this._vortexGameFolder.Trim().Equals("") && !this._vortex.Trim().Equals(""))
+                {
+                    this._vortexGame = this._vortex + "\\" + this._vortexGameFolder;
+                }
+                if (!this._backupFolder.Trim().Equals("") && !this._vortex.Trim().Equals(""))
+                {
+                    this._vortexBackup = this._vortex + "\\" + this._backupFolder;
+                }
             }
         }
 
