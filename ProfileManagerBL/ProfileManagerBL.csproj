@@ -49,7 +49,6 @@
     <Compile Include="ViewModel\ProfileType.cs" />
     <Compile Include="ViewModel\ProfileViewData.cs" />
     <Compile Include="ViewModel\SettingsViewData.cs" />
-    <Compile Include="ViewModel\ViewGame.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="HelpPage.html">

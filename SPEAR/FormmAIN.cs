@@ -201,7 +201,7 @@ namespace Spear
             this.toolStripMenuItemOpenGitignoreFile.Enabled = enabled.openGititnore;
             this.deleteGitignoreFileToolStripMenuItem.Enabled = enabled.deleteGitignore;
             // - tools
-            this.killSteamAppToolStripMenuItem.Enabled = enabled.killSteamApp;
+            //this.killSteamAppToolStripMenuItem.Enabled = enabled.killSteamApp;
             this.toolStripMenuItemOpenGameFolder.Enabled = enabled.openGameFolder;
             // - launch
             this.toolStripMenuItemLaunchGame.Enabled = enabled.launchGame;
@@ -243,7 +243,7 @@ namespace Spear
             this.toolStripMenuItemOpenGitignoreFile.Enabled = false;
             this.deleteGitignoreFileToolStripMenuItem.Enabled = false;
             // - tools
-            this.killSteamAppToolStripMenuItem.Enabled = false;
+            //this.killSteamAppToolStripMenuItem.Enabled = false;
             this.toolStripMenuItemOpenGameFolder.Enabled = false;
             // - launch
             this.toolStripMenuItemLaunchGame.Enabled = false;
@@ -619,7 +619,11 @@ namespace Spear
 
         private void toolStripButtonOpenGameFolder_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("TODO", "TODO", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            string errMsg = "";
+            if (!this.managerBusinessLayer.tool_openGameFolder(out errMsg))
+            {
+                MessageBox.Show(errMsg, "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void toolStripButtonPlayGame_Click(object sender, EventArgs e)
@@ -652,11 +656,7 @@ namespace Spear
             this.deleteGitignore();
         }
 
-        private void killSteamAppToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            log.Debug(" -- killSteamAppToolStripMenuItem_Click");
-            SpearToolsManager.killAllSteam();
-        }
+
 
         private void skyrimOpenLogsToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -671,7 +671,11 @@ namespace Spear
         private void skyrimCleanLogsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             log.Debug(" -- skyrimCleanLogsToolStripMenuItem_Click");
-            MessageBox.Show("TODO", "TODO", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            string errMsg = "";
+            if (!this.managerBusinessLayer.tool_deleteGameLogs(out errMsg))
+            {
+                MessageBox.Show(errMsg, "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
 
@@ -715,24 +719,14 @@ namespace Spear
             }
         }
 
-        private void creationKitSkyrimToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            log.Debug(" -- skyrimLaunchCreationKitToolStripMenuItem_Click");
-            string errMsg = "";
-            if (!this.managerBusinessLayer.tool_launchCreationKit(out errMsg))
-            {
-                MessageBox.Show(errMsg, "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        private void creationKitSkyrimSEToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            MessageBox.Show("TODO", "TODO", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-        }
 
         private void openGameAppDataFolderToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("TODO", "TODO", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            string errMsg = "";
+            if (!this.managerBusinessLayer.tool_openGameAppData(out errMsg))
+            {
+                MessageBox.Show(errMsg, "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void openGameFolderToolStripMenuItem_Click(object sender, EventArgs e)
@@ -755,12 +749,35 @@ namespace Spear
 
         private void openNMMGameFolderToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("TODO", "TODO", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            string errMsg = "";
+            if (!this.managerBusinessLayer.tool_openGameNmm(out errMsg))
+            {
+                MessageBox.Show(errMsg, "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void openVortexGameFolderToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("TODO", "TODO", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            string errMsg = "";
+            if (!this.managerBusinessLayer.tool_openGameVortex(out errMsg))
+            {
+                MessageBox.Show(errMsg, "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void skyrimLaunchCreationKitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            log.Debug(" -- skyrimLaunchCreationKitToolStripMenuItem_Click");
+            string errMsg = "";
+            if (!this.managerBusinessLayer.tool_launchCreationKit(out errMsg))
+            {
+                MessageBox.Show(errMsg, "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void openGithubPageToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.managerBusinessLayer.tool_openGit();
         }
     }
 }

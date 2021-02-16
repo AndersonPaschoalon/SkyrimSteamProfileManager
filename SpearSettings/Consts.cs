@@ -15,6 +15,7 @@ namespace SpearSettings
         public const string FILE_INTEGRITYFILE = "spear_profile.int";
         public const string FILE_SKYRIM_INI = "Skyrim.ini";
         public const string EXE_CREATION_KIT = "CreationKit.exe";
+        public const string WWW_GITHUB_REPOSITORY = "https://github.com/AndersonPaschoalon/SkyrimSteamProfileManager";
 
         // Games consts
         public const string GAME_DEFAULT = "Skyrim";

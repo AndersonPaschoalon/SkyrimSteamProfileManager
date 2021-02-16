@@ -48,7 +48,6 @@ namespace Spear
             this.toolStripMenuItemOpenGitignoreFile = new System.Windows.Forms.ToolStripMenuItem();
             this.deleteGitignoreFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
-            this.killSteamAppToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemOpenGameFolder = new System.Windows.Forms.ToolStripMenuItem();
             this.openGameFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openGameDocumentsFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -60,8 +59,6 @@ namespace Spear
             this.toolStripMenuItemVortex = new System.Windows.Forms.ToolStripMenuItem();
             this.launchNMMToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.skyrimLaunchCreationKitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.creationKitSkyrimToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.creationKitSkyrimSEToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.skyrimLaunchTESVEditToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.skyrimOpenLogsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -134,7 +131,7 @@ namespace Spear
             // configureToolStripMenuItem
             // 
             this.configureToolStripMenuItem.Name = "configureToolStripMenuItem";
-            this.configureToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.configureToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
             this.configureToolStripMenuItem.Text = "Configure";
             this.configureToolStripMenuItem.Click += new System.EventHandler(this.configureToolStripMenuItem_Click);
             // 
@@ -144,7 +141,7 @@ namespace Spear
             this.openWithNotepadToolStripMenuItem,
             this.exportAszipToolStripMenuItem});
             this.logsToolStripMenuItem.Name = "logsToolStripMenuItem";
-            this.logsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.logsToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
             this.logsToolStripMenuItem.Text = "Logs";
             // 
             // openWithNotepadToolStripMenuItem
@@ -210,7 +207,6 @@ namespace Spear
             this.toolStripMenuItemOpenGitignoreFile,
             this.deleteGitignoreFileToolStripMenuItem,
             this.toolStripSeparator5,
-            this.killSteamAppToolStripMenuItem,
             this.toolStripMenuItemOpenGameFolder,
             this.toolStripSeparator6,
             this.toolStripMenuItemLaunchGame,
@@ -250,13 +246,6 @@ namespace Spear
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
             this.toolStripSeparator5.Size = new System.Drawing.Size(177, 6);
-            // 
-            // killSteamAppToolStripMenuItem
-            // 
-            this.killSteamAppToolStripMenuItem.Name = "killSteamAppToolStripMenuItem";
-            this.killSteamAppToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.killSteamAppToolStripMenuItem.Text = "Kill Steam Processes";
-            this.killSteamAppToolStripMenuItem.Click += new System.EventHandler(this.killSteamAppToolStripMenuItem_Click);
             // 
             // toolStripMenuItemOpenGameFolder
             // 
@@ -333,26 +322,10 @@ namespace Spear
             // 
             // skyrimLaunchCreationKitToolStripMenuItem
             // 
-            this.skyrimLaunchCreationKitToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.creationKitSkyrimToolStripMenuItem,
-            this.creationKitSkyrimSEToolStripMenuItem});
             this.skyrimLaunchCreationKitToolStripMenuItem.Name = "skyrimLaunchCreationKitToolStripMenuItem";
             this.skyrimLaunchCreationKitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.skyrimLaunchCreationKitToolStripMenuItem.Text = "Launch Creation Kit";
-            // 
-            // creationKitSkyrimToolStripMenuItem
-            // 
-            this.creationKitSkyrimToolStripMenuItem.Name = "creationKitSkyrimToolStripMenuItem";
-            this.creationKitSkyrimToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
-            this.creationKitSkyrimToolStripMenuItem.Text = "Creation Kit Skyrim";
-            this.creationKitSkyrimToolStripMenuItem.Click += new System.EventHandler(this.creationKitSkyrimToolStripMenuItem_Click);
-            // 
-            // creationKitSkyrimSEToolStripMenuItem
-            // 
-            this.creationKitSkyrimSEToolStripMenuItem.Name = "creationKitSkyrimSEToolStripMenuItem";
-            this.creationKitSkyrimSEToolStripMenuItem.Size = new System.Drawing.Size(190, 22);
-            this.creationKitSkyrimSEToolStripMenuItem.Text = "Creation Kit Skyrim SE";
-            this.creationKitSkyrimSEToolStripMenuItem.Click += new System.EventHandler(this.creationKitSkyrimSEToolStripMenuItem_Click);
+            this.skyrimLaunchCreationKitToolStripMenuItem.Click += new System.EventHandler(this.skyrimLaunchCreationKitToolStripMenuItem_Click);
             // 
             // skyrimLaunchTESVEditToolStripMenuItem
             // 
@@ -392,15 +365,16 @@ namespace Spear
             // openHeToolStripMenuItem
             // 
             this.openHeToolStripMenuItem.Name = "openHeToolStripMenuItem";
-            this.openHeToolStripMenuItem.Size = new System.Drawing.Size(171, 22);
+            this.openHeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.openHeToolStripMenuItem.Text = "Open Help Page";
             this.openHeToolStripMenuItem.Click += new System.EventHandler(this.openHeToolStripMenuItem_Click);
             // 
             // openGithubPageToolStripMenuItem
             // 
             this.openGithubPageToolStripMenuItem.Name = "openGithubPageToolStripMenuItem";
-            this.openGithubPageToolStripMenuItem.Size = new System.Drawing.Size(171, 22);
+            this.openGithubPageToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.openGithubPageToolStripMenuItem.Text = "Open Github Page";
+            this.openGithubPageToolStripMenuItem.Click += new System.EventHandler(this.openGithubPageToolStripMenuItem_Click);
             // 
             // toolStrip1
             // 
@@ -782,7 +756,6 @@ namespace Spear
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem profilesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem killSteamAppToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem launchNMMToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem ACTIVATEProfileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem DESACTIVATEProfileToolStripMenuItem;
@@ -807,8 +780,6 @@ namespace Spear
         private System.Windows.Forms.ToolStripButton toolStripButtonOpenGitignore;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
-        private System.Windows.Forms.ToolStripMenuItem creationKitSkyrimToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem creationKitSkyrimSEToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openGameFolderToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openGameDocumentsFolderToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openGameAppDataFolderToolStripMenuItem;

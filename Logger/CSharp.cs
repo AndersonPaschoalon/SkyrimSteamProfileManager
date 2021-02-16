@@ -809,6 +809,24 @@ namespace Utils
             return stackRename(arrDirNames, arrNewNames, out errMsg, out errDir, out errName);
         }
 
+        public static bool mvToRecycleBin(string filename, out string errMsg)
+        {
+            errMsg = "";
+            try
+            {
+                FileSystem.DeleteFile(filename,
+                                      Microsoft.VisualBasic.FileIO.UIOption.AllDialogs,
+                                      Microsoft.VisualBasic.FileIO.RecycleOption.SendToRecycleBin,
+                                      Microsoft.VisualBasic.FileIO.UICancelOption.DoNothing);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                errMsg = ex.Message;
+                return false;
+            }
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -844,7 +862,7 @@ namespace Utils
         {
             if (Directory.Exists(path))
             {
-                Process.Start("explorer.exe", path);
+                Process.Start(path);
             }
             else
             {
@@ -853,17 +871,19 @@ namespace Utils
             return true;
         }
 
+        /*
         public static bool execDirOrExe(string pathOrExe)
         {
             if (Directory.Exists(pathOrExe))
             {
-                Process.Start("explorer.exe", pathOrExe);
+                // Process.Start("explorer.exe", pathOrExe);
+                Process.Start(pathOrExe);
             }
             else if (File.Exists(pathOrExe))
             {
                 try
                 {
-                    System.Diagnostics.Process.Start(pathOrExe);
+                    Process.Start(pathOrExe);
                 }
                 catch (Exception ex)
                 {
@@ -878,6 +898,7 @@ namespace Utils
             return true;
 
         }
+        */
 
         #endregion fileSystemOperations
 

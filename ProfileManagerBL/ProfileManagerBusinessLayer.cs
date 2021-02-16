@@ -426,6 +426,19 @@ namespace ProfileManagerBL
             }
         }
 
+        public void tool_openGit()
+        {
+            string htmlPage = Consts.WWW_GITHUB_REPOSITORY;
+            try
+            {
+                System.Diagnostics.Process.Start(htmlPage);
+            }
+            catch (Exception)
+            {
+                System.Diagnostics.Process.Start("Chrome", Uri.EscapeDataString(htmlPage));
+            }
+        }
+
         public void tool_openLogFiles()
         {
             List<string> logFiles = new List<string>
@@ -491,53 +504,27 @@ namespace ProfileManagerBL
 
         public bool tool_openGameFolder(out string errMsg)
         {
-            errMsg = "";
-            if (this.paths.steamGame == null || this.paths.steamGame.Trim().Equals(""))
-            {
-                errMsg = "Game folder not defined!";
-                return false;
-            }
-            bool ret = CSharp.openDirectoryOnFileExplorer(this.paths.steamGame);
-            if (!ret)
-            {
-                errMsg = "Could not open game folder: <" + this.paths.steamGame + ">";
-                return false;
-            }
-            return true;
+            return this.openFolder("Game Folder", this.paths.steamGame, out errMsg);
         }
 
         public bool tool_openGameAppData(out string errMsg)
         {
-            errMsg = "";
-            if (this.paths.appDataGame == null || this.paths.appDataGame.Trim().Equals(""))
-            {
-                errMsg = "AppData folder not defined!";
-                return false;
-            }
-            bool ret = CSharp.openDirectoryOnFileExplorer(this.paths.appDataGame);
-            if (!ret)
-            {
-                errMsg = "Could not open AppData folder: <" + this.paths.appDataGame + ">";
-                return false;
-            }
-            return true;
+            return this.openFolder("Game AppData", this.paths.appDataGame, out errMsg);
         }
 
         public bool tool_openGameDocuments(out string errMsg)
         {
-            errMsg = "";
-            if (this.paths.docsGame == null || this.paths.docsGame.Trim().Equals(""))
-            {
-                errMsg = "Game documents folder not defined!";
-                return false;
-            }
-            bool ret = CSharp.openDirectoryOnFileExplorer(this.paths.docsGame);
-            if (!ret)
-            {
-                errMsg = "Could not open Game documents folder: <" + this.paths.docsGame + ">";
-                return false;
-            }
-            return true;
+            return this.openFolder("Game Documents", this.paths.docsGame, out errMsg);
+        }
+
+        public bool tool_openGameVortex(out string errMsg)
+        {
+            return this.openFolder("Vortex", this.paths.vortexGame, out errMsg);
+        }
+
+        public bool tool_openGameNmm(out string errMsg)
+        {
+            return this.openFolder("NMM", this.paths.nmmGame, out errMsg);
         }
 
         public bool tool_exportLogs(string dstPath, out string errMsg)
@@ -569,83 +556,45 @@ namespace ProfileManagerBL
             return true;
         }
 
-        public bool tool_launchCreationKit(out string errMsg)
+        public bool tool_deleteGameLogs(out string errMsg)
         {
             errMsg = "";
-            string creationKitExe = this.paths.creationKitExe;
-            if (File.Exists(creationKitExe))
+            bool retVal = false;
+            List<string> logFiles = this.paths.gameLogsList;
+            foreach (var item in logFiles)
             {
-                System.Diagnostics.Process.Start(creationKitExe);
+                if (!CSharp.mvToRecycleBin(item, out errMsg))
+                {
+                    return false;
+                }
             }
-            else
-            {
-                errMsg = "Creation kit exe not found.";
-                return false;
-            }
-            return true;            
+            return true;
+        }
+
+
+        public bool tool_launchCreationKit(out string errMsg)
+        {
+            return launchExe("Creation Kit", this.paths.creationKitExe, out errMsg);          
         }
 
         public bool tool_launchGame(out string errMsg)
         {
-            errMsg = "";
-            if (File.Exists(this.paths.gameExe))
-            {
-                System.Diagnostics.Process.Start(this.paths.gameExe);
-            }
-            else
-            {
-                errMsg = "Game exe not found.";
-                return false;
-            }
-            return true;
+            return launchExe("Game", this.paths.gameExe, out errMsg);
         }
 
         public bool tool_launchVortex(out string errMsg)
         {
-            errMsg = "";
-            string vortexExe = this.paths.vortexExe;
-            if (File.Exists(vortexExe))
-            {
-                System.Diagnostics.Process.Start(vortexExe);
-            }
-            else
-            {
-                errMsg = "Creation kit exe not found.";
-                return false;
-            }
-            return true;
+            return launchExe("Vortex", this.paths.vortexExe, out errMsg);
         }
 
         public bool tool_launchTesvEdit(out string errMsg)
         {
-            errMsg = "";
-            string tesveditExe = this.paths.tesvEditExe;
-            if (File.Exists(tesveditExe))
-            {
-                System.Diagnostics.Process.Start(tesveditExe);
-            }
-            else
-            {
-                errMsg = "Creation kit exe not found.";
-                return false;
-            }
-            return true;
+            return launchExe("TESVEdit", this.paths.tesvEditExe, out errMsg);
         }
 
         public bool tool_launchNmm(out string errMsg)
         {
-            errMsg = "";
-            string nmm = this.paths.nmmExe;
-            if (File.Exists(nmm))
-            {
-                System.Diagnostics.Process.Start(nmm);
-            }
-            else
-            {
-                errMsg = "Creation kit exe not found.";
-                return false;
-            }
-            return true;
+            return launchExe("NMM", this.paths.nmmExe, out errMsg);
         }
 
 
@@ -1154,6 +1103,38 @@ namespace ProfileManagerBL
             {
                 Process.Start("notepad.exe", file);
             }
+        }
+
+        private bool openFolder(string folderNickname, string folderPath, out string errMsg)
+        {
+            errMsg = "";
+            if (folderPath == null || folderPath.Trim().Equals(""))
+            {
+                errMsg = folderNickname + " folder not defined!";
+                return false;
+            }
+            bool ret = CSharp.openDirectoryOnFileExplorer(folderPath);
+            if (!ret)
+            {
+                errMsg = "Could not open "+ folderNickname + " folder: <" + folderPath + ">";
+                return false;
+            }
+            return true;
+        }
+
+        private bool launchExe(string exeNickname, string exe, out string errMsg)
+        {
+            errMsg = "";
+            if (File.Exists(exe))
+            {
+                System.Diagnostics.Process.Start(exe);
+            }
+            else
+            {
+                errMsg = exeNickname + " exe not found. Exe:<" + exe + ">";
+                return false;
+            }
+            return true;
         }
 
         #endregion private_methods
