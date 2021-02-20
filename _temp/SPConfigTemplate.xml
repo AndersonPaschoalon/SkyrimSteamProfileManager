@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<CONFIG game="Skyrim">
-    <SETTINGS steamPath="" documentsPath="" appDataPath="" 
-              nmmModPath="" nmmInfoPath=""  
-              gameFolder="Skyrim" backupFolder="SkyrimBackups" />
-    <PROFILES>
-    </PROFILES>
-</CONFIG>
