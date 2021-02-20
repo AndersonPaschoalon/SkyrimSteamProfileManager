@@ -18,6 +18,12 @@ namespace SpearSettings
         [XmlAttribute("gameFolder")]
         public string gameFolder { get; set; }
 
+        [XmlAttribute("docsFolder")]
+        public string docsFolder { get; set; }
+
+        [XmlAttribute("appDataFolder")]
+        public string appDataFolder { get; set; }
+
         [XmlAttribute("nmmGameFolder")]
         public string nmmGameFolder { get; set; }
 

@@ -70,6 +70,7 @@ namespace ProfileManager
             if (this.applicationState != SPMState.INACTIVE_PROFILE)
             {
                 log.Debug("-- activateInactiveProfile() operation can only be executed if the application state is SPMState.INACTIVE_PROFILE");
+                log.Error(" ** Errors.ERR_INVALID_STATE_FOR_REQUESTED_OPERATION_1");
                 return Errors.ERR_INVALID_STATE_FOR_REQUESTED_OPERATION_1;
             }
 
@@ -77,6 +78,7 @@ namespace ProfileManager
             if (profileName.Trim() == Consts.INACTIVE_NAME)
             {
                 // name already in use
+                log.Error(" ** Errors.ERR_PROFILE_NAME_ALREADY_EXISTS_1");
                 return Errors.ERR_PROFILE_NAME_ALREADY_EXISTS_1;
             }
             foreach (var item in this.listDesactivated)
@@ -84,6 +86,7 @@ namespace ProfileManager
                 if (profileName.Trim() == item.name.Trim())
                 {
                     // name already in use
+                    log.Error(" ** Errors.ERR_PROFILE_NAME_ALREADY_EXISTS_2");
                     return Errors.ERR_PROFILE_NAME_ALREADY_EXISTS_2;
                 }
             }
@@ -92,6 +95,7 @@ namespace ProfileManager
                 if (this.activeProfile.name.Trim() == profileName.Trim())
                 {
                     // name already in use
+                    log.Error(" ** Errors.ERR_PROFILE_NAME_ALREADY_EXISTS_3");
                     return Errors.ERR_PROFILE_NAME_ALREADY_EXISTS_3;
                 }
             }
@@ -108,8 +112,9 @@ namespace ProfileManager
             //if (!this.paths.updateActiveIntegrityFile(newProfile, out errMsg, out errPath))
             if (!this.integrityFile.updateActiveIntegrityFile(newProfile, out errMsg, out errPath))
             {
-                log.Error("Could not create intregrity file");
-                log.Error("** ERROR errMsg:"+ errMsg + ", errPath:" + errPath);
+                log.Error(" ** Could not create intregrity file");
+                log.Error(" ** ERROR errMsg:"+ errMsg + ", errPath:" + errPath);
+                log.Error(" ** Errors.ERR_CANNOT_CREATE_INTEGRITY_FILE_1");
                 return Errors.ERR_CANNOT_CREATE_INTEGRITY_FILE_1;
             }
             // update Manager state
@@ -134,6 +139,7 @@ namespace ProfileManager
             {
                 outErrMsg = "Invalid state for requested operation. This operation may only be completed if the aplication state is SPMState.DESACTIVATED_ONLY.";
                 log.Warn(" -- " + outErrMsg);
+                log.Error(" ** Errors.ERR_INVALID_STATE_FOR_REQUESTED_OPERATION_5");
                 return Errors.ERR_INVALID_STATE_FOR_REQUESTED_OPERATION_5;
             }
             profileName = profileName.Trim();
@@ -141,6 +147,7 @@ namespace ProfileManager
             {
                 outErrMsg = "profile name is empty";
                 log.Warn(" -- " + outErrMsg);
+                log.Warn(" -- Errors.ERR_INVALID_PROFILE_NAME_1");
                 return Errors.ERR_INVALID_PROFILE_NAME_1;
             }
 
@@ -158,6 +165,7 @@ namespace ProfileManager
             {
                 outErrMsg = "Specified profile could not be found, ERR_INVALID_PROFILE_NAME";
                 log.Warn(" -- " + outErrMsg);
+                log.Error(" ** Errors.ERR_INVALID_PROFILE_NAME_2");
                 return Errors.ERR_INVALID_PROFILE_NAME_2;
             }
 
@@ -174,6 +182,9 @@ namespace ProfileManager
                 log.Error(" ** errLabel1:" + errLabel1);
                 log.Error(" ** errLabel2:" + errLabel2);
                 log.Error(" ** outErrMsg:" + outErrMsg);
+                log.Error(" ** Source Paths:" + CSharp.listToCsv(listPathsSrc.listPaths));
+                log.Error(" ** Destination Paths:" + CSharp.listToCsv(listPathsDst.listPaths));
+                log.Error(" ** Errors.ERR_SOURCE_DESTINATION_DONT_MATCH_ACTIVATEDESACTIVATED");
                 return Errors.ERR_SOURCE_DESTINATION_DONT_MATCH_ACTIVATEDESACTIVATED;
             }
             string[] destinationDirs = listPathsDst.vecPaths;
@@ -226,6 +237,7 @@ namespace ProfileManager
                 log.Error(" ** errMsg: " + errMsg);
                 log.Error(" ** errSrcDir:" + errSrcDir);
                 log.Error(" ** errDstDir: " + errDstDir);
+                log.Error(" ** Errors.ERR_MOVING_DIRECTORIES_1");
                 return Errors.ERR_MOVING_DIRECTORIES_1;
             }
 
@@ -238,6 +250,7 @@ namespace ProfileManager
                 outErrMsg = "Could not create intregrity file. Message:"  + errMsg + ". Error Path:" + errPath;
                 log.Error(" ** outErrMsg:" + outErrMsg);
                 log.Error(" ** ERROR errMsg:" + errMsg + ", errPath:" + errPath);
+                log.Error(" ** Errors.ERR_CANNOT_CREATE_INTEGRITY_FILE_2");
                 return Errors.ERR_CANNOT_CREATE_INTEGRITY_FILE_2;
             }
 
@@ -271,6 +284,7 @@ namespace ProfileManager
             {
                 outMsg = "Invalid state for desactivateActiveProfile operation! State:" + this.applicationState;
                 log.Error(" ** " + outMsg);
+                log.Error(" ** Errors.ERR_INVALID_STATE_FOR_REQUESTED_OPERATION_2");
                 return Errors.ERR_INVALID_STATE_FOR_REQUESTED_OPERATION_2;
             }
 
@@ -280,6 +294,7 @@ namespace ProfileManager
                 {
                 outMsg = "INTEGRITY FILE FOR PROFILE " + profileName + " DOES NOT EXIST. CANNOT COMPLETE ACTION.";
                 log.Error(" ** " + outMsg);
+                log.Error(" **  Errors.ERR_FILE_NOT_EXIST");
                 return Errors.ERR_FILE_NOT_EXIST;
             }
             List<string> intItem = this.integrityFile.activeIntegrityFileItems();
@@ -287,6 +302,7 @@ namespace ProfileManager
             {
                 outMsg = "INTEGRITY FILE FOR PROFILE " + profileName + " IS NOT ON THE RIGHT FORMAT.";
                 log.Error(" ** " + outMsg);
+                log.Error(" ** Errors.ERR_ACTIVE_PROFILE_CORRUPTED_1");
                 return Errors.ERR_ACTIVE_PROFILE_CORRUPTED_1;
             }
             if (intItem[0].Trim() != profileName)
@@ -299,6 +315,7 @@ namespace ProfileManager
                     log.Error(" ** ERROR @ this.integrityFile.deleteActiveIntegrityFile(). Could not delete integrity file. Message: " + errMsg);
                 }
                 this.updateManagerState();
+                log.Error(" ** Errors.ERR_ACTIVE_PROFILE_CORRUPTED_2");
                 return Errors.ERR_ACTIVE_PROFILE_CORRUPTED_2;
             }
             log.Debug(" -- integrity file OK! " + id + ", " + name + ", " + color);
@@ -325,6 +342,9 @@ namespace ProfileManager
                 log.Error(" ** errLabel1:" + errLabel1);
                 log.Error(" ** errLabel2:" + errLabel2);
                 log.Error(" ** outErrMsg:" + outMsg);
+                log.Error(" ** Source Paths:" + CSharp.listToCsv(listPathsSrc.listPaths));
+                log.Error(" ** Destination Paths:" + CSharp.listToCsv(listPathsDst.listPaths));
+                log.Error(" ** Errors.ERR_SOURCE_DESTINATION_DONT_MATCH_DESACTIVATEACTIVE");
                 return Errors.ERR_SOURCE_DESTINATION_DONT_MATCH_DESACTIVATEACTIVE;
             }
             string[] destinationDirs = listPathsDst.vecPaths;
@@ -354,10 +374,11 @@ namespace ProfileManager
             if (!sucess)
             {
                 outMsg = errMsg + " errSrcDir:<" + errSrcDir + ">" + ", errDstDir:<" + errDstDir + ">";
-                log.Error("** outMsg: " + outMsg);
-                log.Error("** errMsg: " + errMsg);
-                log.Error("** errSrcDir:" + errSrcDir);
-                log.Error("** errDstDir: " + errDstDir);
+                log.Error(" ** outMsg: " + outMsg);
+                log.Error(" ** errMsg: " + errMsg);
+                log.Error(" ** errSrcDir:" + errSrcDir);
+                log.Error(" ** errDstDir: " + errDstDir);
+                log.Error(" ** Errors.ERR_MOVING_DIRECTORIES_2");
                 return Errors.ERR_MOVING_DIRECTORIES_2;
             }
             outMsg = "";
@@ -385,6 +406,7 @@ namespace ProfileManager
                 errMsg = "Switch Error: Invalid state for desactivateActiveProfile operation! State:" + this.applicationState;
                 log.Error(" ** Error after this.updateManagerState()");
                 log.Error(" ** " + errMsg);
+                log.Error(" ** Errors.ERR_INVALID_STATE_FOR_REQUESTED_OPERATION_3");
                 return Errors.ERR_INVALID_STATE_FOR_REQUESTED_OPERATION_3;
             }
 
@@ -449,6 +471,7 @@ namespace ProfileManager
             {
                 log.Warn("-- invalid state for requested operation editProfile. State:" + this.applicationState);
                 errMsgRet = "Invalid state for Edit operation. State:" + this.applicationState;
+                log.Error(" ** Errors.ERR_INVALID_STATE_FOR_REQUESTED_OPERATION_4");
                 return Errors.ERR_INVALID_STATE_FOR_REQUESTED_OPERATION_4;
             }
 
@@ -478,6 +501,7 @@ namespace ProfileManager
                         log.Error("** CANNOT UPDATE ACTIVE INTEGRITY FILE");
                         log.Error("** errMsg:" + errMsg + ", errPath:" + errPath);
                         errMsgRet = "SUCCESS";
+                        log.Error(" ** Errors.ERR_CANNOT_CREATE_INTEGRITY_FILE_3");
                         return Errors.ERR_CANNOT_CREATE_INTEGRITY_FILE_3;
                     }
                 }
@@ -531,6 +555,7 @@ namespace ProfileManager
                             log.Error("** CANNOT UPDATE ACTIVE INTEGRITY FILE");
                             log.Error("** errMsg:" + errMsg + ", errPath:" + errPath);
                             errMsgRet = errMsg;
+                            log.Error(" ** Errors.ERR_CANNOT_CREATE_INTEGRITY_FILE_4");
                             return Errors.ERR_CANNOT_CREATE_INTEGRITY_FILE_4;
                         }
                     }
@@ -539,6 +564,7 @@ namespace ProfileManager
                         log.Error("** ERROR RENAMING DIRECTORIES errMsg:" + errMsg +
                             ", errDir:" + errDir + ", errName:" + errName);
                         errMsgRet = errMsg;
+                        log.Error(" ** Errors.ERR_MOVING_DIRECTORIES_3");
                         return Errors.ERR_MOVING_DIRECTORIES_3;
                     }
                 }
@@ -548,6 +574,7 @@ namespace ProfileManager
             }
             log.Warn("-- invalid profile name profNameOld:" + profNameOld);
             errMsgRet = "SUCCESS";
+            log.Error(" ** Errors.ERR_INVALID_PROFILE_NAME_3");
             return Errors.ERR_INVALID_PROFILE_NAME_3;
         }
 
@@ -734,6 +761,7 @@ namespace ProfileManager
                     log.Error(" ** Error -- creating backup directory for path:<" + dir + ">");
                     log.Error(" ** Error -- Message:" + ex.Message + ", StackTrace:" + ex.StackTrace);
                     errMsg = dir;
+                    log.Error(" ** Errors.ERR_CANNOT_CREATE_DIRECTORY");
                     return Errors.ERR_CANNOT_CREATE_DIRECTORY;
                 }
             }

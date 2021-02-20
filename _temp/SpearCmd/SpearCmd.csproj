@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{8C52BEF8-2120-4CF3-8D95-2505F242CE34}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>UiConsole</RootNamespace>
-    <AssemblyName>UiConsole</AssemblyName>
+    <RootNamespace>SpearCmd</RootNamespace>
+    <AssemblyName>SpearCmd</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

@@ -403,13 +403,14 @@ namespace Spear
             // toolStripComboBoxSelectGame
             // 
             this.toolStripComboBoxSelectGame.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.toolStripComboBoxSelectGame.Items.AddRange(new object[] {
-            "Skyrim",
-            "Skyrim SE"});
+            this.toolStripComboBoxSelectGame.Items.AddRange(new object[] { });
+            //this.toolStripComboBoxSelectGame.Items.AddRange(new object[] {
+            //"Skyrim",
+            //"Skyrim SE"});
             this.toolStripComboBoxSelectGame.Name = "toolStripComboBoxSelectGame";
             this.toolStripComboBoxSelectGame.Size = new System.Drawing.Size(121, 25);
             this.toolStripComboBoxSelectGame.SelectedIndexChanged += new System.EventHandler(this.toolStripComboBoxSelectGame_SelectedIndexChanged);
-            this.toolStripComboBoxSelectGame.Click += new System.EventHandler(this.toolStripComboBoxSelectGame_Click);
+            //this.toolStripComboBoxSelectGame.Click += new System.EventHandler(this.toolStripComboBoxSelectGame_Click);
             // 
             // toolStripSeparator2
             // 

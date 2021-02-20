@@ -236,6 +236,7 @@ namespace ProfileManagerBL
             eop.skyrimOpenLogs = false;
             foreach (var item in listlogs)
             {
+                // MessageBox.Show(item, "DEBUG", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 if (File.Exists(item))
                 {
                     eop.skyrimOpenLogs = true;

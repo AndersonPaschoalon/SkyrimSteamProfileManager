@@ -590,11 +590,6 @@ namespace Spear
             this.updateToolStripButtons();
         }
 
-        private void toolStripComboBoxSelectGame_Click(object sender, EventArgs e)
-        {
-            MessageBox.Show("toolStripComboBoxSelectGame_Click", "TODO2", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
-
         private void toolStripButtonGitThrash_Click(object sender, EventArgs e)
         {
             log.Debug("-- toolStripButtonGitThrash_Click");

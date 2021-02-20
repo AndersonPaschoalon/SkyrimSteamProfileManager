@@ -61,9 +61,11 @@ namespace SpearSettings
             // game name. This is not a folder, it is a label from settings file
             this._game = gameSettings.game;
             // update game installation and backup settings
-            this.execUpdate1(settings.steamPath, settings.appDataPath, settings.documentsPath,
-                             gameSettings.gameFolder, gameSettings.backupFolder, 
-                             gameSettings.boolDocumentsPathIsOptional, gameSettings.boolAppDataPathIsOptional);
+            this.execUpdate1(settings.steamPath, settings.appDataPath,
+                             settings.documentsPath, gameSettings.gameFolder, 
+                             gameSettings.docsFolder, gameSettings.appDataFolder, 
+                             gameSettings.backupFolder, gameSettings.boolDocumentsPathIsOptional, 
+                             gameSettings.boolAppDataPathIsOptional);
             // update nmm and vortex settings
             this.execUpdate2(settings.nmmPath2, gameSettings.nmmGameFolder, 
                               settings.vortexPath2, gameSettings.vortexGameFolder);
@@ -154,6 +156,7 @@ namespace SpearSettings
         public string steam { get { return this._steam; } }
         public string steamGame { get { return this._steamGame; } }
         public string steamBkp { get { return this._steamBackup; } }
+        public string steamGameFolder { get { return this._gameFolder;  } }
         public string steamBkpProf(string prof)
         {
             if (!this._steamBackup.Trim().Equals("") && !prof.Trim().Equals(""))
@@ -180,6 +183,7 @@ namespace SpearSettings
         public string appData { get { return this._appData; } }
         public string appDataGame { get { return this._appDirGame; } }
         public string appDataBkp { get { return this._appDirBackup; } }
+        public string appDataGameFolder { get { return this._appDataFolder; } } 
         public string appDataBkpProf(string prof) 
         {
             if (!prof.Trim().Equals("") && !this._appDirBackup.Trim().Equals(""))
@@ -206,6 +210,7 @@ namespace SpearSettings
         public string docs { get { return this._docs; } }
         public string docsGame { get { return this._docsGame; } }
         public string docsBkp { get { return this._docsBackup; } }
+        public string docsGameFolder { get { return this._docsFolder; } }
         public string docsBkpProf(string prof) 
         {
             if (!prof.Trim().Equals("") && !this._docsBackup.Trim().Equals(""))
@@ -255,7 +260,7 @@ namespace SpearSettings
         }
         public string nmmBkpProfGame(string prof)
         {
-            if (!this.nmmEmpty && !this._nmmGameFolder.Trim().Equals("") && !prof.Trim().Equals("") && this._nmmBackup.Trim().Equals(""))
+            if (!this.nmmEmpty && !this._nmmGameFolder.Trim().Equals("") && !prof.Trim().Equals("") && !this._nmmBackup.Trim().Equals(""))
             { 
                 return this._nmmBackup + "\\" + prof + "\\" + this._nmmGameFolder;
             }
@@ -335,7 +340,7 @@ namespace SpearSettings
             get 
             {
                 List<string> listLogs = new List<string>();
-                string logPath;
+                //string logPath;
                 if (!this._gameLogsPath.Trim().Equals("") &&
                     !this._gameLogsExt.Trim().Equals("") &&
                     Directory.Exists(this._gameLogsPath.Trim()))
@@ -354,6 +359,7 @@ namespace SpearSettings
                     }
                     catch (Exception ex)
                     {
+                        Console.WriteLine("**EXCEPTION** Message:" + ex.Message + ", StackTrace:" + ex.StackTrace);
                     }
                 }
                 return listLogs;
@@ -383,21 +389,20 @@ namespace SpearSettings
         {
             ListPaths optBkpPaths = new ListPaths();
             // if is optional, add
-            if (this._isDocsOptional)
+            if (this._isDocsOptional && !this.docsGameFolder.Trim().Equals(""))
             {
                 optBkpPaths.addpath(this.docsBkpProfGame(profileName), PathsHelper.LABEL_DOCUMENTS);
             }
-            if (this._isAppDataOptional)
+            if (this._isAppDataOptional && !this.appDataGameFolder.Trim().Equals(""))
             {
                 optBkpPaths.addpath(this.appDataBkpProfGame(profileName), PathsHelper.LABEL_APPDATA);
             }
             // if not empty, add
-            if (!this.nmmBkpProfGame(profileName).Trim().Equals("") &&
-                !this.nmm.Trim().Equals(""))
+            if (!this.nmmBkpProfGame(profileName).Trim().Equals("") && !this.nmmGameFolder.Trim().Equals(""))
             {
                 optBkpPaths.addpath(this.nmmBkpProfGame(profileName), PathsHelper.LABEL_NMM);
             }
-            if (!this.vortexBkpProfGame(profileName).Trim().Equals(""))
+            if (!this.vortexBkpProfGame(profileName).Trim().Equals("") && !this.vortexGameFolder.Trim().Equals(""))
             {
                 optBkpPaths.addpath(this.vortexBkpProfGame(profileName), PathsHelper.LABEL_VORTEX);
             }
@@ -451,20 +456,20 @@ namespace SpearSettings
         {
             ListPaths optBkpPaths = new ListPaths();
             // if is optional, add
-            if (this._isDocsOptional)
+            if (this._isDocsOptional && !this.docsGameFolder.Trim().Equals(""))
             {
                 optBkpPaths.addpath(this.docsBkpProf(profileName), PathsHelper.LABEL_DOCUMENTS);
             }
-            if (this._isAppDataOptional)
+            if (this._isAppDataOptional && !this.appDataGameFolder.Trim().Equals(""))
             {
                 optBkpPaths.addpath(this.appDataBkpProf(profileName), PathsHelper.LABEL_APPDATA);
             }
             // if not empty, add
-            if (!this.nmmBkpProf(profileName).Trim().Equals(""))
+            if (!this.nmmBkpProf(profileName).Trim().Equals("") && !this.nmmGameFolder.Trim().Equals(""))
             {
                 optBkpPaths.addpath(this.nmmBkpProf(profileName), PathsHelper.LABEL_NMM);
             }
-            if (!this.vortexBkpProf(profileName).Trim().Equals(""))
+            if (!this.vortexBkpProf(profileName).Trim().Equals("") && !this.vortexGameFolder.Trim().Equals(""))
             {
                 optBkpPaths.addpath(this.vortexBkpProf(profileName), PathsHelper.LABEL_VORTEX);
             }
@@ -510,27 +515,27 @@ namespace SpearSettings
         {
             ListPaths optAppPaths = new ListPaths();
             // if is optional, add
-            if (this._isDocsOptional)
+            if (this._isDocsOptional && !this.docsGameFolder.Trim().Equals(""))
             {
-                if (!this.docs.Trim().Equals(""))
-                {
+                //if (!this.docs.Trim().Equals(""))
+                //{
                     optAppPaths.addpath(this.docs, PathsHelper.LABEL_DOCUMENTS);
-                }
+                //}
                 
             }
-            if (this._isAppDataOptional)
+            if (this._isAppDataOptional && !this.appDataGameFolder.Trim().Equals(""))
             {
-                if (!this.appData.Trim().Equals(""))
-                {
+                //if (!this.appData.Trim().Equals(""))
+                //{
                     optAppPaths.addpath(this.appData, PathsHelper.LABEL_APPDATA);
-                }
+                //}
             }
             // if not empty, add
-            if (!this.nmm.Trim().Equals(""))
+            if (!this.nmm.Trim().Equals("") && !this.nmmGameFolder.Trim().Equals(""))
             {
                 optAppPaths.addpath(this.nmm, PathsHelper.LABEL_NMM);
             }
-            if (!this.vortex.Trim().Equals(""))
+            if (!this.vortex.Trim().Equals("") && !this.vortexGameFolder.Trim().Equals(""))
             {
                 optAppPaths.addpath(this.vortex, PathsHelper.LABEL_VORTEX);
             }
@@ -585,27 +590,27 @@ namespace SpearSettings
 
             // if is optional, add
             // - Docs 
-            if (this._isDocsOptional)
+            if (this._isDocsOptional && !this.docsGameFolder.Trim().Equals(""))
             {
-                if (!this.docsGame.Trim().Equals(""))
-                {
+                //if (!this.docsGame.Trim().Equals(""))
+                //{
                     optAppPaths.addpath(this.docsGame,PathsHelper.LABEL_DOCUMENTS);
-                }
+                //}
             }
             // - AppData
-            if (this._isAppDataOptional)
+            if (this._isAppDataOptional && !this.appDataGameFolder.Trim().Equals(""))
             {
-                if (!this.appDataGame.Trim().Equals(""))
-                {
+                //if (!this.appDataGame.Trim().Equals(""))
+                //{
                     optAppPaths.addpath(this.appDataGame, PathsHelper.LABEL_APPDATA);
-                }
+                //}
             }
             // if not empty, add
-            if (!this.nmmGame.Trim().Equals(""))
+            if (!this.nmmGame.Trim().Equals("") && !this.nmmGameFolder.Trim().Equals(""))
             {
                 optAppPaths.addpath(this.nmmGame, PathsHelper.LABEL_NMM);
             }
-            if (!this.vortexGame.Trim().Equals(""))
+            if (!this.vortexGame.Trim().Equals("") && !this.vortexGameFolder.Trim().Equals(""))
             {
                 optAppPaths.addpath(this.vortexGame, PathsHelper.LABEL_VORTEX);
             }
@@ -647,27 +652,27 @@ namespace SpearSettings
         {
             ListPaths optAppBkpPaths = new ListPaths();
             // if is optional, add
-            if (this._isDocsOptional)
+            if (this._isDocsOptional && !this.docsGameFolder.Trim().Equals(""))
             {
-                if (!this.docsBkp.Trim().Equals(""))
-                {
+                //if (!this.docsBkp.Trim().Equals(""))
+                //{
                     optAppBkpPaths.addpath(this.docsBkp, PathsHelper.LABEL_DOCUMENTS);
-                }
+                //}
 
             }
-            if (this._isAppDataOptional)
+            if (this._isAppDataOptional && !this.appDataGameFolder.Trim().Equals(""))
             {
-                if (!this.appDataBkp.Trim().Equals(""))
-                {
+                //if (!this.appDataBkp.Trim().Equals(""))
+                //{
                     optAppBkpPaths.addpath(this.appDataBkp, PathsHelper.LABEL_APPDATA);
-                }
+                //}
             }
             // if not empty, add
-            if (!this.nmmBkp.Trim().Equals(""))
+            if (!this.nmmBkp.Trim().Equals("") && !this.nmmGameFolder.Trim().Equals(""))
             {
                 optAppBkpPaths.addpath(this.nmmBkp, PathsHelper.LABEL_NMM);
             }
-            if (!this.vortexBkp.Trim().Equals(""))
+            if (!this.vortexBkp.Trim().Equals("") && !this.vortexGameFolder.Trim().Equals(""))
             {
                 optAppBkpPaths.addpath(this.vortexBkp, PathsHelper.LABEL_VORTEX);
             }
@@ -771,6 +776,8 @@ namespace SpearSettings
 
         private string _game;
         private string _gameFolder = "";
+        private string _docsFolder = "";
+        private string _appDataFolder = "";
         private string _backupFolder = "";
 
         private string _steam = "";
@@ -808,17 +815,19 @@ namespace SpearSettings
         
         // update paths related with steam, appData, documents, NMM, and game/backup
         private void execUpdate1(string steam, string appData, string myDocs,
-                                string gameFolder, string backupFolder, 
-                                bool isDocOpt, bool isAppOpt)
+                                string gameFolder, string docsFolder, string appDataFolder,
+                                string backupFolder, bool isDocOpt, bool isAppOpt)
         {
             steam.Trim();
             appData.Trim();
             myDocs.Trim();
-            gameFolder = CSharp.alphaNumeric(gameFolder);
             backupFolder = CSharp.alphaNumeric(backupFolder);
 
             this._gameFolder = gameFolder;
+            this._docsFolder = docsFolder;
+            this._appDataFolder = appDataFolder;
             this._backupFolder = backupFolder;
+
             this._isAppDataOptional = isAppOpt;
             this._isDocsOptional = isDocOpt;
 
@@ -837,14 +846,26 @@ namespace SpearSettings
             if (!appData.Trim().Equals(""))
             {
                 this._appData = appData;
-                this._appDirGame = appData + "\\" + gameFolder;
-                this._appDirBackup = appData + "\\" + this._backupFolder;
+                if (!_appDataFolder.Trim().Equals(""))
+                {
+                    this._appDirGame = this._appData + "\\" + this._appDataFolder;
+                }
+                if (!_backupFolder.Trim().Equals(""))
+                {
+                    this._appDirBackup = this._appData + "\\" + this._backupFolder;
+                }
             }
             if (!myDocs.Trim().Equals(""))
             {
                 this._docs = myDocs;
-                this._docsGame = myDocs + "\\" + gameFolder;
-                this._docsBackup = myDocs + "\\" + this._backupFolder;
+                if (!this._docsFolder.Trim().Equals(""))
+                {
+                    this._docsGame = this._docs + "\\" + this._docsFolder;
+                }
+                if (!this._backupFolder.Trim().Equals(""))
+                {
+                    this._docsBackup = this._docs + "\\" + this._backupFolder;
+                } 
             }
         }
 
@@ -858,8 +879,8 @@ namespace SpearSettings
 
             // NMM
             this.nmmEmpty = (this._nmm.Trim().Equals("")) ? true : false;
-            if (!this.nmmEmpty)
-            {
+            //if (!this.nmmEmpty)
+            //{
                 if (!this._nmmGameFolder.Trim().Equals("") && !this._nmm.Trim().Equals(""))
                 {
                     this._nmmGame = this._nmm + "\\" + this._nmmGameFolder;
@@ -868,11 +889,11 @@ namespace SpearSettings
                 {
                     this._nmmBackup = this._nmm + "\\" + this._backupFolder;
                 }
-            }
+            //}
             // Vortex
             this.vortexEmpty = (this._vortex.Trim().Equals("")) ? true : false;
-            if (!this.vortexEmpty)
-            {
+            //if (!this.vortexEmpty)
+            //{
                 if (!this._vortexGameFolder.Trim().Equals("") && !this._vortex.Trim().Equals(""))
                 {
                     this._vortexGame = this._vortex + "\\" + this._vortexGameFolder;
@@ -881,7 +902,7 @@ namespace SpearSettings
                 {
                     this._vortexBackup = this._vortex + "\\" + this._backupFolder;
                 }
-            }
+            //}
         }
 
         // Update information about exe files
