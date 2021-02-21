@@ -101,7 +101,7 @@ namespace SpearSettings
                 return Errors.ERR_STEAM_DIRRECTORY_MISSING_1;
             }
             // documents
-            else if (!gameSettings.boolDocumentsPathIsOptional)
+            else if (!gameSettings.isDocumentsPathOptional())
             {
                 if (settings.documentsPath == null ||
                     settings.documentsPath.Trim().Equals("") ||
@@ -111,7 +111,7 @@ namespace SpearSettings
                 }
             }
             // app data
-            else if (!gameSettings.boolAppDataPathIsOptional)
+            else if (!gameSettings.isAppDataPathOptional())
             {
                 if (settings.appDataPath == null ||
                     settings.appDataPath.Trim().Equals("") ||

@@ -195,6 +195,7 @@
     <None Include="Resources\open-git.png" />
     <None Include="Resources\15-open-git.png" />
     <None Include="Resources\15-open-git2.png" />
+    <None Include="Resources\github-16.png" />
     <Content Include="spear.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

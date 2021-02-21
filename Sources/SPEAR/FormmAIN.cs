@@ -35,7 +35,6 @@ namespace Spear
         private DataGridView dataGridViewDesactivated = new DataGridView();
         private BindingSource bindingSourceDesactivated = new BindingSource();
         // Tests
-        //private const bool ENABLE_TESTING = true;
         private const bool ENABLE_TESTING = false;
         private int testToRun = 0;
 
@@ -85,6 +84,17 @@ namespace Spear
         private void FormMain_Load(object sender, EventArgs e)
         {
             this.fillDataGrids();
+            System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
+            timer.Interval = 100; // 100 ms
+            timer.Tick += new EventHandler(timer_Tick);
+            timer.Start();
+
+
+            appendText(this.richTextConsole, "####################################################", Color.Purple);
+            appendText(this.richTextConsole, "##              SPEAR CONSOLE OUTPUT              ##", Color.Purple);
+            appendText(this.richTextConsole, "####################################################", Color.Purple);
+            appendText(this.richTextConsole, "", Color.Purple);
+
         }
 
         private void dataGridViewActive_CellMouseClick(object sender, DataGridViewCellEventArgs e)
@@ -775,7 +785,65 @@ namespace Spear
             this.managerBusinessLayer.tool_openGit();
         }
 
-        private void tableLayoutPanel1_Paint(object sender, PaintEventArgs e)
+        private void toolStripButton1_Click(object sender, EventArgs e)
+        {
+            this.managerBusinessLayer.tool_pushToGithub();
+        }
+
+        private void timer_Tick(object sender, EventArgs e)
+        {
+            List<LogBuffer.LogMsg> listBuffer =  LogBuffer.consumeBuffer();
+            foreach (var item in listBuffer)
+            {
+                string msgPre = "";
+                var lv = item.level;
+                switch (lv)
+                {
+                    case LogLevel.DEBUG:
+                        {
+                            msgPre = " [DEBUG] ";
+                            FormMain.appendText(this.richTextConsole, msgPre + item.msg, Color.Green);
+                            break;
+                        }
+                    case LogLevel.INFO:
+                        {
+                            msgPre = " [INFO]  ";
+                            FormMain.appendText(this.richTextConsole, msgPre + item.msg, Color.White);
+                            break;
+                        }
+                    case LogLevel.WARN:
+                        {
+                            msgPre = " [WARN]  ";
+                            FormMain.appendText(this.richTextConsole, msgPre + item.msg, Color.Orange);
+                            break;
+                        }
+                    case LogLevel.ERROR:
+                        {
+                            msgPre = " [ERROR] ";
+                            FormMain.appendText(this.richTextConsole, msgPre + item.msg, Color.Red);
+                            break;
+                        }
+
+                }
+            }
+        }
+
+
+        public static void appendText(RichTextBox box, string text, Color color, bool addNewLine = true)
+        {
+            box.SelectionStart = box.TextLength;
+            box.SelectionLength = 0;
+            box.SelectionColor = color;
+            //box.SelectionFont = new Font("Miriam Mono", 8, FontStyle.Bold);
+            box.SelectionFont = new System.Drawing.Font("Miriam Mono CLM", 8.249999F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(177)));
+            box.AppendText(addNewLine
+                       ? $"{text}{Environment.NewLine}"
+                       : text);
+            box.SelectionColor = box.ForeColor;
+            box.ScrollToCaret();
+        }
+
+        private void richTextConsole_TextChanged(object sender, EventArgs e)
         {
 
         }

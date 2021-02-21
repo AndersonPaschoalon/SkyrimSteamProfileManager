@@ -113,6 +113,16 @@ namespace Spear.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap _15_github {
+            get {
+                object obj = ResourceManager.GetObject("_15_github", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap _15_open_folder {
             get {
                 object obj = ResourceManager.GetObject("_15_open_folder", resourceCulture);

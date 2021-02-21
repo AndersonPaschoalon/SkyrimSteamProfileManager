@@ -414,36 +414,28 @@ namespace ProfileManagerBL
 
         #region bl_tools
 
+        public void tool_pushToGithub()
+        {
+            this.openHtml(Environment.CurrentDirectory + Consts.FILE_PUSH_GITHUB);
+            //this.openHtml(Environment.CurrentDirectory + "\\" + Consts.FILE_PUSH_GITHUB);
+        }
+
         public void tool_openHelpPage()
         {
-            string htmlPage = Environment.CurrentDirectory + "\\" + Consts.FILE_HELP_PAGE;
-            try
-            {
-                System.Diagnostics.Process.Start(htmlPage);
-            }
-            catch (Exception)
-            {
-                System.Diagnostics.Process.Start("Chrome", Uri.EscapeDataString(htmlPage));
-            }
+            this.openHtml(Environment.CurrentDirectory + Consts.FILE_HELP_PAGE);
+            //this.openHtml(Environment.CurrentDirectory + "\\" + Consts.FILE_HELP_PAGE);
         }
 
         public void tool_openGit()
         {
-            string htmlPage = Consts.WWW_GITHUB_REPOSITORY;
-            try
-            {
-                System.Diagnostics.Process.Start(htmlPage);
-            }
-            catch (Exception)
-            {
-                System.Diagnostics.Process.Start("Chrome", Uri.EscapeDataString(htmlPage));
-            }
+            this.openHtml(Consts.WWW_GITHUB_REPOSITORY);
+            //this.openHtml(Consts.WWW_GITHUB_REPOSITORY);
         }
 
         public void tool_openLogFiles()
         {
             List<string> logFiles = new List<string>
-            {"Logs\\app_core.log","Logs\\app_ui.log"};
+            {"Logs\\app_core.log","Logs\\app_ui.log", "Logs\\app_settings.log"};
             foreach (var item in logFiles)
             {
                 this.openTxtFile(item);
@@ -571,7 +563,6 @@ namespace ProfileManagerBL
             }
             return true;
         }
-
 
         public bool tool_launchCreationKit(out string errMsg)
         {
@@ -1134,6 +1125,31 @@ namespace ProfileManagerBL
             {
                 errMsg = exeNickname + " exe not found. Exe:<" + exe + ">";
                 return false;
+            }
+            return true;
+        }
+
+
+        private bool openHtml(string pathOrUrl)
+        {
+            log.Debug(" -- openHtml:{" + pathOrUrl + "}");
+            try
+            {
+                System.Diagnostics.Process.Start(pathOrUrl);
+            }
+            catch (Exception ex1)
+            {
+                log.Warn(" ** Exception ** Message:" + ex1.Message + ", StackTrace:" + ex1.StackTrace);
+                try
+                {
+                    System.Diagnostics.Process.Start("Chrome", Uri.EscapeDataString(pathOrUrl));
+                }
+                catch (Exception ex2)
+                {
+                    log.Warn(" ** Exception ** Message:" + ex2.Message + ", StackTrace:" + ex2.StackTrace);
+                    return false;
+                }
+                return true;
             }
             return true;
         }

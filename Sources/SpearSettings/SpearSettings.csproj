@@ -29,6 +29,10 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -74,5 +78,24 @@
   <ItemGroup>
     <None Include="Properties\SPConfig.xml" />
   </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Content Include="SettingsDebug\SPConfig.xml" />
+    <Content Include="SettingsRelease\SPConfig.xml" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>if $(ConfigurationName) == Debug (
+    echo ----------------------------------------------
+    echo -- Copy DEBUG  test  SPConfig.xml 
+    echo ----------------------------------------------
+    copy /Y  ..\..\SettingsDebug\SPConfig.xml  ..\..\..\SPEAR\bin\Debug\Settings\
+) ELSE (
+dir
+    echo ----------------------------------------------
+    echo -- Copy DELIVERY SPConfig.xml"
+    echo ----------------------------------------------
+    copy /Y ..\..\SettingsRelease\SPConfig.xml  ..\..\..\SPEAR\bin\Release\Settings\
+)</PostBuildEvent>
+  </PropertyGroup>
 </Project>

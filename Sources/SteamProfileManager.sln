@@ -18,8 +18,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{7B1DFD30-04FB-46E8-AB6B-0177BF894F8B}"
 	ProjectSection(SolutionItems) = preProject
 		README.md = README.md
-		SPEAR\bin\Release\Settings\SPConfig.xml = SPEAR\bin\Release\Settings\SPConfig.xml
-		SPEAR\bin\Debug\Settings\SPConfig.xml = SPEAR\bin\Debug\Settings\SPConfig.xml
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FormAppTest", "FormAppTest\FormAppTest.csproj", "{6FFE2F62-C8D9-4FD1-93C5-67DC0430303C}"
@@ -27,6 +25,16 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToolsManager", "ToolsManager\ToolsManager.csproj", "{19740288-33F5-48DE-B07F-F3DBF4D8603E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpearSettings", "SpearSettings\SpearSettings.csproj", "{304D2E48-A00B-4F47-AF2E-4D4214C56352}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Release", "Release", "{3A2B7D84-5E89-4B36-A0B1-2BB8B60426CE}"
+	ProjectSection(SolutionItems) = preProject
+		SPEAR\bin\Release\Settings\SPConfig.xml = SPEAR\bin\Release\Settings\SPConfig.xml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Debug", "Debug", "{203509B2-4803-4655-86F4-C216A7C7775B}"
+	ProjectSection(SolutionItems) = preProject
+		SPEAR\bin\Debug\Settings\SPConfig.xml = SPEAR\bin\Debug\Settings\SPConfig.xml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -225,6 +233,10 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{3A2B7D84-5E89-4B36-A0B1-2BB8B60426CE} = {7B1DFD30-04FB-46E8-AB6B-0177BF894F8B}
+		{203509B2-4803-4655-86F4-C216A7C7775B} = {7B1DFD30-04FB-46E8-AB6B-0177BF894F8B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {598A9D96-2728-444F-BEF2-3A181875F34B}

@@ -51,11 +51,16 @@
     <Compile Include="ViewModel\SettingsViewData.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="HelpPage.html">
+    <Content Include="Html\CreatGithubRepository.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Html\HelpPage.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="Html\Create-repository.md" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Logger\Utils.csproj">
       <Project>{CEDC3029-A30F-46D9-9738-98F6114EA896}</Project>

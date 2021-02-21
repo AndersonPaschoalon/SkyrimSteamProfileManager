@@ -12,7 +12,7 @@ namespace SpearSettings
 {
     public class SPProfile
     {
-        private readonly ILogger log = Log4NetLogger.getInstance(LogAppender.APP_CORE);
+        private readonly ILogger log = Log4NetLogger.getInstance(LogAppender.APP_SETTINGS);
 
         /// <summary>
         /// Default constructor. Instantiate a empty profile
@@ -101,7 +101,7 @@ namespace SpearSettings
         /// <returns></returns>
         public static SPProfile loadActivatedProfile(string steamGameFolder)
         {
-            ILogger slog = Log4NetLogger.getInstance(LogAppender.APP_CORE);
+            ILogger slog = Log4NetLogger.getInstance(LogAppender.APP_SETTINGS);
             slog.Debug("-- loadActiveProfiles() steamGameFolder:" + steamGameFolder);
             SPProfile prof = new SPProfile();
             string pathFile = steamGameFolder + "\\" + Consts.FILE_INTEGRITYFILE;
@@ -125,7 +125,7 @@ namespace SpearSettings
         /// <returns></returns>
         public static List<SPProfile> loadDesactivatedProfiles(string backupFolder, string gameFolder)
         {
-            ILogger slog = Log4NetLogger.getInstance(LogAppender.APP_CORE);
+            ILogger slog = Log4NetLogger.getInstance(LogAppender.APP_SETTINGS);
             List<SPProfile> listDesactivated = new List<SPProfile>();
             string[] allDirs = Directory.GetDirectories(backupFolder);
             slog.Debug("* allDirs:{" + CSharp.arrayToCsv(allDirs) + "}");

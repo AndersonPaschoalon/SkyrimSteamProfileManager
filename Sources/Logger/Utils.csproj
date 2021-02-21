@@ -51,6 +51,7 @@
     <Compile Include="ILogger.cs" />
     <Compile Include="Loggers\ConsoleLogger.cs" />
     <Compile Include="Loggers\Log4NetLogger.cs" />
+    <Compile Include="Loggers\LogBuffer.cs" />
     <Compile Include="Loggers\LogConfig.cs" />
     <Compile Include="Loggers\LogLevel.cs" />
     <Compile Include="Loggers\TrivialLog.cs" />

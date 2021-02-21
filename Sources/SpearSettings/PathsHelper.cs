@@ -61,18 +61,30 @@ namespace SpearSettings
             // game name. This is not a folder, it is a label from settings file
             this._game = gameSettings.game;
             // update game installation and backup settings
-            this.execUpdate1(settings.steamPath, settings.appDataPath,
-                             settings.documentsPath, gameSettings.gameFolder, 
-                             gameSettings.docsFolder, gameSettings.appDataFolder, 
-                             gameSettings.backupFolder, gameSettings.boolDocumentsPathIsOptional, 
-                             gameSettings.boolAppDataPathIsOptional);
+            this.execUpdate1(settings.steamPath, 
+                settings.appDataPath,
+                settings.documentsPath, 
+                gameSettings.gameFolder,
+                gameSettings.docsSubPath, 
+                gameSettings.docsFolder, 
+                gameSettings.appDataFolder, 
+                gameSettings.backupFolder, 
+                gameSettings.isDocumentsPathOptional(), 
+                gameSettings.isAppDataPathOptional());
             // update nmm and vortex settings
-            this.execUpdate2(settings.nmmPath2, gameSettings.nmmGameFolder, 
-                              settings.vortexPath2, gameSettings.vortexGameFolder);
+            this.execUpdate2(settings.nmmPath2, 
+                gameSettings.nmmGameFolder, 
+                settings.vortexPath2, 
+                gameSettings.vortexGameFolder);
             // update exes from settings file
-            this.execUpdate3(settings.vortexExe, settings.nmmExe, settings.tesvEditExe, gameSettings.gameExe);
+            this.execUpdate3(settings.vortexExe, 
+                settings.nmmExe, 
+                settings.tesvEditExe, 
+                gameSettings.gameExe);
             // update game log stuff
-            this.execUpdate4(gameSettings.gameLogPath, gameSettings.gameLogExt, gameSettings.boolUseGameLogs);
+            this.execUpdate4(gameSettings.gameLogPath, 
+                gameSettings.gameLogExt, 
+                gameSettings.gameLogsAreSet());
         }
 
         public int checkSettings()
@@ -131,6 +143,18 @@ namespace SpearSettings
             }
             return Errors.SUCCESS;
         }
+
+        #region HTML
+
+        //public string htmlDir
+        //{
+        //    get 
+        //    {
+        //        return Environment.CurrentDirectory + "\\" + Consts.DIR_HTML + "\\";
+        //    }
+        //}
+
+        #endregion HTML
 
         #region integrity_files 
 
@@ -814,20 +838,30 @@ namespace SpearSettings
 
         
         // update paths related with steam, appData, documents, NMM, and game/backup
-        private void execUpdate1(string steam, string appData, string myDocs,
-                                string gameFolder, string docsFolder, string appDataFolder,
-                                string backupFolder, bool isDocOpt, bool isAppOpt)
+        private void execUpdate1(string steam, 
+            string appData, 
+            string myDocs,
+            string gameFolder, 
+            string docsDubdir, 
+            string docsFolder, 
+            string appDataFolder, 
+            string backupFolder, 
+            bool isDocOpt, 
+            bool isAppOpt)
         {
-            steam.Trim();
             appData.Trim();
             myDocs.Trim();
+            gameFolder.Trim();
+            docsDubdir.Trim();
+            docsFolder.Trim();
+            appDataFolder.Trim();
+            backupFolder.Trim();
             backupFolder = CSharp.alphaNumeric(backupFolder);
 
             this._gameFolder = gameFolder;
             this._docsFolder = docsFolder;
             this._appDataFolder = appDataFolder;
             this._backupFolder = backupFolder;
-
             this._isAppDataOptional = isAppOpt;
             this._isDocsOptional = isDocOpt;
 
@@ -857,7 +891,16 @@ namespace SpearSettings
             }
             if (!myDocs.Trim().Equals(""))
             {
-                this._docs = myDocs;
+                // if Documents has a subpath, ad it here
+                if (!docsDubdir.Trim().Equals(""))
+                {
+                    this._docs = myDocs + "\\" + docsDubdir;
+                }
+                else
+                {
+                    this._docs = myDocs;
+                }
+                // init vars from Documents directory
                 if (!this._docsFolder.Trim().Equals(""))
                 {
                     this._docsGame = this._docs + "\\" + this._docsFolder;
@@ -865,12 +908,14 @@ namespace SpearSettings
                 if (!this._backupFolder.Trim().Equals(""))
                 {
                     this._docsBackup = this._docs + "\\" + this._backupFolder;
-                } 
+                }
             }
         }
 
-        private void execUpdate2(string nmmPath, string nmmGameFolder,
-                                 string vortexPath, string vortexGameFolder)
+        private void execUpdate2(string nmmPath, 
+            string nmmGameFolder,
+            string vortexPath, 
+            string vortexGameFolder)
         {
             this._nmm = nmmPath.Trim();
             this._nmmGameFolder = nmmGameFolder.Trim();
@@ -906,7 +951,10 @@ namespace SpearSettings
         }
 
         // Update information about exe files
-        private void execUpdate3(string vortexExe, string nmmExe, string tesvEditExe, string gameExe)
+        private void execUpdate3(string vortexExe, 
+            string nmmExe, 
+            string tesvEditExe, 
+            string gameExe)
         {
             // Tools
             if (File.Exists(vortexExe))
@@ -926,7 +974,9 @@ namespace SpearSettings
         }
 
         // game logs
-        private void execUpdate4(string gameLogPath, string gameLogExtension, bool useGameLogs)
+        private void execUpdate4(string gameLogPath, 
+            string gameLogExtension, 
+            bool useGameLogs)
         {
             if (Directory.Exists(gameLogPath))
             {

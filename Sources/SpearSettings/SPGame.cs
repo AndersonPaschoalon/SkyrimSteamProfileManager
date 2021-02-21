@@ -18,6 +18,9 @@ namespace SpearSettings
         [XmlAttribute("gameFolder")]
         public string gameFolder { get; set; }
 
+        [XmlAttribute("docsSubPath")]
+        public string docsSubPath { get; set; }
+
         [XmlAttribute("docsFolder")]
         public string docsFolder { get; set; }
 
@@ -42,47 +45,48 @@ namespace SpearSettings
         [XmlAttribute("documentsPathIsOptional")]
         public string documentsPathIsOptional { get; set; }
 
-        public bool boolDocumentsPathIsOptional
-        {
-            get 
-            {
-                return (documentsPathIsOptional.Trim().ToUpper() == "TRUE") ? true : false;
-            }
-            set 
-            {
-                documentsPathIsOptional = (value) ? "TRUE" : "FALSE";
-            }
-        }
-
         [XmlAttribute("appDataPathIsOptional")]
         public string appDataPathIsOptional { get; set; }
-
-        public bool boolAppDataPathIsOptional
-        {
-            get
-            {
-                return (appDataPathIsOptional.Trim().ToUpper() == "TRUE") ? true : false;
-            }
-            set
-            {
-                appDataPathIsOptional = (value) ? "TRUE" : "FALSE";
-            }
-        }
 
         [XmlAttribute("useGameLogs")]
         public string useGameLogs { get; set; }
 
-        public bool boolUseGameLogs
+
+        #region methods
+
+        public bool isDocumentsPathOptional()
         {
-            get
-            {
-                return (useGameLogs.Trim().ToUpper() == "TRUE") ? true : false;
-            }
-            set
-            {
-                useGameLogs = (value) ? "TRUE" : "FALSE";
-            }
+            return (this.documentsPathIsOptional.Trim().ToUpper() == "TRUE") ? true : false;
         }
+
+        public void setDocumentsPathIsOptional(bool setVal)
+        {
+            this.documentsPathIsOptional = (setVal) ? "TRUE" : "FALSE";
+        }
+
+        public bool isAppDataPathOptional()
+        {
+            return (this.appDataPathIsOptional.Trim().ToUpper() == "TRUE") ? true : false;
+        }
+
+        public void setAppDataPathIsOptional(bool setVal)
+        {
+            this.appDataPathIsOptional = (setVal) ? "TRUE" : "FALSE";
+        }
+
+        public bool gameLogsAreSet()
+        {
+            return (this.useGameLogs.Trim().ToUpper() == "TRUE") ? true : false;
+        }
+
+        public void setUseGameLogs(bool setVal)
+        {
+            this.useGameLogs = (setVal) ? "TRUE" : "FALSE";
+        }
+
+        #endregion methods
+
+
 
     }
 }

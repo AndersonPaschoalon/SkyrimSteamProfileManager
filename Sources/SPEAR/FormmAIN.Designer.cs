@@ -66,6 +66,7 @@ namespace Spear
             this.helpToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.openHeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openGithubPageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.howToPushToGithubToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripComboBoxSelectGame = new System.Windows.Forms.ToolStripComboBox();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
@@ -82,6 +83,7 @@ namespace Spear
             this.toolStripButtonGitignore = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonOpenGitignore = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonGitThrash = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.panel1 = new System.Windows.Forms.Panel();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
@@ -96,6 +98,8 @@ namespace Spear
             this.buttonSelectTest = new System.Windows.Forms.Button();
             this.textBoxSelectedTest = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.consoleOutput = new System.Windows.Forms.GroupBox();
+            this.richTextConsole = new System.Windows.Forms.RichTextBox();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
@@ -104,6 +108,7 @@ namespace Spear
             this.panelActivated.SuspendLayout();
             this.panelDesactivated.SuspendLayout();
             this.panelTests.SuspendLayout();
+            this.consoleOutput.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -357,24 +362,31 @@ namespace Spear
             // 
             this.helpToolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.openHeToolStripMenuItem,
-            this.openGithubPageToolStripMenuItem});
+            this.openGithubPageToolStripMenuItem,
+            this.howToPushToGithubToolStripMenuItem});
             this.helpToolStripMenuItem1.Name = "helpToolStripMenuItem1";
-            this.helpToolStripMenuItem1.Size = new System.Drawing.Size(44, 20);
-            this.helpToolStripMenuItem1.Text = "Help";
+            this.helpToolStripMenuItem1.Size = new System.Drawing.Size(64, 20);
+            this.helpToolStripMenuItem1.Text = "Tutorials";
             // 
             // openHeToolStripMenuItem
             // 
             this.openHeToolStripMenuItem.Name = "openHeToolStripMenuItem";
-            this.openHeToolStripMenuItem.Size = new System.Drawing.Size(171, 22);
-            this.openHeToolStripMenuItem.Text = "Open Help Page";
+            this.openHeToolStripMenuItem.Size = new System.Drawing.Size(195, 22);
+            this.openHeToolStripMenuItem.Text = "How to use Spear";
             this.openHeToolStripMenuItem.Click += new System.EventHandler(this.openHeToolStripMenuItem_Click);
             // 
             // openGithubPageToolStripMenuItem
             // 
             this.openGithubPageToolStripMenuItem.Name = "openGithubPageToolStripMenuItem";
-            this.openGithubPageToolStripMenuItem.Size = new System.Drawing.Size(171, 22);
-            this.openGithubPageToolStripMenuItem.Text = "Open Github Page";
+            this.openGithubPageToolStripMenuItem.Size = new System.Drawing.Size(195, 22);
+            this.openGithubPageToolStripMenuItem.Text = "Github Page";
             this.openGithubPageToolStripMenuItem.Click += new System.EventHandler(this.openGithubPageToolStripMenuItem_Click);
+            // 
+            // howToPushToGithubToolStripMenuItem
+            // 
+            this.howToPushToGithubToolStripMenuItem.Name = "howToPushToGithubToolStripMenuItem";
+            this.howToPushToGithubToolStripMenuItem.Size = new System.Drawing.Size(195, 22);
+            this.howToPushToGithubToolStripMenuItem.Text = "How to Push to Github";
             // 
             // toolStrip1
             // 
@@ -393,7 +405,8 @@ namespace Spear
             this.toolStripSeparator1,
             this.toolStripButtonGitignore,
             this.toolStripButtonOpenGitignore,
-            this.toolStripButtonGitThrash});
+            this.toolStripButtonGitThrash,
+            this.toolStripButton1});
             this.toolStrip1.Location = new System.Drawing.Point(0, 24);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(800, 25);
@@ -527,6 +540,16 @@ namespace Spear
             this.toolStripButtonGitThrash.Text = "Delete gitignore file";
             this.toolStripButtonGitThrash.Click += new System.EventHandler(this.toolStripButtonGitThrash_Click);
             // 
+            // toolStripButton1
+            // 
+            this.toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButton1.Image = global::Spear.Properties.Resources._15_github;
+            this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton1.Name = "toolStripButton1";
+            this.toolStripButton1.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButton1.Text = "Push to Github (tutorial)";
+            this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click);
+            // 
             // tableLayoutPanel1
             // 
             this.tableLayoutPanel1.ColumnCount = 3;
@@ -535,18 +558,18 @@ namespace Spear
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 55F));
             this.tableLayoutPanel1.Controls.Add(this.panel1, 1, 1);
             this.tableLayoutPanel1.Controls.Add(this.panelTests, 0, 1);
+            this.tableLayoutPanel1.Controls.Add(this.consoleOutput, 0, 3);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 49);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 5;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 10F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 150F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 0F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 60F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 40F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 5F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(800, 401);
             this.tableLayoutPanel1.TabIndex = 5;
-            this.tableLayoutPanel1.Paint += new System.Windows.Forms.PaintEventHandler(this.tableLayoutPanel1_Paint);
             // 
             // panel1
             // 
@@ -556,7 +579,7 @@ namespace Spear
             this.panel1.Location = new System.Drawing.Point(115, 13);
             this.panel1.Name = "panel1";
             this.tableLayoutPanel1.SetRowSpan(this.panel1, 2);
-            this.panel1.Size = new System.Drawing.Size(544, 380);
+            this.panel1.Size = new System.Drawing.Size(544, 285);
             this.panel1.TabIndex = 1;
             // 
             // tableLayoutPanel2
@@ -578,7 +601,7 @@ namespace Spear
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 10F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(544, 380);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(544, 285);
             this.tableLayoutPanel2.TabIndex = 0;
             // 
             // labelActive
@@ -609,7 +632,7 @@ namespace Spear
             this.panelActivated.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelActivated.Location = new System.Drawing.Point(30, 33);
             this.panelActivated.Name = "panelActivated";
-            this.panelActivated.Size = new System.Drawing.Size(225, 334);
+            this.panelActivated.Size = new System.Drawing.Size(225, 239);
             this.panelActivated.TabIndex = 2;
             // 
             // panelActivatedGrid
@@ -617,7 +640,7 @@ namespace Spear
             this.panelActivatedGrid.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelActivatedGrid.Location = new System.Drawing.Point(0, 0);
             this.panelActivatedGrid.Name = "panelActivatedGrid";
-            this.panelActivatedGrid.Size = new System.Drawing.Size(225, 334);
+            this.panelActivatedGrid.Size = new System.Drawing.Size(225, 239);
             this.panelActivatedGrid.TabIndex = 0;
             // 
             // panelDesactivated
@@ -626,7 +649,7 @@ namespace Spear
             this.panelDesactivated.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelDesactivated.Location = new System.Drawing.Point(288, 33);
             this.panelDesactivated.Name = "panelDesactivated";
-            this.panelDesactivated.Size = new System.Drawing.Size(225, 334);
+            this.panelDesactivated.Size = new System.Drawing.Size(225, 239);
             this.panelDesactivated.TabIndex = 3;
             // 
             // panelDesactivatedGrid
@@ -634,7 +657,7 @@ namespace Spear
             this.panelDesactivatedGrid.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelDesactivatedGrid.Location = new System.Drawing.Point(0, 0);
             this.panelDesactivatedGrid.Name = "panelDesactivatedGrid";
-            this.panelDesactivatedGrid.Size = new System.Drawing.Size(225, 334);
+            this.panelDesactivatedGrid.Size = new System.Drawing.Size(225, 239);
             this.panelDesactivatedGrid.TabIndex = 0;
             // 
             // panelTests
@@ -685,6 +708,33 @@ namespace Spear
             this.label1.TabIndex = 0;
             this.label1.Text = "TEST PANEL";
             // 
+            // consoleOutput
+            // 
+            this.consoleOutput.BackColor = System.Drawing.SystemColors.Control;
+            this.tableLayoutPanel1.SetColumnSpan(this.consoleOutput, 3);
+            this.consoleOutput.Controls.Add(this.richTextConsole);
+            this.consoleOutput.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.consoleOutput.Location = new System.Drawing.Point(3, 304);
+            this.consoleOutput.Name = "consoleOutput";
+            this.consoleOutput.Size = new System.Drawing.Size(794, 88);
+            this.consoleOutput.TabIndex = 3;
+            this.consoleOutput.TabStop = false;
+            this.consoleOutput.Text = "Console Output";
+            // 
+            // richTextConsole
+            // 
+            this.richTextConsole.BackColor = System.Drawing.SystemColors.Desktop;
+            this.richTextConsole.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.richTextConsole.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.richTextConsole.Font = new System.Drawing.Font("Miriam Mono CLM", 8.249999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(177)));
+            this.richTextConsole.Location = new System.Drawing.Point(3, 16);
+            this.richTextConsole.Name = "richTextConsole";
+            this.richTextConsole.ReadOnly = true;
+            this.richTextConsole.Size = new System.Drawing.Size(788, 69);
+            this.richTextConsole.TabIndex = 0;
+            this.richTextConsole.Text = "";
+            this.richTextConsole.TextChanged += new System.EventHandler(this.richTextConsole_TextChanged);
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -710,6 +760,7 @@ namespace Spear
             this.panelDesactivated.ResumeLayout(false);
             this.panelTests.ResumeLayout(false);
             this.panelTests.PerformLayout();
+            this.consoleOutput.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -783,5 +834,9 @@ namespace Spear
         private System.Windows.Forms.ToolStripMenuItem openGameAppDataFolderToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openNMMGameFolderToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openVortexGameFolderToolStripMenuItem;
+        private System.Windows.Forms.ToolStripButton toolStripButton1;
+        private System.Windows.Forms.ToolStripMenuItem howToPushToGithubToolStripMenuItem;
+        private System.Windows.Forms.GroupBox consoleOutput;
+        private System.Windows.Forms.RichTextBox richTextConsole;
     }
 }

@@ -75,9 +75,31 @@ namespace ToolsManager
             string killSteam = "taskkill /f /im Steam.exe";
             string killSteamService = "taskkill /f /im SteamService.exe";
             string killSteamHelper = "taskkill /f /im steamwebhelper.exe";
-            Process.Start("CMD.exe", killSteam);
-            Process.Start("CMD.exe", killSteamService);
-            Process.Start("CMD.exe", killSteamHelper);
+            ILogger logger = Log4NetLogger.getInstance(LogAppender.APP_CORE);
+            try
+            {
+                Process.Start("CMD.exe", killSteam);
+            }
+            catch (Exception ex)
+            {
+                logger.Warn(" ** Exception on killAllSteam. Message:" + ex.Message + ", StackTrace:" + ex.StackTrace);
+            }
+            try
+            {
+                Process.Start("CMD.exe", killSteamService);
+            }
+            catch (Exception ex)
+            {
+                logger.Warn(" ** Exception on killAllSteam. Message:" + ex.Message + ", StackTrace:" + ex.StackTrace);
+            }
+            try
+            {
+                Process.Start("CMD.exe", killSteamHelper);
+            }
+            catch (Exception ex)
+            {
+                logger.Warn(" ** Exception on killAllSteam. Message:" + ex.Message + ", StackTrace:" + ex.StackTrace);
+            }
         }
 
         public bool gitignoreDetected()
@@ -93,12 +115,14 @@ namespace ToolsManager
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="errMsg"></param>
         /// <returns></returns>
         public bool createGitignore(out string errMsg)
         {
             log.Debug(" -- createGitignore()");
             string gitignorePath = this.paths.gitignore;
-            String gitignoreContent = "";
+            string gitignoreContent = "";
+            string content = "";
             try
             {
                 if (!File.Exists(gitignorePath))
@@ -107,9 +131,23 @@ namespace ToolsManager
                                                                      "*.*",
                                                                      System.IO.SearchOption.AllDirectories))
                     {
-                        string content = file.Replace(this.paths.steamGame, "");
-                        content = content.Replace(@"\", @"/");
-                        gitignoreContent += @"." + content + "\n";
+                        content = "";
+                        content = file.Replace(this.paths.steamGame, "").Trim();
+                        // replace \ bar by / bar
+                        content = content.Replace(@"\", @"/"); 
+                        // add scape characters whitespace " ", "[", "]"
+                        content = content.Replace(" ", @"\ ").Replace("[", @"\[").Replace("]", @"\]");
+                        // if the first character is /, skip it
+                        if (content[0] == '/')
+                        {
+                            content = content.Substring(1);
+                        }
+                        // skip spear profile file
+                        if (content != Consts.FILE_INTEGRITYFILE)
+                        {
+                            // skip line 
+                            gitignoreContent += content + "\n";
+                        }
                     }
                     File.WriteAllText(gitignorePath, gitignoreContent);
                     errMsg = "";
