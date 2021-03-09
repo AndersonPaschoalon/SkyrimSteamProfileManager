@@ -16,7 +16,6 @@ namespace SpearSettings
     {
         private readonly ILogger log = Log4NetLogger.getInstance(LogAppender.APP_SETTINGS);
         private readonly string STEAMPATH = @"C:\Program Files (x86)\Steam\steamapps\common";
-        //private readonly string DOCSPATH = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\My Games\";
         private readonly string DOCSPATH = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
         private readonly string APPDATAPATH = Environment.GetEnvironmentVariable("localappdata");
 

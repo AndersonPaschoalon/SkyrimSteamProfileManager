@@ -65,6 +65,14 @@ namespace SpearSettings
         public const int ERR_VORTEXBKP_DIRRECTORY_MISSING = 048;
         public const int ERR_SOURCE_DESTINATION_DONT_MATCH_ACTIVATEDESACTIVATED = 049;
         public const int ERR_SOURCE_DESTINATION_DONT_MATCH_DESACTIVATEACTIVE = 050;
+        public const int ERR_PATHS_LABELS_SIZE_DONT_MATCH_1 = 051;
+        public const int ERR_PATH_NOT_FOUND_STEAM = 052;
+        public const int ERR_PATH_NOT_FOUND_DOCUMENTS = 053;
+        public const int ERR_PATH_NOT_FOUND_APPDATA = 054;
+        public const int ERR_PATH_NOT_FOUND_NMM = 055;
+        public const int ERR_PATH_NOT_FOUND_VORTEX = 056;
+        public const int ERR_PATH_NOT_FOUND_DEFAULT = 057;
+        public const int ERR_PATH_NULL_OR_EMPTY = 058;
 
         public static string errMsg(int errNumber)
         {

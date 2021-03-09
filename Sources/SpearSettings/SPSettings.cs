@@ -44,6 +44,9 @@ namespace SpearSettings
         [XmlAttribute("tesvEditExe")]
         public string tesvEditExe { get; set; }
 
+        [XmlAttribute("gitignoreExtensions")]
+        public string gitignoreExtensions { get; set; }
+
         [XmlAttribute("dateFormat")]
         public string dateFormat { get; set; }
 

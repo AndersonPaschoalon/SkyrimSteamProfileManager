@@ -534,7 +534,7 @@ namespace ProfileManagerBL
         public bool tool_killSteamProcs(out string errMsg)
         {
             errMsg = "";
-            SpearToolsManager.killAllSteam();
+            SpearToolsManager.killSteamProcs(out errMsg);
             return true;
         }
 

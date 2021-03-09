@@ -14,17 +14,16 @@ namespace SpearSettings
             this.listPathLabels = new List<string>();
         }
 
-        public List<string> listPaths { get; private set; }
-        public string[] vecPaths 
-        {
-            get 
-            {
-                return listPaths.ToArray();
-            }
-        }
-        internal List<string> listPathLabels { get; private set; }
-
-        public bool checkLabels(ListPaths lpaths,out string errLabel1, out string errLabel2)
+        /// <summary>
+        /// This methods checks the consistency between two objects ListPaths. In sucess returns
+        /// true, and the output strings are empty. In case of failure, retuns false, and the 
+        /// labels that didnt matched.
+        /// </summary>
+        /// <param name="lpaths"></param>
+        /// <param name="errLabel1"></param>
+        /// <param name="errLabel2"></param>
+        /// <returns></returns>
+        public bool checkLabels(ListPaths lpaths, out string errLabel1, out string errLabel2)
         {
             int len = lpaths.listPathLabels.Count;
             List<string> listIn = lpaths.listPathLabels;
@@ -45,6 +44,18 @@ namespace SpearSettings
             }
             return false;
         }
+
+        public List<string> listPaths { get; private set; }
+
+        public string[] vecPaths 
+        {
+            get 
+            {
+                return listPaths.ToArray();
+            }
+        }
+
+        internal List<string> listPathLabels { get; private set; }
 
         internal void addpath(string path, string label)
         {

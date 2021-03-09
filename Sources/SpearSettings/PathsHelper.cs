@@ -796,6 +796,22 @@ namespace SpearSettings
 
         #endregion profile_helpers
 
+        #region check_installation
+
+        public int checkInstallationPaths()
+        {
+            ListPaths listPathsObj = this.getAllPaths_AppGame();
+            return this.checkInstallationHelper(listPathsObj.listPaths, listPathsObj.listPathLabels);
+        }
+
+        public int checkBackupInstallationPaths(string bkpProfileName)
+        {
+            ListPaths listPathsObj = this.getAllPaths_BkpProfGame(bkpProfileName);
+            return this.checkInstallationHelper(listPathsObj.listPaths, listPathsObj.listPathLabels);
+        }
+
+        #endregion check_installation
+
         #region private 
 
         private string _game;
@@ -984,6 +1000,53 @@ namespace SpearSettings
                 this._gameLogsExt = gameLogExtension;
                 this._useGameLogs = useGameLogs;
             }
+        }
+
+        private int checkInstallationHelper(List<string> paths, List<string> labels)
+        {
+            if (paths == null || labels == null || paths.Count.Equals(0) || paths.Count.Equals(0))
+            {
+                return Errors.ERR_PATH_NULL_OR_EMPTY;
+            }
+            if (paths.Count != labels.Count)
+            {
+                return Errors.ERR_PATHS_LABELS_SIZE_DONT_MATCH_1;
+            }
+            for (int i = 0; i < paths.Count; i++)
+            {
+                if (!Directory.Exists(paths[i]))
+                {
+                    switch (labels[i])
+                    {
+                        case PathsHelper.LABEL_APPDATA:
+                            {
+                                return Errors.ERR_PATH_NOT_FOUND_APPDATA;
+                            }
+                        case PathsHelper.LABEL_DOCUMENTS:
+                            {
+                                return Errors.ERR_PATH_NOT_FOUND_DOCUMENTS;
+                            }
+                        case PathsHelper.LABEL_NMM:
+                            {
+                                return Errors.ERR_PATH_NOT_FOUND_NMM;
+                            }
+                        case PathsHelper.LABEL_STEAM:
+                            {
+                                return Errors.ERR_PATH_NOT_FOUND_STEAM;
+                            }
+                        case PathsHelper.LABEL_VORTEX:
+                            {
+                                return Errors.ERR_PATH_NOT_FOUND_VORTEX;
+
+                            }
+                        default:
+                            {
+                                return Errors.ERR_PATH_NOT_FOUND_DEFAULT;
+                            }
+                    }
+                }
+            }
+            return Errors.SUCCESS;
         }
 
         #endregion private 
