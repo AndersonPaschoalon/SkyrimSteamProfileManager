@@ -18,8 +18,10 @@
         -->
         <!-- **original**
         <requestedExecutionLevel level="asInvoker" uiAccess="false" />
-        -->
+        **adm**
         <requestedExecutionLevel level="requireAdministrator" uiAccess="false" />
+        -->
+        <requestedExecutionLevel level="asInvoker" uiAccess="false" />
       </requestedPrivileges>
     </security>
   </trustInfo>

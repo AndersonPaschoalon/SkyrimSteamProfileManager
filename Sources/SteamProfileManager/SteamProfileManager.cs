@@ -131,6 +131,7 @@ namespace ProfileManager
         /// <returns></returns>
         public int activateDesactivatedProfile(string profileName, out string outErrMsg)
         {
+            bool opWasCancelled = false;
             log.Debug("## manager.activateDesactivatedProfile() #######################################");
             log.Debug("# activateDesactivatedProfile() profileName:" + profileName);
             log.Debug("STEP 1: Check Settings...");
@@ -170,9 +171,18 @@ namespace ProfileManager
             }
 
             log.Debug("STEP 3: moving folders from backup to root dir...");
+            // check backup before moving 
+            string errPathOut = "";
+            string errLabel = "";
+            int ret = this.paths.checkBackupInstallationPaths(profileName, out errPathOut, out errLabel);
+            if (ret != Errors.SUCCESS)
+            {
+                outErrMsg = "Backup Path (" + profileName + ") " + errLabel + ": <" + errPathOut + ">";
+                return ret;
+            }
+            // load all paths
             ListPaths listPathsDst = this.paths.getAllPaths_App();
             ListPaths listPathsSrc = this.paths.getAllPaths_BkpProfGame(profileName);
-            // check consinstency
             string errLabel1 = "";
             string errLabel2 = "";
             if (!listPathsSrc.checkLabels(listPathsDst, out errLabel1, out errLabel2))
@@ -189,50 +199,24 @@ namespace ProfileManager
             }
             string[] destinationDirs = listPathsDst.vecPaths;
             string[] sourceDirs = listPathsSrc.vecPaths;
-            // this.paths.steam,
-            //string[] destinationDirs = this.paths.getAllPaths_App().vecPaths;
-            // this.paths.steamBkpProfGame(profileName),
-            //string[] sourceDirs = this.paths.getAllPaths_BkpProfGame(profileName).vecPaths;
-            /*
-            if (this.paths.optionalAreSet())
-            {
-                destinationDirs = new string[]  {
-                    this.paths.steam,
-                    this.paths.appData,
-                    this.paths.docs,
-                    this.paths.nmm
-                };
-                sourceDirs = new string[] {
-                    this.paths.steamBkpProfGame(profileName),      // steam
-                    this.paths.appDataBkpProfGame(profileName),    // appdata
-                    this.paths.docsBkpProfGame(profileName),       // docs
-                    this.paths.nmmBkpProfGame(profileName)
-                };
-            }
-            else
-            {
-                log.Info(" -- Optional dirs are not set. They will not be moved.");
-                destinationDirs = new string[]  {
-                    this.paths.steam,
-                    this.paths.appData,
-                    this.paths.docs
-                };
-                sourceDirs = new string[] {
-                    this.paths.steamBkpProfGame(profileName),      // steam
-                    this.paths.appDataBkpProfGame(profileName),    // appdata
-                    this.paths.docsBkpProfGame(profileName)        // docs
-                };
-            }
-            */
             string errMsg = "";
             string errSrcDir = "";
             string errDstDir = "";
             string errPath = "";
             bool sucess = CSharp.stackMv(sourceDirs, destinationDirs, true, LogMethod.LOGGER, 
-                                         out errMsg, out errSrcDir, out errDstDir);
+                                         out errMsg, out errSrcDir, out errDstDir, out opWasCancelled);
             if (!sucess)
             {
                 outErrMsg = "Error moving directories: SrcDir<" + errSrcDir + ">, DstDir<" + errDstDir + ">. Error Message:" + errMsg;
+                if (opWasCancelled)
+                {
+                    log.Warn(" ** outMsg: " + outErrMsg);
+                    log.Warn(" ** errMsg: " + errMsg);
+                    log.Warn(" ** errSrcDir:" + errSrcDir);
+                    log.Warn(" ** errDstDir: " + errDstDir);
+                    log.Warn(" ** Errors.ERR_MOVING_DIRECTORIES_2");
+                    return Errors.INFO_OPERATION_CANCELLED_BY_USER;
+                }
                 log.Error(" ** " + outErrMsg);
                 log.Error(" ** errMsg: " + errMsg);
                 log.Error(" ** errSrcDir:" + errSrcDir);
@@ -244,7 +228,6 @@ namespace ProfileManager
             log.Debug("STEP 4: create integrity file...");
             errMsg = "";
             errPath = "";
-            //if (!this.paths.updateActiveIntegrityFile(profToActivate, out errMsg, out errPath))
             if (!this.integrityFile.updateActiveIntegrityFile(profToActivate, out errMsg, out errPath))
             {
                 outErrMsg = "Could not create intregrity file. Message:"  + errMsg + ". Error Path:" + errPath;
@@ -276,6 +259,7 @@ namespace ProfileManager
             string color = "";
             string errMsg = "";
             bool retVal = false;
+            bool opWasCancelled = false;
 
             // check state
             this.updateManagerState();
@@ -329,7 +313,15 @@ namespace ProfileManager
                 return ret;
             }
             log.Debug(" -- createBackupProfilesFolder OK!");
-
+            // check instalation before moving 
+            string errPath = "";
+            string errLabel = "";
+            ret = this.paths.checkInstallationPaths(out errPath, out errLabel);
+            if (ret != Errors.SUCCESS)
+            {
+                outMsg = "Installation Path " + errLabel + ": <" + errPath + ">";
+                return ret;
+            }
             ListPaths listPathsDst = this.paths.getAllPaths_BkpProf(profileName);
             ListPaths listPathsSrc = this.paths.getAllPaths_AppGame();
             // check consinstency
@@ -349,31 +341,22 @@ namespace ProfileManager
             }
             string[] destinationDirs = listPathsDst.vecPaths;
             string[] sourceDirs = listPathsSrc.vecPaths;
-
-            /*
-            // move directories to backup dir   sourceDirs
-            string[] destinationDirs = this.paths.getAllPaths_BkpProf(profileName).vecPaths;
-            string[] sourceDirs = this.paths.getAllPaths_AppGame().vecPaths;
-            // string[] destinationDirs = this.paths.getAllPaths_BkpProf(profileName).ToArray();
-            // string[] sourceDirs = this.paths.getAllPaths_AppGame().ToArray();
-            if (destinationDirs.Length != sourceDirs.Length)
-            {
-                outMsg = "List of source and destination directories are inconsistent.";
-                log.Error(" ** Error: " + outMsg);
-                log.Error(" ** destinationDirs.Length:" + destinationDirs.Length + ", sourceDirs.Length:" + sourceDirs.Length);
-                log.Error(" ** Source      Dirs:" + CSharp.arrayToCsv(sourceDirs));
-                log.Error(" ** Destination Dirs:" + CSharp.arrayToCsv(destinationDirs));
-                return Errors.ERR_INCONSISTENT_SRC_DST_DIR_NUMBER;
-            }
-            */
-
             string errSrcDir = "";
             string errDstDir = "";
             bool sucess = CSharp.stackMv(sourceDirs, destinationDirs, true, LogMethod.LOGGER,
-                                         out errMsg, out errSrcDir, out errDstDir);
+                                         out errMsg, out errSrcDir, out errDstDir, out opWasCancelled);
             if (!sucess)
             {
                 outMsg = errMsg + " errSrcDir:<" + errSrcDir + ">" + ", errDstDir:<" + errDstDir + ">";
+                if (opWasCancelled)
+                {
+                    log.Warn(" ** outMsg: " + outMsg);
+                    log.Warn(" ** errMsg: " + errMsg);
+                    log.Warn(" ** errSrcDir:" + errSrcDir);
+                    log.Warn(" ** errDstDir: " + errDstDir);
+                    log.Warn(" ** Errors.INFO_OPERATION_CANCELLED_BY_USER");
+                    return Errors.INFO_OPERATION_CANCELLED_BY_USER;
+                }
                 log.Error(" ** outMsg: " + outMsg);
                 log.Error(" ** errMsg: " + errMsg);
                 log.Error(" ** errSrcDir:" + errSrcDir);
@@ -486,7 +469,6 @@ namespace ProfileManager
                 prof.name = profNameNew;
                 prof.color = colorNew;
                 // creatin date is not changed
-
                 if (profileType == 1) // ACTIVE profile
                 {
                     ret = this.integrityFile.updateActiveIntegrityFile(prof, out errMsg, out errPath);
@@ -517,26 +499,6 @@ namespace ProfileManager
                     log.Debug(" -- editProfile for DESACTIVATED profile ");
                     log.Debug(" -- dirsToCheck:{" + CSharp.listToCsv(dirsToCheck) + "}");
                     log.Debug(" -- names:{" + CSharp.listToCsv(names) + "}");
-
-                    /*
-                    List<string> dirsToCheck = new List<string>{
-                        this.paths.steamBkpProf(profNameOld),
-                        this.paths.docsBkpProf(profNameOld),
-                        this.paths.appDataBkpProf(profNameOld)
-                    };
-                    List<string> names = new List<string>
-                    {
-                        profNameNew,
-                        profNameNew,
-                        profNameNew
-                    };
-                    if (this.paths.optionalAreSet())
-                    {
-                        dirsToCheck.Add(this.paths.nmmBkpProf(profNameOld));
-                        names.Add(profNameNew);
-                        names.Add(profNameNew);
-                    }
-                    */
                     errMsg = "";
                     errDir = "";
                     errName = "";

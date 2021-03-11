@@ -33,6 +33,8 @@ namespace Utils
         ERR_UNKNOWN
     }
 
+    
+
     public class CSharp
     {
         #region private
@@ -42,7 +44,12 @@ namespace Utils
         #region consts 
         public const string TRUE = "TRUE";
         public const string FALSE = "FALSE";
+        public const string MOVE_CANCELLED = "MOVE_CANCELLED";
         #endregion consts
+
+        #region static 
+        public static LogMethod stlogMethod;
+        #endregion static 
 
         #region logger
 
@@ -374,10 +381,10 @@ namespace Utils
         /// <param name="errMsg"></param>
         /// <returns></returns>
         public static bool stackMv(string[] sources, string[] destinations, bool showUi,
-                                   out string errMsg)
+                                   out string errMsg, out bool opWasCancelled)
         {
             LogMethod logMethod = LogMethod.NONE;
-            return stackMv(sources, destinations, showUi, logMethod, out errMsg);
+            return stackMv(sources, destinations, showUi, logMethod, out errMsg, out opWasCancelled);
         }
 
 
@@ -390,12 +397,12 @@ namespace Utils
         /// <param name="errMsg"></param>
         /// <returns></returns>
         public static bool stackMv(string[] sources, string[] destinations, bool showUi,
-                                   LogMethod logMethod, out string errMsg)
+                                   LogMethod logMethod, out string errMsg, out bool opWasCancelled)
         {
             string errSrc = "";
             string errDst = "";
             return stackMv(sources, destinations, showUi, logMethod, 
-                           out errMsg, out errSrc, out errDst);
+                           out errMsg, out errSrc, out errDst, out opWasCancelled);
         }
 
         /// <summary>
@@ -413,8 +420,11 @@ namespace Utils
         /// <returns></returns>
         public static bool stackMv(string[] sources, string[] destinations, bool showUi,
                                    LogMethod logMethod, out string errMsg, out string errSrcDir, 
-                                   out string errDstDir)
+                                   out string errDstDir, out bool opWasCancelled)
         {
+            bool retVal = true;
+            opWasCancelled = false;
+            CSharp.stlogMethod = logMethod;
             if (sources == null || destinations == null)
             {
                 errMsg = "NULL VECTOR ERROR";
@@ -497,32 +507,51 @@ namespace Utils
             // Move the directories
             Stack<string> dirStackSrc = new Stack<string>();
             Stack<string> dirStackDst = new Stack<string>();
+            errMsg = "";
             for (int i = 0; i < sources.Length; i++)
             {
                 try
                 {
-                    if (logMethod == LogMethod.LOGGER)
-                    {
-                        log.Debug("mv -r \"" + sources[i] + "\" \"" + destinations[i] + "\"");
-                    }
-                    Console.WriteLine("mv -r \"" + sources[i] + "\" \"" + destinations[i] + "\"");
-                    
                     if (!sources[i].Trim().Equals("") && !destinations[i].Trim().Equals(""))
                     {
-                        dirMv(sources[i], destinations[i], showUi);
+                        CSharp.dirMv(sources[i], destinations[i], showUi);
                         dirStackSrc.Push(sources[i]);
                         dirStackDst.Push(destinations[i]);
                     }
                 }
+                catch (OperationCanceledException oce)
+                {
+                    errMsg = oce.Message;
+                    opWasCancelled = true;
+                }
                 catch (Exception ex)
+                {
+                    retVal = false;
+                    errMsg = ex.Message;
+                    opWasCancelled = false;
+                }
+                finally
                 {
                     while (dirStackSrc.Count > 0)
                     {
-                        undoMv(dirStackSrc.Pop(), dirStackDst.Pop(), showUi);
+                        bool retUndo = undoMv(dirStackSrc.Pop(),
+                                              dirStackDst.Pop(),
+                                              showUi,
+                                              out errSrcDir,
+                                              out errDstDir,
+                                              out errMsg,
+                                              out opWasCancelled);
+                        if (!retUndo)
+                        {
+                            retVal = false;
+                        }
                     }
                     errSrcDir = sources[i];
                     errDstDir = destinations[i];
-                    errMsg = ex.Message;
+                    retVal = false;
+                }
+                if (!retVal)
+                {
                     return false;
                 }
             }
@@ -538,7 +567,13 @@ namespace Utils
         /// <param name="usedSource"></param>
         /// <param name="usedDestination"></param>
         /// <param name="showUi"></param>
-        public static void undoMv(string usedSource, string usedDestination, bool showUi)
+        public static bool undoMv(string usedSource, 
+                                  string usedDestination, 
+                                  bool showUi, 
+                                  out string errSrc, 
+                                  out string errDst, 
+                                  out string errMsg,
+                                  out bool opWasCancelled)
         {
             // move src  dst : move "TestDir\\t2"  "TestDir\\t1"  
             // before "TestDir\\t2" "TestDir\\t1" => after: "TestDir\\t1" "TestDir\\t1\\t2"
@@ -549,7 +584,7 @@ namespace Utils
             string lastElementSrc = dirsSrc[dirsSrc.Length - 1];
             string newSource = usedDestination + "\\" + lastElementSrc;
             // new dst
-            string[] dirsDst = usedDestination.Split(charSeparators, StringSplitOptions.RemoveEmptyEntries);
+            string[] dirsDst = usedSource.Split(charSeparators, StringSplitOptions.RemoveEmptyEntries);
             string newDst = "";
             for (int i = 0; i < dirsDst.Length - 1; i++)
             {
@@ -559,13 +594,66 @@ namespace Utils
                 }
                 else
                 {
-                    newDst = "\\" + dirsDst[i];
+                    newDst += "\\" + dirsDst[i];
                 }
             }
-            newDst = newDst + "\\";
-            dirMv(newSource, newDst, showUi);
-
+            newDst +=  "\\";
+            try
+            {
+                CSharp.dirMv(newSource, newDst, showUi);
+            }
+            catch (OperationCanceledException oce)
+            {
+                errSrc = newSource;
+                errDst = newDst;
+                errMsg = oce.Message;
+                opWasCancelled = true;
+                return false;
+            }
+            catch (Exception ex)
+            {
+                errSrc = newSource;
+                errDst = newDst;
+                errMsg = ex.Message;
+                opWasCancelled = false;
+                return false;
+            }
+            errSrc = "";
+            errDst = "";
+            errMsg = "";
+            opWasCancelled = false;
+            return true;
         }
+
+        /*
+                public static void undoMv(string usedSource, string usedDestination, bool showUi)
+               {
+                   // move src  dst : move "TestDir\\t2"  "TestDir\\t1"  
+                   // before "TestDir\\t2" "TestDir\\t1" => after: "TestDir\\t1" "TestDir\\t1\\t2"
+                   // undomove: move source "TestDir\\t1\\t2" ; move destination "TestDir\\"
+                   // new source
+                   char[] charSeparators = new char[] { '\\' };
+                   string[] dirsSrc = usedSource.Split(charSeparators, StringSplitOptions.RemoveEmptyEntries);
+                   string lastElementSrc = dirsSrc[dirsSrc.Length - 1];
+                   string newSource = usedDestination + "\\" + lastElementSrc;
+                   // new dst
+                   string[] dirsDst = usedDestination.Split(charSeparators, StringSplitOptions.RemoveEmptyEntries);
+                   string newDst = "";
+                   for (int i = 0; i < dirsDst.Length - 1; i++)
+                   {
+                       if (i == 0)
+                       {
+                           newDst = dirsDst[0];
+                       }
+                       else
+                       {
+                           newDst = "\\" + dirsDst[i];
+                       }
+                   }
+                   newDst = newDst + "\\";
+                   CSharp.dirMv(newSource, newDst, showUi);
+               } 
+        */
 
         /// <summary>
         /// Execute the move operation using the linux mv -r sintax, where the destination will be 
@@ -576,6 +664,12 @@ namespace Utils
         /// <param name="showUi"></param>
         public static void dirMv(string source, string destination, bool showUi)
         {
+            if (CSharp.stlogMethod == LogMethod.LOGGER)
+            {
+                log.Debug("mv -r \"" + source + "\" \"" + destination + "\"");
+            }
+            Console.WriteLine("mv -r \"" + source + "\" \"" + destination + "\"");
+
             char[] charSeparators = new char[] { '\\' };
             string[] dirs = source.Split(charSeparators, StringSplitOptions.RemoveEmptyEntries);
             string lastElement = dirs[dirs.Length - 1];
@@ -583,10 +677,11 @@ namespace Utils
 
             if (showUi)
             {
+                // do the move
                 FileSystem.MoveDirectory(source,
                                          destination,
                                          UIOption.AllDialogs,
-                                         UICancelOption.DoNothing);
+                                         UICancelOption.ThrowException);
             }
             else
             {
@@ -870,35 +965,6 @@ namespace Utils
             }
             return true;
         }
-
-        /*
-        public static bool execDirOrExe(string pathOrExe)
-        {
-            if (Directory.Exists(pathOrExe))
-            {
-                // Process.Start("explorer.exe", pathOrExe);
-                Process.Start(pathOrExe);
-            }
-            else if (File.Exists(pathOrExe))
-            {
-                try
-                {
-                    Process.Start(pathOrExe);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("ERROR", "Error starting process " + pathOrExe + ". Message: " + ex.Message, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return false;
-                }                
-            }
-            else
-            {
-                return false;
-            }
-            return true;
-
-        }
-        */
 
         #endregion fileSystemOperations
 

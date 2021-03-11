@@ -418,11 +418,17 @@ namespace Spear
             {
                 return;
             }
-            else
+            else if (retval < 100) // error
             {
                 string msg = Errors.errMsg(retval) + ". " + errMsg;
                 log.Debug("ERROR " + retval + " => " + msg + ", errMsg:" + errMsg);
                 MessageBox.Show(msg, "ERROR " + retval, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else if (retval >= 100) // info
+            {
+                string msg = Errors.errMsg(retval) + ". " + errMsg;
+                log.Debug("INFO " + retval + " => " + msg + ", errMsg:" + errMsg);
+                MessageBox.Show(errMsg, "INFO " + retval, MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 

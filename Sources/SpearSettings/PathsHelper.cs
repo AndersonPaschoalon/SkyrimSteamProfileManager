@@ -87,6 +87,7 @@ namespace SpearSettings
                 gameSettings.gameLogsAreSet());
         }
 
+        /*
         public int checkSettings()
         {
             if (!Directory.Exists(this.steam))
@@ -143,18 +144,7 @@ namespace SpearSettings
             }
             return Errors.SUCCESS;
         }
-
-        #region HTML
-
-        //public string htmlDir
-        //{
-        //    get 
-        //    {
-        //        return Environment.CurrentDirectory + "\\" + Consts.DIR_HTML + "\\";
-        //    }
-        //}
-
-        #endregion HTML
+        */
 
         #region integrity_files 
 
@@ -798,16 +788,16 @@ namespace SpearSettings
 
         #region check_installation
 
-        public int checkInstallationPaths()
+        public int checkInstallationPaths(out string errPath, out string errLabel)
         {
             ListPaths listPathsObj = this.getAllPaths_AppGame();
-            return this.checkInstallationHelper(listPathsObj.listPaths, listPathsObj.listPathLabels);
+            return this.checkInstallationHelper(listPathsObj.listPaths, listPathsObj.listPathLabels, out errPath, out errLabel);
         }
 
-        public int checkBackupInstallationPaths(string bkpProfileName)
+        public int checkBackupInstallationPaths(string bkpProfileName, out string errPath, out string errLabel)
         {
             ListPaths listPathsObj = this.getAllPaths_BkpProfGame(bkpProfileName);
-            return this.checkInstallationHelper(listPathsObj.listPaths, listPathsObj.listPathLabels);
+            return this.checkInstallationHelper(listPathsObj.listPaths, listPathsObj.listPathLabels, out errPath, out errLabel);
         }
 
         #endregion check_installation
@@ -1002,50 +992,62 @@ namespace SpearSettings
             }
         }
 
-        private int checkInstallationHelper(List<string> paths, List<string> labels)
+        private int checkInstallationHelper(List<string> paths, List<string> labels, out string errPath, out string errLabel)
         {
             if (paths == null || labels == null || paths.Count.Equals(0) || paths.Count.Equals(0))
             {
+                errPath = "";
+                errLabel = "Paths null or empty";
                 return Errors.ERR_PATH_NULL_OR_EMPTY;
             }
             if (paths.Count != labels.Count)
             {
+                errPath = "";
+                errLabel = "Paths and label size dont match";
                 return Errors.ERR_PATHS_LABELS_SIZE_DONT_MATCH_1;
             }
             for (int i = 0; i < paths.Count; i++)
             {
                 if (!Directory.Exists(paths[i]))
                 {
+                    errPath = paths[i];
                     switch (labels[i])
                     {
                         case PathsHelper.LABEL_APPDATA:
                             {
+                                errLabel = "AppData";
                                 return Errors.ERR_PATH_NOT_FOUND_APPDATA;
                             }
                         case PathsHelper.LABEL_DOCUMENTS:
                             {
+                                errLabel = "Documents";
                                 return Errors.ERR_PATH_NOT_FOUND_DOCUMENTS;
                             }
                         case PathsHelper.LABEL_NMM:
                             {
+                                errLabel = "NMM";
                                 return Errors.ERR_PATH_NOT_FOUND_NMM;
                             }
                         case PathsHelper.LABEL_STEAM:
                             {
+                                errLabel = "Steam";
                                 return Errors.ERR_PATH_NOT_FOUND_STEAM;
                             }
                         case PathsHelper.LABEL_VORTEX:
                             {
+                                errLabel = "Vortex";
                                 return Errors.ERR_PATH_NOT_FOUND_VORTEX;
-
                             }
                         default:
                             {
+                                errLabel = "Default";
                                 return Errors.ERR_PATH_NOT_FOUND_DEFAULT;
                             }
                     }
                 }
             }
+            errPath = "";
+            errLabel = "SUCCESS";
             return Errors.SUCCESS;
         }
 
