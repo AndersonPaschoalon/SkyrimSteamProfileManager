@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.VisualBasic.FileIO;
@@ -251,12 +252,16 @@ namespace Utils
 
         public static Err safeMove(string sourceDirName, string destDirName)
         {
+            sourceDirName = CSharp.cleanPath(sourceDirName);
+            destDirName = CSharp.cleanPath(destDirName);
             LogMethod logMethod = LogMethod.NONE;
             return safeMove(sourceDirName, destDirName, logMethod);
         }
 
         public static Err safeMove(string sourceDirName, string destDirName, LogMethod logMethod)
         {
+            sourceDirName = CSharp.cleanPath(sourceDirName);
+            destDirName = CSharp.cleanPath(destDirName);
             try
             {
                 Directory.Move(sourceDirName, destDirName);
@@ -422,6 +427,8 @@ namespace Utils
                                    LogMethod logMethod, out string errMsg, out string errSrcDir, 
                                    out string errDstDir, out bool opWasCancelled)
         {
+            bool opWasCancelledTemp = false;
+            bool exceptionError = false;
             bool retVal = true;
             opWasCancelled = false;
             CSharp.stlogMethod = logMethod;
@@ -521,16 +528,19 @@ namespace Utils
                 }
                 catch (OperationCanceledException oce)
                 {
+                    //retVal = true;
                     errMsg = oce.Message;
                     opWasCancelled = true;
+                    exceptionError = true;
                 }
                 catch (Exception ex)
                 {
                     retVal = false;
                     errMsg = ex.Message;
                     opWasCancelled = false;
+                    exceptionError = true;
                 }
-                finally
+                if (exceptionError)
                 {
                     while (dirStackSrc.Count > 0)
                     {
@@ -540,18 +550,12 @@ namespace Utils
                                               out errSrcDir,
                                               out errDstDir,
                                               out errMsg,
-                                              out opWasCancelled);
-                        if (!retUndo)
-                        {
-                            retVal = false;
-                        }
+                                              out opWasCancelledTemp);
                     }
                     errSrcDir = sources[i];
                     errDstDir = destinations[i];
-                    retVal = false;
-                }
-                if (!retVal)
-                {
+                    // if OperationCanceledException or sucess return true
+                    // other exception return false
                     return false;
                 }
             }
@@ -625,36 +629,6 @@ namespace Utils
             return true;
         }
 
-        /*
-                public static void undoMv(string usedSource, string usedDestination, bool showUi)
-               {
-                   // move src  dst : move "TestDir\\t2"  "TestDir\\t1"  
-                   // before "TestDir\\t2" "TestDir\\t1" => after: "TestDir\\t1" "TestDir\\t1\\t2"
-                   // undomove: move source "TestDir\\t1\\t2" ; move destination "TestDir\\"
-                   // new source
-                   char[] charSeparators = new char[] { '\\' };
-                   string[] dirsSrc = usedSource.Split(charSeparators, StringSplitOptions.RemoveEmptyEntries);
-                   string lastElementSrc = dirsSrc[dirsSrc.Length - 1];
-                   string newSource = usedDestination + "\\" + lastElementSrc;
-                   // new dst
-                   string[] dirsDst = usedDestination.Split(charSeparators, StringSplitOptions.RemoveEmptyEntries);
-                   string newDst = "";
-                   for (int i = 0; i < dirsDst.Length - 1; i++)
-                   {
-                       if (i == 0)
-                       {
-                           newDst = dirsDst[0];
-                       }
-                       else
-                       {
-                           newDst = "\\" + dirsDst[i];
-                       }
-                   }
-                   newDst = newDst + "\\";
-                   CSharp.dirMv(newSource, newDst, showUi);
-               } 
-        */
-
         /// <summary>
         /// Execute the move operation using the linux mv -r sintax, where the destination will be 
         /// the parent directory of the moved one.
@@ -664,9 +638,12 @@ namespace Utils
         /// <param name="showUi"></param>
         public static void dirMv(string source, string destination, bool showUi)
         {
+            source = CSharp.cleanPath(source);
+            destination = CSharp.cleanPath(destination);
+            // cleanPath(string path)
             if (CSharp.stlogMethod == LogMethod.LOGGER)
             {
-                log.Debug("mv -r \"" + source + "\" \"" + destination + "\"");
+                log.Info("mv -r \"" + source + "\" \"" + destination + "\"");
             }
             Console.WriteLine("mv -r \"" + source + "\" \"" + destination + "\"");
 
@@ -967,6 +944,18 @@ namespace Utils
         }
 
         #endregion fileSystemOperations
+
+        #region private 
+
+        public static string cleanPath(string path)
+        {
+            string pattern = @"(\\)+";
+            string rep = @"\";
+            string result = Regex.Replace(path, pattern, rep);
+            return result;
+        }
+
+        #endregion private 
 
     }
 }

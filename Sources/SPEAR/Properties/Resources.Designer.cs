@@ -83,6 +83,16 @@ namespace Spear.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap _15_document_view {
+            get {
+                object obj = ResourceManager.GetObject("_15_document_view", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap _15_edit {
             get {
                 object obj = ResourceManager.GetObject("_15_edit", resourceCulture);

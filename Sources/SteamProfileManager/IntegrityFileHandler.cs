@@ -19,6 +19,8 @@ namespace ProfileManager
             this.pathsHelper = paths;
         }
 
+        //==============================
+
         public string activeIntegrityFilePath()
         {
             return this.pathsHelper.activeIntegrityFilePath;
@@ -66,10 +68,43 @@ namespace ProfileManager
             return true;
         }
 
+
+        //==============================
+
         public string desactivatedIntegrityFilePath(string prof)
         {
             return this.pathsHelper.desactivatedIntegrityFilePath(prof);
         }
+
+        public bool desactivatedIntegrityFileExists(string prof)
+        {
+            string intFile = this.pathsHelper.desactivatedIntegrityFilePath(prof);
+            if (File.Exists(intFile))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public string desactivatedIntegrityFileContent(string prof)
+        {
+            if (this.desactivatedIntegrityFileExists(prof))
+            {
+                string intFile = this.pathsHelper.desactivatedIntegrityFilePath(prof);
+                string integrityFileContent = File.ReadAllText(intFile);
+                return integrityFileContent;
+            }
+            return "";
+        }
+
+        public List<string> desactivatedIntegrityFileItems(string prof)
+        {
+            string content = this.desactivatedIntegrityFileContent(prof);
+            return CSharp.csvToList(content);
+        }
+
+
+        //==========================
 
         public bool updateActiveIntegrityFile(SPProfile prof, out string errMsg, out string errPath)
         {

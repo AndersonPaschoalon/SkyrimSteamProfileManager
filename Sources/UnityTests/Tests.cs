@@ -70,8 +70,8 @@ namespace Tester
         public static void testLogger()
         {
             ILogger logConsole = ConsoleLogger.getInstance();
-            ILogger logLog4net = Log4NetLogger.getInstance(LogAppender.APP_CORE);
-            ILogger logLog4netUi = Log4NetLogger.getInstance(LogAppender.APP_UI);
+            ILogger logLog4net = Log4NetLogger.getInstance(LogAppender.APP_CORE, ".\\");
+            ILogger logLog4netUi = Log4NetLogger.getInstance(LogAppender.APP_UI, ".\\");
             ILogger logTlog = TrivialLog.getInstance("triviallogTest.log");
 
             logLog4net.Debug("TEST LOG4NET Debug");

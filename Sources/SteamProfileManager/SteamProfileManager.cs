@@ -34,8 +34,8 @@ namespace ProfileManager
 
         public SteamProfileManager(string gameName)
         {
-            log = Log4NetLogger.getInstance(LogAppender.APP_CORE);
-            CSharp.setLogger(Log4NetLogger.getInstance(LogAppender.APP_CORE));
+            log = Log4NetLogger.getInstance(LogAppender.APP_CORE, Consts.DIR_SETTINGS);
+            CSharp.setLogger(Log4NetLogger.getInstance(LogAppender.APP_CORE, Consts.DIR_SETTINGS));
             log.Info("###############################################################################");
             log.Info("# SteamProfileManager Core: " + gameName);
             log.Info("###############################################################################");
@@ -207,9 +207,9 @@ namespace ProfileManager
                                          out errMsg, out errSrcDir, out errDstDir, out opWasCancelled);
             if (!sucess)
             {
-                outErrMsg = "Error moving directories: SrcDir<" + errSrcDir + ">, DstDir<" + errDstDir + ">. Error Message:" + errMsg;
                 if (opWasCancelled)
                 {
+                    outErrMsg = "Operation cancelled by the User";
                     log.Warn(" ** outMsg: " + outErrMsg);
                     log.Warn(" ** errMsg: " + errMsg);
                     log.Warn(" ** errSrcDir:" + errSrcDir);
@@ -217,6 +217,7 @@ namespace ProfileManager
                     log.Warn(" ** Errors.ERR_MOVING_DIRECTORIES_2");
                     return Errors.INFO_OPERATION_CANCELLED_BY_USER;
                 }
+                outErrMsg = "Error moving directories: SrcDir<" + errSrcDir + ">, DstDir<" + errDstDir + ">. Error Message:" + errMsg;
                 log.Error(" ** " + outErrMsg);
                 log.Error(" ** errMsg: " + errMsg);
                 log.Error(" ** errSrcDir:" + errSrcDir);
@@ -347,9 +348,10 @@ namespace ProfileManager
                                          out errMsg, out errSrcDir, out errDstDir, out opWasCancelled);
             if (!sucess)
             {
-                outMsg = errMsg + " errSrcDir:<" + errSrcDir + ">" + ", errDstDir:<" + errDstDir + ">";
+
                 if (opWasCancelled)
                 {
+                    outMsg = "Operation cancelled by the User";
                     log.Warn(" ** outMsg: " + outMsg);
                     log.Warn(" ** errMsg: " + errMsg);
                     log.Warn(" ** errSrcDir:" + errSrcDir);
@@ -357,6 +359,7 @@ namespace ProfileManager
                     log.Warn(" ** Errors.INFO_OPERATION_CANCELLED_BY_USER");
                     return Errors.INFO_OPERATION_CANCELLED_BY_USER;
                 }
+                outMsg = errMsg + " errSrcDir:<" + errSrcDir + ">" + ", errDstDir:<" + errDstDir + ">";
                 log.Error(" ** outMsg: " + outMsg);
                 log.Error(" ** errMsg: " + errMsg);
                 log.Error(" ** errSrcDir:" + errSrcDir);
@@ -609,9 +612,54 @@ namespace ProfileManager
             return this.applicationState;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="profileName"></param>
+        /// <param name="errPath"></param>
+        /// <param name="errLabel"></param>
+        /// <returns></returns>
+        public int checkInstallation(string profileName, out string errPath, out string errLabel)
+        {
+            if (this.activeProfile != null && this.activeProfile.name.Equals(profileName))
+            {
+                List<string> items =  integrityFile.activeIntegrityFileItems();
+                if (items.Count == 3)
+                {
+                    int retVal = this.paths.checkInstallationPaths(out errPath, out errLabel);
+                    return retVal;
+                }
+                errPath = "";
+                errLabel = "Integrity file is corrupted.";
+                return Errors.ERR_INTEGRITY_FILE_CORRUPTED;
+            }
+            else
+            {
+                foreach (var item in this.listDesactivated)
+                {
+                    if (item.Equals(profileName))
+                    {
+                        List<string> items = integrityFile.desactivatedIntegrityFileItems(profileName);
+                        if (items.Count == 3)
+                        {
+                            int retVal = this.paths.checkInstallationPaths(out errPath, out errLabel);
+                            return retVal;
+                        }
+                        errPath = "";
+                        errLabel = "Integrity file is corrupted";
+                        return Errors.ERR_INTEGRITY_FILE_CORRUPTED;
+                    }
+                }
+            }
+            errPath = "";
+            errLabel = "No valid profile was found";
+            return Errors.ERR_NO_PROFILE_FOUND;
+        }
+
         #endregion interface_methods
 
         #region app_state
+
         /// <summary>
         /// return a list of current desactivated profiles
         /// </summary>
@@ -630,7 +678,10 @@ namespace ProfileManager
             return this.activeProfile;
         }
 
-        // ok
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public SPProfile getInactiveProfile()
         {
             if ((this.applicationState == SPMState.NO_PROFILE) ||

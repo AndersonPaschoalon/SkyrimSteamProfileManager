@@ -34,6 +34,8 @@ namespace Spear
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.configureToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.gameSettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.spearLogsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.logsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openWithNotepadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportAszipToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -54,7 +56,6 @@ namespace Spear
             this.openGameAppDataFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openNMMGameFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openVortexGameFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemLaunchGame = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemVortex = new System.Windows.Forms.ToolStripMenuItem();
             this.launchNMMToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -135,10 +136,27 @@ namespace Spear
             // 
             // configureToolStripMenuItem
             // 
+            this.configureToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.gameSettingsToolStripMenuItem,
+            this.spearLogsToolStripMenuItem});
             this.configureToolStripMenuItem.Name = "configureToolStripMenuItem";
             this.configureToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
             this.configureToolStripMenuItem.Text = "Configure";
             this.configureToolStripMenuItem.Click += new System.EventHandler(this.configureToolStripMenuItem_Click);
+            // 
+            // gameSettingsToolStripMenuItem
+            // 
+            this.gameSettingsToolStripMenuItem.Name = "gameSettingsToolStripMenuItem";
+            this.gameSettingsToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
+            this.gameSettingsToolStripMenuItem.Text = "Game Settings";
+            this.gameSettingsToolStripMenuItem.Click += new System.EventHandler(this.gameSettingsToolStripMenuItem_Click);
+            // 
+            // spearLogsToolStripMenuItem
+            // 
+            this.spearLogsToolStripMenuItem.Name = "spearLogsToolStripMenuItem";
+            this.spearLogsToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
+            this.spearLogsToolStripMenuItem.Text = "Spear Logs";
+            this.spearLogsToolStripMenuItem.Click += new System.EventHandler(this.spearLogsToolStripMenuItem_Click);
             // 
             // logsToolStripMenuItem
             // 
@@ -161,6 +179,7 @@ namespace Spear
             this.exportAszipToolStripMenuItem.Name = "exportAszipToolStripMenuItem";
             this.exportAszipToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.exportAszipToolStripMenuItem.Text = "Export as .zip";
+            this.exportAszipToolStripMenuItem.Visible = false;
             this.exportAszipToolStripMenuItem.Click += new System.EventHandler(this.exportAszipToolStripMenuItem_Click);
             // 
             // profilesToolStripMenuItem
@@ -213,7 +232,6 @@ namespace Spear
             this.deleteGitignoreFileToolStripMenuItem,
             this.toolStripSeparator5,
             this.toolStripMenuItemOpenGameFolder,
-            this.toolStripSeparator6,
             this.toolStripMenuItemLaunchGame,
             this.toolStripMenuItemVortex,
             this.launchNMMToolStripMenuItem,
@@ -299,11 +317,6 @@ namespace Spear
             this.openVortexGameFolderToolStripMenuItem.Text = "Vortex Game Folder";
             this.openVortexGameFolderToolStripMenuItem.Click += new System.EventHandler(this.openVortexGameFolderToolStripMenuItem_Click);
             // 
-            // toolStripSeparator6
-            // 
-            this.toolStripSeparator6.Name = "toolStripSeparator6";
-            this.toolStripSeparator6.Size = new System.Drawing.Size(175, 6);
-            // 
             // toolStripMenuItemLaunchGame
             // 
             this.toolStripMenuItemLaunchGame.Name = "toolStripMenuItemLaunchGame";
@@ -316,6 +329,7 @@ namespace Spear
             this.toolStripMenuItemVortex.Name = "toolStripMenuItemVortex";
             this.toolStripMenuItemVortex.Size = new System.Drawing.Size(178, 22);
             this.toolStripMenuItemVortex.Text = "Launch Vortex";
+            this.toolStripMenuItemVortex.Visible = false;
             this.toolStripMenuItemVortex.Click += new System.EventHandler(this.toolStripMenuItemVortex_Click);
             // 
             // launchNMMToolStripMenuItem
@@ -323,6 +337,7 @@ namespace Spear
             this.launchNMMToolStripMenuItem.Name = "launchNMMToolStripMenuItem";
             this.launchNMMToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
             this.launchNMMToolStripMenuItem.Text = "Launch NMM";
+            this.launchNMMToolStripMenuItem.Visible = false;
             this.launchNMMToolStripMenuItem.Click += new System.EventHandler(this.launchNMMToolStripMenuItem_Click);
             // 
             // skyrimLaunchCreationKitToolStripMenuItem
@@ -337,6 +352,7 @@ namespace Spear
             this.skyrimLaunchTESVEditToolStripMenuItem.Name = "skyrimLaunchTESVEditToolStripMenuItem";
             this.skyrimLaunchTESVEditToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
             this.skyrimLaunchTESVEditToolStripMenuItem.Text = "Launch TESVEdit";
+            this.skyrimLaunchTESVEditToolStripMenuItem.Visible = false;
             this.skyrimLaunchTESVEditToolStripMenuItem.Click += new System.EventHandler(this.skyrimLaunchTESVEditToolStripMenuItem_Click);
             // 
             // toolStripSeparator3
@@ -419,6 +435,7 @@ namespace Spear
             this.toolStripComboBoxSelectGame.Name = "toolStripComboBoxSelectGame";
             this.toolStripComboBoxSelectGame.Size = new System.Drawing.Size(121, 25);
             this.toolStripComboBoxSelectGame.SelectedIndexChanged += new System.EventHandler(this.toolStripComboBoxSelectGame_SelectedIndexChanged);
+            this.toolStripComboBoxSelectGame.Click += new System.EventHandler(this.toolStripComboBoxSelectGame_Click);
             // 
             // toolStripSeparator2
             // 
@@ -820,7 +837,6 @@ namespace Spear
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemOpenGitignoreFile;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemOpenGameFolder;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemVortex;
         private System.Windows.Forms.ToolStripMenuItem skyrimLaunchTESVEditToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openGithubPageToolStripMenuItem;
@@ -838,5 +854,7 @@ namespace Spear
         private System.Windows.Forms.ToolStripMenuItem howToPushToGithubToolStripMenuItem;
         private System.Windows.Forms.GroupBox consoleOutput;
         private System.Windows.Forms.RichTextBox richTextConsole;
+        private System.Windows.Forms.ToolStripMenuItem gameSettingsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem spearLogsToolStripMenuItem;
     }
 }

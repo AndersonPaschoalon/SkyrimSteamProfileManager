@@ -35,7 +35,7 @@ namespace ProfileManagerBL
 
         public ProfileManagerBusinessLayer(string game)
         {
-            this.log = Log4NetLogger.getInstance(LogAppender.APP_CORE);
+            this.log = Log4NetLogger.getInstance(LogAppender.APP_CORE, Consts.DIR_SETTINGS);
             log.Debug("SELECTED GAME: " + game);
             List<string> listGames = SPConfig.listGameNames();
             if (!listGames.Contains(game))
@@ -416,20 +416,17 @@ namespace ProfileManagerBL
 
         public void tool_pushToGithub()
         {
-            this.openHtml(Environment.CurrentDirectory + Consts.FILE_PUSH_GITHUB);
-            //this.openHtml(Environment.CurrentDirectory + "\\" + Consts.FILE_PUSH_GITHUB);
+            this.openHtml(Consts.FILE_PUSH_GITHUB);
         }
 
         public void tool_openHelpPage()
         {
-            this.openHtml(Environment.CurrentDirectory + Consts.FILE_HELP_PAGE);
-            //this.openHtml(Environment.CurrentDirectory + "\\" + Consts.FILE_HELP_PAGE);
+            this.openHtml(Consts.FILE_HELP_PAGE);
         }
 
         public void tool_openGit()
         {
             this.openHtml(Consts.WWW_GITHUB_REPOSITORY);
-            //this.openHtml(Consts.WWW_GITHUB_REPOSITORY);
         }
 
         public void tool_openLogFiles()
@@ -440,6 +437,16 @@ namespace ProfileManagerBL
             {
                 this.openTxtFile(item);
             }
+        }
+
+        public void tool_openGameSettings()
+        {
+            this.openTxtFile(Consts.DIR_SETTINGS + "SPConfig.xml");
+        }
+
+        public void tool_openLogSettings()
+        {
+            this.openTxtFile(Consts.DIR_SETTINGS + "logConfig.xml");
         }
 
         /// <summary>

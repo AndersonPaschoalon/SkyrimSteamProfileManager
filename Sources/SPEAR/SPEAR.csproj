@@ -56,6 +56,9 @@
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
+  <PropertyGroup>
+    <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -196,7 +199,20 @@
     <None Include="Resources\15-open-git.png" />
     <None Include="Resources\15-open-git2.png" />
     <None Include="Resources\github-16.png" />
+    <Content Include="Resources\15-document_view.png" />
     <Content Include="spear.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>dir
+IF EXIST  logConfig.xml (
+    echo ----------------------------------------------
+    echo -- Copy logConfig.xml  
+    echo ----------------------------------------------
+    move /Y  logConfig.xml  .\Settings\
+) ELSE (
+     echo  "logConfig.xml already copied."
+)
+</PostBuildEvent>
+  </PropertyGroup>
 </Project>

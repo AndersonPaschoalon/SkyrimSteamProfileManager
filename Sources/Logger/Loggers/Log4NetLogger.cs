@@ -44,10 +44,10 @@ namespace Utils.Loggers
 
         #region builders
 
-        private Log4NetLogger(LogAppender appender)
+        private Log4NetLogger(LogAppender appender, string configPath)
         {
             this.logAppender = appender;
-            this.level = LogConfig.getLogLevel();
+            this.level = LogConfig.getLogLevel(configPath);
         }
 
         ~Log4NetLogger()
@@ -55,7 +55,7 @@ namespace Utils.Loggers
             Log4NetLogger.shutdown();
         }
 
-        public static Log4NetLogger getInstance(LogAppender appender)
+        public static Log4NetLogger getInstance(LogAppender appender, string configPath)
         {
             LogBuffer.initBuffer(); 
             switch (appender)
@@ -64,7 +64,7 @@ namespace Utils.Loggers
                     {
                         if (Log4NetLogger.instanceManager == null)
                         {
-                            Log4NetLogger.instanceManager = new Log4NetLogger(LogAppender.APP_CORE);
+                            Log4NetLogger.instanceManager = new Log4NetLogger(LogAppender.APP_CORE, configPath);
                         }
                         return Log4NetLogger.instanceManager;
                     }
@@ -72,7 +72,7 @@ namespace Utils.Loggers
                     {
                         if (Log4NetLogger.instanceUi == null)
                         {
-                            Log4NetLogger.instanceUi = new Log4NetLogger(LogAppender.APP_UI);
+                            Log4NetLogger.instanceUi = new Log4NetLogger(LogAppender.APP_UI, configPath);
                         }
                         return Log4NetLogger.instanceUi;
                     }
@@ -80,7 +80,7 @@ namespace Utils.Loggers
                     {
                         if (Log4NetLogger.instanceSettings == null)
                         {
-                            Log4NetLogger.instanceSettings = new Log4NetLogger(LogAppender.APP_SETTINGS);
+                            Log4NetLogger.instanceSettings = new Log4NetLogger(LogAppender.APP_SETTINGS, configPath);
                         }
                         return Log4NetLogger.instanceSettings;
                     }
@@ -88,7 +88,7 @@ namespace Utils.Loggers
                     {
                         if (Log4NetLogger.instanceDefault == null)
                         {
-                            Log4NetLogger.instanceDefault = new Log4NetLogger(LogAppender.APP_DEFFAULT);
+                            Log4NetLogger.instanceDefault = new Log4NetLogger(LogAppender.APP_DEFFAULT, configPath);
                         }
                         return Log4NetLogger.instanceDefault;
                     }

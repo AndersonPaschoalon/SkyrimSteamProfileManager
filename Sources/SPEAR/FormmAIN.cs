@@ -36,11 +36,12 @@ namespace Spear
         private BindingSource bindingSourceDesactivated = new BindingSource();
         // Tests
         private const bool ENABLE_TESTING = false;
+        private const bool DISABLE_SETTINGS_FORM = true;
         private int testToRun = 0;
 
         public FormMain()
         {
-            log = Log4NetLogger.getInstance(LogAppender.APP_UI);
+            log = Log4NetLogger.getInstance(LogAppender.APP_UI, Consts.DIR_SETTINGS);
             log.Debug("###############################################################################");
             log.Debug("# INITIALIZE FormMain");
             log.Debug("###############################################################################");
@@ -66,19 +67,25 @@ namespace Spear
         // update settings after saving data
         private void configureToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            string errMsg = "";
-            SettingsViewData oldSvd = this.managerBusinessLayer.action_getSettings();
-            FormSettings settings = new FormSettings(oldSvd, this.managerBusinessLayer.gameName());
-            settings.ShowDialog();
-            if (settings.saveSettings)
+            if (DISABLE_SETTINGS_FORM)
             {
-                int ret = this.managerBusinessLayer.action_updateSettings(settings.getSettings(), out errMsg);
-                if(ret != Errors.SUCCESS)
+                log.Debug(" -- Settings Form disabled!");
+            }
+            else
+            {
+                string errMsg = "";
+                SettingsViewData oldSvd = this.managerBusinessLayer.action_getSettings();
+                FormSettings settings = new FormSettings(oldSvd, this.managerBusinessLayer.gameName());
+                settings.ShowDialog();
+                if (settings.saveSettings)
                 {
-                    MessageBox.Show(errMsg, "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    int ret = this.managerBusinessLayer.action_updateSettings(settings.getSettings(), out errMsg);
+                    if (ret != Errors.SUCCESS)
+                    {
+                        MessageBox.Show(errMsg, "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
                 }
             }
-
         }
 
         private void FormMain_Load(object sender, EventArgs e)
@@ -88,13 +95,8 @@ namespace Spear
             timer.Interval = 100; // 100 ms
             timer.Tick += new EventHandler(timer_Tick);
             timer.Start();
-
-
-            appendText(this.richTextConsole, "####################################################", Color.Purple);
-            appendText(this.richTextConsole, "##              SPEAR CONSOLE OUTPUT              ##", Color.Purple);
-            appendText(this.richTextConsole, "####################################################", Color.Purple);
+            appendText(this.richTextConsole, ">> SPEAR CONSOLE OUTPUT <<", Color.Purple);
             appendText(this.richTextConsole, "", Color.Purple);
-
         }
 
         private void dataGridViewActive_CellMouseClick(object sender, DataGridViewCellEventArgs e)
@@ -426,9 +428,9 @@ namespace Spear
             }
             else if (retval >= 100) // info
             {
-                string msg = Errors.errMsg(retval) + ". " + errMsg;
+                string msg = errMsg;
                 log.Debug("INFO " + retval + " => " + msg + ", errMsg:" + errMsg);
-                MessageBox.Show(errMsg, "INFO " + retval, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(errMsg, "INFO ", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 
@@ -730,7 +732,6 @@ namespace Spear
             }
         }
 
-
         private void openGameAppDataFolderToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string errMsg = "";
@@ -850,6 +851,26 @@ namespace Spear
         }
 
         private void richTextConsole_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void gameSettingsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.managerBusinessLayer.tool_openGameSettings();
+        }
+
+        private void spearLogsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.managerBusinessLayer.tool_openLogSettings();
+        }
+
+        private void toolStripComboBoxSelectGame_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void toolStripButton2_Click(object sender, EventArgs e)
         {
 
         }

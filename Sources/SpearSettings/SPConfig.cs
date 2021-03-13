@@ -14,7 +14,7 @@ namespace SpearSettings
     [XmlRoot("CONFIG", IsNullable = false)]
     public class SPConfig
     {
-        private readonly ILogger log = Log4NetLogger.getInstance(LogAppender.APP_SETTINGS);
+        private readonly ILogger log = Log4NetLogger.getInstance(LogAppender.APP_SETTINGS, Consts.DIR_SETTINGS);
         private readonly string STEAMPATH = @"C:\Program Files (x86)\Steam\steamapps\common";
         private readonly string DOCSPATH = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
         private readonly string APPDATAPATH = Environment.GetEnvironmentVariable("localappdata");
@@ -79,7 +79,7 @@ namespace SpearSettings
         {
             // vars
             SPConfig configuration;
-            ILogger logger = Log4NetLogger.getInstance(LogAppender.APP_SETTINGS);
+            ILogger logger = Log4NetLogger.getInstance(LogAppender.APP_SETTINGS, Consts.DIR_SETTINGS);
             string configFile = PathsHelper.getConfigFileName();
             // create if does not exit
             logger.Debug("CurrentDirectory:" + Directory.GetCurrentDirectory());

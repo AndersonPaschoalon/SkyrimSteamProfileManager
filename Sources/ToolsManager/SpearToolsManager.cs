@@ -34,8 +34,8 @@ namespace ToolsManager
 
         public SpearToolsManager(string gameName)
         {
-            log = Log4NetLogger.getInstance(LogAppender.APP_CORE);
-            CSharp.setLogger(Log4NetLogger.getInstance(LogAppender.APP_CORE));
+            log = Log4NetLogger.getInstance(LogAppender.APP_CORE, Consts.DIR_SETTINGS);
+            CSharp.setLogger(Log4NetLogger.getInstance(LogAppender.APP_CORE, Consts.DIR_SETTINGS));
             this.theGame = gameName;
             SPConfig config = SPConfig.loadConfig();
             if (config != null)

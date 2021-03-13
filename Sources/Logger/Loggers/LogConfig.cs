@@ -17,14 +17,19 @@ namespace Utils.Loggers
         private const string LV_WARN  = "WARN";
         private const string LV_ERROR = "ERROR";
 
-        public static LogLevel getLogLevel()
+        public static LogLevel getLogLevel(string rootFolder)
         {
-            // read xml into a string
-            //string LOG_CONFIG = "Utils.logConfig.xml";
-            string readText = "";
-            if (File.Exists(LOG_CONFIG))
+            rootFolder.Trim();
+            if (rootFolder[rootFolder.Length - 1] != '\\')
             {
-                readText = File.ReadAllText(LOG_CONFIG);
+                rootFolder += @"\";
+            }
+            string filePath = rootFolder + LogConfig.LOG_CONFIG;
+            string readText = "";
+            //if (File.Exists(LogConfig.LOG_CONFIG))
+            if (File.Exists(filePath))
+            {
+                readText = File.ReadAllText(filePath);
             }
             else
             {

@@ -73,6 +73,8 @@ namespace SpearSettings
         public const int ERR_PATH_NOT_FOUND_VORTEX = 056;
         public const int ERR_PATH_NOT_FOUND_DEFAULT = 057;
         public const int ERR_PATH_NULL_OR_EMPTY = 058;
+        public const int ERR_INTEGRITY_FILE_CORRUPTED = 059;
+        public const int ERR_NO_PROFILE_FOUND = 60;
         // INFO
         public const int INFO_OPERATION_CANCELLED_BY_USER = 100;
 
