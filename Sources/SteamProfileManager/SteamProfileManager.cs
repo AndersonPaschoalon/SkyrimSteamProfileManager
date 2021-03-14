@@ -118,8 +118,7 @@ namespace ProfileManager
                 return Errors.ERR_CANNOT_CREATE_INTEGRITY_FILE_1;
             }
             // update Manager state
-
-            this.updateManagerState();
+            this.reloadState();
             return Errors.SUCCESS;
         }
 
@@ -240,7 +239,7 @@ namespace ProfileManager
 
             log.Debug("STEP 5: update manager state...");
             profToActivate.isReady = true;
-            this.updateManagerState();
+            this.reloadState();
 
             outErrMsg = "";
             return Errors.SUCCESS;
@@ -367,6 +366,7 @@ namespace ProfileManager
                 log.Error(" ** Errors.ERR_MOVING_DIRECTORIES_2");
                 return Errors.ERR_MOVING_DIRECTORIES_2;
             }
+            this.reloadState();
             outMsg = "";
             return Errors.SUCCESS;
         }
@@ -423,8 +423,7 @@ namespace ProfileManager
             }
 
             // update settings
-            this.updateManagerState();
-
+            this.reloadState();
             return Errors.SUCCESS;
         }
 
@@ -533,7 +532,7 @@ namespace ProfileManager
                         return Errors.ERR_MOVING_DIRECTORIES_3;
                     }
                 }
-                this.updateManagerState();
+                this.reloadState();
                 errMsgRet = "SUCCESS";
                 return Errors.SUCCESS;
             }
@@ -621,6 +620,10 @@ namespace ProfileManager
         /// <returns></returns>
         public int checkInstallation(string profileName, out string errPath, out string errLabel)
         {
+            //errPath = "";
+            //errLabel = "";
+            //return Errors.SUCCESS;
+            this.reloadState();
             if (this.activeProfile != null && this.activeProfile.name.Equals(profileName))
             {
                 List<string> items =  integrityFile.activeIntegrityFileItems();
@@ -637,12 +640,12 @@ namespace ProfileManager
             {
                 foreach (var item in this.listDesactivated)
                 {
-                    if (item.Equals(profileName))
+                    if (item.name.Equals(profileName))
                     {
                         List<string> items = integrityFile.desactivatedIntegrityFileItems(profileName);
                         if (items.Count == 3)
                         {
-                            int retVal = this.paths.checkInstallationPaths(out errPath, out errLabel);
+                            int retVal = this.paths.checkBackupInstallationPaths(profileName, out errPath, out errLabel);
                             return retVal;
                         }
                         errPath = "";
