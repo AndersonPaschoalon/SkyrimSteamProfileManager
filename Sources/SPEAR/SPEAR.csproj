@@ -204,15 +204,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>dir
-IF EXIST  logConfig.xml (
-    echo ----------------------------------------------
-    echo -- Copy logConfig.xml  
-    echo ----------------------------------------------
-    move /Y  logConfig.xml  .\Settings\
-) ELSE (
-     echo  "logConfig.xml already copied."
-)
-</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
 </Project>

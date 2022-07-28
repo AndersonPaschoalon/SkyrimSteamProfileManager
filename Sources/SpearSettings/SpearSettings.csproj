@@ -85,17 +85,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>if $(ConfigurationName) == Debug (
-    echo ----------------------------------------------
-    echo -- Copy DEBUG  test  SPConfig.xml 
-    echo ----------------------------------------------
-    copy /Y  ..\..\SettingsDebug\SPConfig.xml  ..\..\..\SPEAR\bin\Debug\Settings\
-) ELSE (
-dir
-    echo ----------------------------------------------
-    echo -- Copy DELIVERY SPConfig.xml"
-    echo ----------------------------------------------
-    copy /Y ..\..\SettingsRelease\SPConfig.xml  ..\..\..\SPEAR\bin\Release\Settings\
-)</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
 </Project>
