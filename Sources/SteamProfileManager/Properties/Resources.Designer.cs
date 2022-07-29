@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ProfileManager.Properties {
+namespace SteamProfileManager.Properties {
     using System;
     
     

@@ -53,29 +53,25 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Debug\logConfig.xml" />
-    <Content Include="Debug\SPConfig.xml" />
     <Content Include="SPConfig.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Logger\Utils.csproj">
-      <Project>{cedc3029-a30f-46d9-9738-98f6114ea896}</Project>
-      <Name>Utils</Name>
-    </ProjectReference>
     <ProjectReference Include="..\SpearSettings\SpearSettings.csproj">
       <Project>{304d2e48-a00b-4f47-af2e-4d4214c56352}</Project>
       <Name>SpearSettings</Name>
     </ProjectReference>
-    <ProjectReference Include="..\SteamProfileManager\ProfileManager.csproj">
+    <ProjectReference Include="..\SteamProfileManager\SteamProfileManager.csproj">
       <Project>{e2edf30e-8041-4c61-b499-b251e6054a64}</Project>
-      <Name>ProfileManager</Name>
+      <Name>SteamProfileManager</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Utils\Utils.csproj">
+      <Project>{cedc3029-a30f-46d9-9738-98f6114ea896}</Project>
+      <Name>Utils</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Release\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>

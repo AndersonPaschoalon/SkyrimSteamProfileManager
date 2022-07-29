@@ -61,13 +61,13 @@
     <None Include="Properties\SPConfigTemplate.xml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Logger\Utils.csproj">
-      <Project>{cedc3029-a30f-46d9-9738-98f6114ea896}</Project>
-      <Name>Utils</Name>
-    </ProjectReference>
     <ProjectReference Include="..\SpearSettings\SpearSettings.csproj">
       <Project>{304D2E48-A00B-4F47-AF2E-4D4214C56352}</Project>
       <Name>SpearSettings</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Utils\Utils.csproj">
+      <Project>{cedc3029-a30f-46d9-9738-98f6114ea896}</Project>
+      <Name>Utils</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

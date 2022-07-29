@@ -54,32 +54,6 @@ namespace ToolsManager
             }
         }
 
-        #region files
-
-        public static bool exportLogsAsZip(string dstPath)
-        {
-            const string zipFile = @".\logs-spear.zip";
-            const string zipPath = @".\ZipTempDir\";
-            const string cmdDeleteZip = @"/C del /f .\logs-spear.zip";
-            const string cmdDeleteDir = @"/C rd /S /Q ZipTempDir";
-            const string cmdCreate = @"/C mkdir ZipTempDir";
-            const string cmdCopyLogs = @"/C xcopy /Y /s .\Logs\* .\ZipTempDir\";
-            const string cmdCopySettings = @"/C xcopy /Y /s .\Settings\* .\ZipTempDir\";
-            string cmdMoveToDst = @"move .\logs-spear.zip " + dstPath;
-
-            System.Diagnostics.Process.Start("CMD.exe", cmdDeleteZip);
-            System.Diagnostics.Process.Start("CMD.exe", cmdDeleteDir);
-            System.Diagnostics.Process.Start("CMD.exe", cmdCreate);
-            System.Diagnostics.Process.Start("CMD.exe", cmdCopyLogs);
-            System.Diagnostics.Process.Start("CMD.exe", cmdCopySettings);
-            ZipFile.CreateFromDirectory(zipPath, zipFile);
-            System.Diagnostics.Process.Start("CMD.exe", cmdMoveToDst);
-
-            return true;
-        }
-
-        #endregion files
-
         #region steam 
 
         public static void killSteamProcs(out string errMsg)

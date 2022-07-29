@@ -943,6 +943,26 @@ namespace Utils
             return true;
         }
 
+        public static string getCurrentDirectory()
+        {
+            string strWorkPath = "";
+            try
+            {
+                //This will give us the full name path of the executable file:
+                //i.e. C:\Program Files\MyApplication\MyApplication.exe
+                string strExeFilePath = System.Reflection.Assembly.GetExecutingAssembly().Location;
+                //This will strip just the working path name:
+                //C:\Program Files\MyApplication
+                strWorkPath = System.IO.Path.GetDirectoryName(strExeFilePath);
+
+            }
+            catch (Exception)
+            {  
+            }
+            return strWorkPath;
+        }
+
+
         #endregion fileSystemOperations
 
         #region private 

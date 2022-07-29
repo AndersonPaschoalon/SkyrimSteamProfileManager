@@ -4,8 +4,8 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.Diagnostics;
 using ProfileManagerBL.ViewModel;
-using ProfileManager;
-using ProfileManager.Enum;
+using SteamProfileManager;
+using SteamProfileManager.Enum;
 using Utils;
 using Utils.Loggers;
 using System.IO;
@@ -24,7 +24,7 @@ namespace ProfileManagerBL
         private SPGame gameSettings;
         private SPSettings settings;
         // manager
-        private SteamProfileManager manager;
+        private SteamProfileManager.SteamProfileManager manager;
         private SpearToolsManager tools;
 
 
@@ -52,7 +52,7 @@ namespace ProfileManagerBL
                 this.gameStr = game;
                 this.gameSettings = config.selectGame(game);
                 this.paths = new PathsHelper(this.settings, this.gameSettings);
-                this.manager = new SteamProfileManager(game);
+                this.manager = new SteamProfileManager.SteamProfileManager(game);
                 this.tools = new SpearToolsManager(game);
     }
             else
@@ -126,25 +126,25 @@ namespace ProfileManagerBL
             int nIn = this.countCheckedInactive();
             int nAc = this.countCheckedActive();
             int nDe = this.countCheckedDesactivated();
-            ProfileManager.Enum.SPMState state = this.manager.getApplicationState();
+            SteamProfileManager.Enum.SPMState state = this.manager.getApplicationState();
             EnabledOp eop = new EnabledOp();
 
             // Profile Operations /////////////////////////////////////////////
             eop.reloadProfile = true;
             switch (state)
             {
-                case ProfileManager.Enum.SPMState.NO_PROFILE:
+                case SteamProfileManager.Enum.SPMState.NO_PROFILE:
                     {
                         log.Debug("No Profile, No Operations Allowed");
                         break;
 
                     }
-                case ProfileManager.Enum.SPMState.NOT_CONFIGURED:
+                case SteamProfileManager.Enum.SPMState.NOT_CONFIGURED:
                     {
                         log.Debug("Not Configured, No Operations Allowed");
                         break;
                     }
-                case ProfileManager.Enum.SPMState.INACTIVE_PROFILE:
+                case SteamProfileManager.Enum.SPMState.INACTIVE_PROFILE:
                     // configuration and activation operation is permited
                     {
                         log.Debug("INACTIVE_PROFILE, activation is permited if selected");
@@ -155,7 +155,7 @@ namespace ProfileManagerBL
                         }
                         break;
                     }
-                case ProfileManager.Enum.SPMState.DESACTIVATED_ONLY:
+                case SteamProfileManager.Enum.SPMState.DESACTIVATED_ONLY:
                     // configuration and activation operations are permited
                     {
                         log.Debug("DESACTIVATED_ONLY edit and activation is permited if ONE is selected");
@@ -167,7 +167,7 @@ namespace ProfileManagerBL
                         }
                         break;
                     }
-                case ProfileManager.Enum.SPMState.ACTIVE_ONLY:
+                case SteamProfileManager.Enum.SPMState.ACTIVE_ONLY:
                     // configuration and desactivation operations are permited
                     {
                         log.Debug("ACTIVE_ONLY if one is selected desactivation and edit is permited");
@@ -178,7 +178,7 @@ namespace ProfileManagerBL
                         }
                         break;
                     }
-                case ProfileManager.Enum.SPMState.ACTIVE_AND_DESACTIVATED_PROFILES:
+                case SteamProfileManager.Enum.SPMState.ACTIVE_AND_DESACTIVATED_PROFILES:
                     // configuration, desactivation and switch operations are permited
                     {
                         log.Debug("ACTIVE_AND_DESACTIVATED_PROFILES edit, switch, desactive and edit permited");
@@ -313,7 +313,7 @@ namespace ProfileManagerBL
                 {
                     return ret;
                 }
-                this.manager = new SteamProfileManager(this.gameName());
+                this.manager = new SteamProfileManager.SteamProfileManager(this.gameName());
                 this.manager.reloadState();
                 this.tools = new SpearToolsManager(this.gameName());
             }
@@ -621,52 +621,52 @@ namespace ProfileManagerBL
             int nDe = this.countCheckedDesactivated();
             log.Debug("nIn:" + nIn + ", nAc:" + nAc + ", nDe:" + nDe);
 
-            ProfileManager.Enum.SPMState state;
+            SteamProfileManager.Enum.SPMState state;
             switch (test)
             {
                 case 0:
                     {
-                        state = ProfileManager.Enum.SPMState.ACTIVE_AND_DESACTIVATED_PROFILES;
+                        state = SteamProfileManager.Enum.SPMState.ACTIVE_AND_DESACTIVATED_PROFILES;
                         break;
                     }
                 case 1:
                     {
-                        state = ProfileManager.Enum.SPMState.NOT_CONFIGURED;
+                        state = SteamProfileManager.Enum.SPMState.NOT_CONFIGURED;
                         break;
                     }
                 case 2:
                     {
-                        state = ProfileManager.Enum.SPMState.NO_PROFILE;
+                        state = SteamProfileManager.Enum.SPMState.NO_PROFILE;
                         break;
                     }
                 case 3:
                     {
-                        state = ProfileManager.Enum.SPMState.INACTIVE_PROFILE;
+                        state = SteamProfileManager.Enum.SPMState.INACTIVE_PROFILE;
                         break;
                     }
                 case 4:
                     {
-                        state = ProfileManager.Enum.SPMState.ACTIVE_ONLY;
+                        state = SteamProfileManager.Enum.SPMState.ACTIVE_ONLY;
                         break;
                     }
                 case 5:
                     {
-                        state = ProfileManager.Enum.SPMState.DESACTIVATED_ONLY;
+                        state = SteamProfileManager.Enum.SPMState.DESACTIVATED_ONLY;
                         break;
                     }
                 case 6:
                     {
-                        state = ProfileManager.Enum.SPMState.ACTIVE_AND_DESACTIVATED_PROFILES;
+                        state = SteamProfileManager.Enum.SPMState.ACTIVE_AND_DESACTIVATED_PROFILES;
                         break;
                     }
                 case 7:
                     {
-                        state = ProfileManager.Enum.SPMState.ACTIVE_AND_DESACTIVATED_PROFILES;
+                        state = SteamProfileManager.Enum.SPMState.ACTIVE_AND_DESACTIVATED_PROFILES;
                         break;
                     }
                 default:
                     {
-                        state = ProfileManager.Enum.SPMState.ACTIVE_AND_DESACTIVATED_PROFILES;
+                        state = SteamProfileManager.Enum.SPMState.ACTIVE_AND_DESACTIVATED_PROFILES;
                         break;
                     }
             }
@@ -675,17 +675,17 @@ namespace ProfileManagerBL
             EnabledOp eop = new EnabledOp(); // return obj
             switch (state)
             {
-                case ProfileManager.Enum.SPMState.NO_PROFILE:
+                case SteamProfileManager.Enum.SPMState.NO_PROFILE:
                     {
                         log.Debug("No Profile, No Operations Allowed");
                         return eop;
                     }
-                case ProfileManager.Enum.SPMState.NOT_CONFIGURED:
+                case SteamProfileManager.Enum.SPMState.NOT_CONFIGURED:
                     {
                         log.Debug("Not Configured, No Operations Allowed");
                         return eop;
                     }
-                case ProfileManager.Enum.SPMState.INACTIVE_PROFILE:
+                case SteamProfileManager.Enum.SPMState.INACTIVE_PROFILE:
                     // configuration and activation operation is permited
                     {
                         log.Debug("INACTIVE_PROFILE, activation is permited if selected");
@@ -696,7 +696,7 @@ namespace ProfileManagerBL
                         }
                         return eop;
                     }
-                case ProfileManager.Enum.SPMState.DESACTIVATED_ONLY:
+                case SteamProfileManager.Enum.SPMState.DESACTIVATED_ONLY:
                     // configuration and activation operations are permited
                     {
                         log.Debug("DESACTIVATED_ONLY edit and activation is permited if ONE is selected");
@@ -708,7 +708,7 @@ namespace ProfileManagerBL
                         }
                         return eop;
                     }
-                case ProfileManager.Enum.SPMState.ACTIVE_ONLY:
+                case SteamProfileManager.Enum.SPMState.ACTIVE_ONLY:
                     // configuration and desactivation operations are permited
                     {
                         log.Debug("ACTIVE_ONLY if one is selected desactivation and edit is permited");
@@ -719,7 +719,7 @@ namespace ProfileManagerBL
                         }
                         return eop;
                     }
-                case ProfileManager.Enum.SPMState.ACTIVE_AND_DESACTIVATED_PROFILES:
+                case SteamProfileManager.Enum.SPMState.ACTIVE_AND_DESACTIVATED_PROFILES:
                     // configuration, desactivation and switch operations are permited
                     {
                         log.Debug("ACTIVE_AND_DESACTIVATED_PROFILES edit, switch, desactive and edit permited");
@@ -767,45 +767,45 @@ namespace ProfileManagerBL
                 case 0:
                     {
                         // 0 - ACTIVE_AND_DESACTIVATED_PROFILES
-                        managerState = ProfileManager.Enum.SPMState.ACTIVE_AND_DESACTIVATED_PROFILES;
+                        managerState = SteamProfileManager.Enum.SPMState.ACTIVE_AND_DESACTIVATED_PROFILES;
                         lp.Add(new ProfileViewData { color = Color.FromName("SlateBlue"), name = "Trest 00", state = ProfileType.ACTIVE });
                         break;
                     }
                 case 1:
                     {
                         // 1 - NOT_CONFIGURED  
-                        managerState = ProfileManager.Enum.SPMState.NOT_CONFIGURED;
+                        managerState = SteamProfileManager.Enum.SPMState.NOT_CONFIGURED;
                         break;
                     }
                 case 2:
                     {
                         // 2 - NO_PROFILE 
-                        managerState = ProfileManager.Enum.SPMState.NO_PROFILE;
+                        managerState = SteamProfileManager.Enum.SPMState.NO_PROFILE;
                         break;
                     }
                 case 3:
                     {
                         // 3 - INACTIVE_PROFILE 
-                        managerState = ProfileManager.Enum.SPMState.INACTIVE_PROFILE;
+                        managerState = SteamProfileManager.Enum.SPMState.INACTIVE_PROFILE;
                         return this.activated;
                     }
                 case 4:
                     {
                         // 4 - ACTIVE_ONLY 
                         lp.Add(new ProfileViewData { color = Color.FromName("SlateBlue"), name = "Vanilla01 - active only", state = ProfileType.ACTIVE });
-                        managerState = ProfileManager.Enum.SPMState.ACTIVE_ONLY;
+                        managerState = SteamProfileManager.Enum.SPMState.ACTIVE_ONLY;
                         break;
                     }
                 case 5:
                     {
                         // 5 - DESACTIVATED_ONLY 
-                        managerState = ProfileManager.Enum.SPMState.DESACTIVATED_ONLY;
+                        managerState = SteamProfileManager.Enum.SPMState.DESACTIVATED_ONLY;
                         break;
                     }
                 case 6:
                     {
                         // 6 - ACTIVE_AND_DESACTIVATED_PROFILES 
-                        managerState = ProfileManager.Enum.SPMState.ACTIVE_AND_DESACTIVATED_PROFILES;
+                        managerState = SteamProfileManager.Enum.SPMState.ACTIVE_AND_DESACTIVATED_PROFILES;
                         lp.Add(new ProfileViewData { color = Color.FromName("SlateBlue"), name = "Vanilla01 - active/des", state = ProfileType.ACTIVE });
                         break;
                     }
@@ -839,49 +839,49 @@ namespace ProfileManagerBL
                     {
                         // 0 - ACTIVE_AND_DESACTIVATED_PROFILES
                         MessageBox.Show("ACTIVE_AND_DESACTIVATED_PROFILES");
-                        managerState = ProfileManager.Enum.SPMState.ACTIVE_AND_DESACTIVATED_PROFILES;
+                        managerState = SteamProfileManager.Enum.SPMState.ACTIVE_AND_DESACTIVATED_PROFILES;
                         break;
                     }
                 case 1:
                     {
                         // 1 - NOT_CONFIGURED  
                         MessageBox.Show("NOT_CONFIGURED");
-                        managerState = ProfileManager.Enum.SPMState.NOT_CONFIGURED;
+                        managerState = SteamProfileManager.Enum.SPMState.NOT_CONFIGURED;
                         break;
                     }
                 case 2:
                     {
                         // 2 - NO_PROFILE 
                         MessageBox.Show("NO_PROFILE");
-                        managerState = ProfileManager.Enum.SPMState.NO_PROFILE;
+                        managerState = SteamProfileManager.Enum.SPMState.NO_PROFILE;
                         break;
                     }
                 case 3:
                     {
                         // 3 - INACTIVE_PROFILE 
                         MessageBox.Show("INACTIVE_PROFILE");
-                        managerState = ProfileManager.Enum.SPMState.INACTIVE_PROFILE;
+                        managerState = SteamProfileManager.Enum.SPMState.INACTIVE_PROFILE;
                         break;
                     }
                 case 4:
                     {
                         // 4 - ACTIVE_ONLY 
                         MessageBox.Show("ACTIVE_ONLY");
-                        managerState = ProfileManager.Enum.SPMState.ACTIVE_ONLY;
+                        managerState = SteamProfileManager.Enum.SPMState.ACTIVE_ONLY;
                         break;
                     }
                 case 5:
                     {
                         // 5 - DESACTIVATED_ONLY 
                         MessageBox.Show("DESACTIVATED_ONLY");
-                        managerState = ProfileManager.Enum.SPMState.DESACTIVATED_ONLY;
+                        managerState = SteamProfileManager.Enum.SPMState.DESACTIVATED_ONLY;
                         break;
                     }
                 case 6:
                     {
                         // 6 - ACTIVE_AND_DESACTIVATED_PROFILES
                         MessageBox.Show("ACTIVE_AND_DESACTIVATED_PROFILES");
-                        managerState = ProfileManager.Enum.SPMState.ACTIVE_AND_DESACTIVATED_PROFILES;
+                        managerState = SteamProfileManager.Enum.SPMState.ACTIVE_AND_DESACTIVATED_PROFILES;
                         break;
                     }
                 default:
@@ -900,7 +900,7 @@ namespace ProfileManagerBL
                 case 0:
                     {
                         // 0 - ACTIVE_AND_DESACTIVATED_PROFILES
-                        managerState = ProfileManager.Enum.SPMState.ACTIVE_AND_DESACTIVATED_PROFILES;
+                        managerState = SteamProfileManager.Enum.SPMState.ACTIVE_AND_DESACTIVATED_PROFILES;
                         lp.Add(new ProfileViewData { color = Color.FromName("SlateBlue"), name = "Test 00", state = ProfileType.DESACTIVATED });
                         lp.Add(new ProfileViewData { color = Color.FromName("SlateBlue"), name = "TestName01", state = ProfileType.DESACTIVATED });
                         lp.Add(new ProfileViewData { color = Color.FromName("BlueViolet"), name = "TestName02", state = ProfileType.DESACTIVATED });
@@ -917,31 +917,31 @@ namespace ProfileManagerBL
                 case 1:
                     {
                         // 1 - NOT_CONFIGURED  
-                        managerState = ProfileManager.Enum.SPMState.NOT_CONFIGURED;
+                        managerState = SteamProfileManager.Enum.SPMState.NOT_CONFIGURED;
                         break;
                     }
                 case 2:
                     {
                         // 2 - NO_PROFILE 
-                        managerState = ProfileManager.Enum.SPMState.NO_PROFILE;
+                        managerState = SteamProfileManager.Enum.SPMState.NO_PROFILE;
                         break;
                     }
                 case 3:
                     {
                         // 3 - INACTIVE_PROFILE
-                        managerState = ProfileManager.Enum.SPMState.INACTIVE_PROFILE;
+                        managerState = SteamProfileManager.Enum.SPMState.INACTIVE_PROFILE;
                         break;
                     }
                 case 4:
                     {
                         // 4 - ACTIVE_ONLY 
-                        managerState = ProfileManager.Enum.SPMState.ACTIVE_ONLY;
+                        managerState = SteamProfileManager.Enum.SPMState.ACTIVE_ONLY;
                         break;
                     }
                 case 5:
                     {
                         // 5 - DESACTIVATED_ONLY 
-                        managerState = ProfileManager.Enum.SPMState.DESACTIVATED_ONLY;
+                        managerState = SteamProfileManager.Enum.SPMState.DESACTIVATED_ONLY;
                         lp.Add(new ProfileViewData { color = Color.FromName("SlateBlue"), name = "TestName01 desOnly", state = ProfileType.DESACTIVATED });
                         lp.Add(new ProfileViewData { color = Color.FromName("BlueViolet"), name = "TestName02 desOnly", state = ProfileType.DESACTIVATED });
                         lp.Add(new ProfileViewData { color = Color.FromName("Blue"), name = "TestName03 desOnly", state = ProfileType.DESACTIVATED });
@@ -981,7 +981,7 @@ namespace ProfileManagerBL
                 case 6:
                     {
                         // 6 - ACTIVE_AND_DESACTIVATED_PROFILES 
-                        managerState = ProfileManager.Enum.SPMState.ACTIVE_AND_DESACTIVATED_PROFILES;
+                        managerState = SteamProfileManager.Enum.SPMState.ACTIVE_AND_DESACTIVATED_PROFILES;
                         lp.Add(new ProfileViewData { color = Color.FromName("SlateBlue"), name = "TestName01 desAct", state = ProfileType.DESACTIVATED });
                         lp.Add(new ProfileViewData { color = Color.FromName("BlueViolet"), name = "TestName02 desAct", state = ProfileType.DESACTIVATED });
                         lp.Add(new ProfileViewData { color = Color.FromName("Blue"), name = "TestName03 desAct", state = ProfileType.DESACTIVATED });

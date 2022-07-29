@@ -162,10 +162,6 @@
     <None Include="Resources\15-engineering.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Logger\Utils.csproj">
-      <Project>{CEDC3029-A30F-46D9-9738-98F6114EA896}</Project>
-      <Name>Utils</Name>
-    </ProjectReference>
     <ProjectReference Include="..\ProfileManagerBL\ProfileManagerBL.csproj">
       <Project>{F8EAEF56-A5C9-4163-94BA-3F0B702CC0FD}</Project>
       <Name>ProfileManagerBL</Name>
@@ -174,13 +170,17 @@
       <Project>{304d2e48-a00b-4f47-af2e-4d4214c56352}</Project>
       <Name>SpearSettings</Name>
     </ProjectReference>
-    <ProjectReference Include="..\SteamProfileManager\ProfileManager.csproj">
+    <ProjectReference Include="..\SteamProfileManager\SteamProfileManager.csproj">
       <Project>{E2EDF30E-8041-4C61-B499-B251E6054A64}</Project>
-      <Name>ProfileManager</Name>
+      <Name>SteamProfileManager</Name>
     </ProjectReference>
     <ProjectReference Include="..\ToolsManager\ToolsManager.csproj">
       <Project>{19740288-33F5-48DE-B07F-F3DBF4D8603E}</Project>
       <Name>ToolsManager</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Utils\Utils.csproj">
+      <Project>{cedc3029-a30f-46d9-9738-98f6114ea896}</Project>
+      <Name>Utils</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -200,11 +200,43 @@
     <None Include="Resources\15-open-git2.png" />
     <None Include="Resources\github-16.png" />
     <Content Include="Resources\15-document_view.png" />
+    <Content Include="SettingsDebug\SPConfig.xml" />
+    <Content Include="SettingsRelease\SPConfig.xml" />
     <Content Include="spear.ico" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
+    <PostBuildEvent>dir
+mkdir .\Settings\
+if $(ConfigurationName) == Debug (
+    echo ----------------------------------------------
+    echo -- Copy DEBUG  test  SPConfig.xml 
+    echo ----------------------------------------------
+    copy /Y  ..\..\SettingsDebug\SPConfig.xml  .\Settings\
+) ELSE (
+dir
+    echo ----------------------------------------------
+    echo -- Copy DELIVERY SPConfig.xml"
+    echo ----------------------------------------------
+    copy /Y ..\..\SettingsRelease\SPConfig.xml  .\Settings\
+)
+
+IF EXIST  logConfig.xml (
+    echo ----------------------------------------------
+    echo -- Copy logConfig.xml  
+    echo ----------------------------------------------
+    move /Y  logConfig.xml  .\Settings\
+) ELSE (
+     echo  "logConfig.xml already copied."
+)
+
+if $(ConfigurationName) == Debug (
+    echo ----------------------------------------------
+    echo -- Copy DEBUG  test  SPConfig.xml 
+    echo ----------------------------------------------
+    xcopy /s /y  "..\..\..\_Test_Enviroment\TestEnviroment\"  ".\TestEnviroment"
+) 
+</PostBuildEvent>
   </PropertyGroup>
 </Project>

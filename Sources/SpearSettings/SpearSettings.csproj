@@ -64,12 +64,6 @@
     <Compile Include="UserSettings.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Logger\Utils.csproj">
-      <Project>{CEDC3029-A30F-46D9-9738-98F6114EA896}</Project>
-      <Name>Utils</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -78,7 +72,12 @@
   <ItemGroup>
     <None Include="Properties\SPConfig.xml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Utils\Utils.csproj">
+      <Project>{cedc3029-a30f-46d9-9738-98f6114ea896}</Project>
+      <Name>Utils</Name>
+    </ProjectReference>
+  </ItemGroup>
   <ItemGroup>
     <Content Include="SettingsDebug\SPConfig.xml" />
     <Content Include="SettingsRelease\SPConfig.xml" />

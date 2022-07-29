@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ProfileManager.Enum
+namespace SteamProfileManager.Enum
 {
     public enum SPMState
     {

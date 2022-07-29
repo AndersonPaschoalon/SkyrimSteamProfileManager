@@ -19,7 +19,7 @@ namespace FormAppTest
             //string formName = "skyrim.exe";
             //string formName = "TESVEDIT";
             //string formName = "NMM";
-            string formName = "AoM";
+            string formName = "Skyrim";
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Form1(formName));
