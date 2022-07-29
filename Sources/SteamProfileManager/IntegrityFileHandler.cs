@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Utils;
 
-namespace ProfileManager
+namespace SteamProfileManager
 {
     public class IntegrityFileHandler
     {

@@ -1,0 +1,369 @@
+﻿<UserControl x:Class="GitSpear.UserControls.ProfilesBoard"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" xmlns:sdk="http://schemas.microsoft.com/netfx/2009/xaml/presentation"
+             Background="{DynamicResource MaterialDesignPaper}"
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}"              
+             xmlns:local="clr-namespace:GitSpear.UserControls"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+
+    <Border Grid.Row="0" 
+            BorderBrush="{DynamicResource PrimaryHueMidBrush}" 
+            BorderThickness="1"
+            Margin="0">
+        <Grid>
+        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="7*" ></RowDefinition>
+            <RowDefinition Height="3*" ></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <!-- PROFILES BOARD-->
+            
+            <Grid Visibility="Visible" 
+              Background="Lavender" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"></ColumnDefinition>
+                <ColumnDefinition Width="210"></ColumnDefinition>
+                <ColumnDefinition Width="60"></ColumnDefinition>
+                <ColumnDefinition Width="210"></ColumnDefinition>
+                <ColumnDefinition Width="1*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*" ></RowDefinition>
+            </Grid.RowDefinitions>
+
+            <!-- ACTIVATED PROFILES -->
+            <Border BorderBrush="{DynamicResource PrimaryHueMidBrush}" 
+                    Background="White"
+                    BorderThickness="0"  
+                    VerticalAlignment="Top"
+                    CornerRadius="6"
+                    Margin="0 20 0 15"
+                    Grid.Row="0" 
+                    Grid.Column="1">
+                <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth2" 
+                                     UniformCornerRadius="6" 
+                                     Padding="0 0 0 15">
+                    <Grid VerticalAlignment="Top">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="30" ></RowDefinition>
+                            <RowDefinition ></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <Border Grid.Row="0" 
+                            Background="{DynamicResource PrimaryHueMidBrush}" 
+                            BorderThickness="0"
+                            Margin="0">
+                        </Border>
+                        <!-- CARD HEADER -->
+                        <TextBlock Grid.Row="0" 
+                               Padding="15 5 5 5" 
+                               Foreground="White" > 
+                        Activated Profiles
+                        </TextBlock>
+                        <Grid Margin="6 0 6 0" Grid.Row="1" >
+                            
+                            <!-- ACTIVATED PROFILES HEADER -->
+                                <RadioButton 
+                                 GroupName="Desactivated"
+                                 Style="{DynamicResource MaterialDesignRaisedButton}"
+                                 Background="Gainsboro"
+                                 Foreground="Black"
+                                 x:Name="modcw2gwForst"
+                                 Height="35"
+                                 VerticalAlignment="Top"
+                                 HorizontalAlignment="Stretch"
+                                 HorizontalContentAlignment="Left"
+                                 Margin="0 5 0 0"
+                                 Padding="2"
+                                 ToolTip="Icon">
+                                    <StackPanel Orientation="Horizontal" 
+                                        HorizontalAlignment="Left">
+                                    <materialDesign:PackIcon  Kind="GamepadSquare" 
+                                                         Width="15" 
+                                                         Height="15" 
+                                                         HorizontalAlignment="Left"
+                                                         Margin="0 0 15 0" 
+                                                         Foreground="Silver"/>
+                                    <TextBlock>
+                                        <Bold FontSize="10">Dev-DSilHand</Bold>
+                                        <LineBreak></LineBreak>
+                                        <Italic Foreground="Gray" FontSize="6" >Created at 10/10/2020 | .gitignore | git initialized</Italic>
+                                        <LineBreak></LineBreak>
+                                        <Italic Foreground="Gray" FontSize="6" >DSilHand Mod Development</Italic>
+                                    </TextBlock>
+                                </StackPanel>
+                            </RadioButton>
+                            
+                        </Grid>
+                    </Grid>
+                </materialDesign:Card>
+            </Border>
+
+            <!-- DESACTIVATED PROFILES -->
+            <Border BorderBrush="{DynamicResource PrimaryHueMidBrush}" 
+                    BorderThickness="0"  
+                    VerticalAlignment="Top"
+                    CornerRadius="6"
+                    Margin="0 20 0 15"
+                    Grid.Row="0" 
+                    Grid.Column="3">
+                <materialDesign:Card materialDesign:ShadowAssist.ShadowDepth="Depth2" 
+                                     UniformCornerRadius="6" 
+                                     Padding="0 0 0 15">
+                    <Grid VerticalAlignment="Top">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="30" ></RowDefinition>
+                            <RowDefinition ></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <Border Grid.Row="0" 
+                            Background="{DynamicResource PrimaryHueMidBrush}" 
+                            BorderThickness="0"
+                            Margin="0">
+                        </Border>
+                        <!-- CARD HEADER -->
+                        <TextBlock Grid.Row="0" 
+                               Padding="15 5 5 5" 
+                               Foreground="White" > 
+                        Desactivated Profiles
+                        </TextBlock>
+                        <Grid Margin="6 0 6 0" Grid.Row="1" >
+
+                                <!-- DESACTIVATED PROFILES CARDS Style="{DynamicResource MaterialDesignRaisedButton}"-->
+                                <StackPanel Height="Auto">
+                                    <Border x:Name="radioBorder">
+                            <RadioButton GroupName="Desactivated"
+                                         Style="{DynamicResource MaterialDesignRaisedButton}"
+                                 Background="Gainsboro"
+                                 Foreground="Black"
+                                 x:Name="devDsilhand"
+                                 Height="25"
+                                 VerticalAlignment="Top"
+                                 HorizontalAlignment="Stretch"
+                                 HorizontalContentAlignment="Left"
+                                 Margin="0 5 0 0"
+                                 Padding="2"
+                                         Checked="devDsilhand_Checked"
+                                 ToolTip="Icon">
+                                        <StackPanel Orientation="Horizontal" 
+                                        HorizontalAlignment="Left">
+                                        <materialDesign:PackIcon  Kind="GamepadSquare" 
+                                                         Width="15" 
+                                                         Height="15" 
+                                                         HorizontalAlignment="Left"
+                                                         Margin="0 0 15 0" 
+                                                         Foreground="Silver"/>
+                                        <TextBlock>
+                                <Bold FontSize="10">Dev-DSilHand</Bold>
+                                <LineBreak></LineBreak>
+                                <Italic Foreground="Gray" FontSize="6" >Created at 10/10/2020</Italic>
+                                        </TextBlock>
+                                    </StackPanel>
+                                </RadioButton>
+                             </Border >
+                                        <RadioButton GroupName="Desactivated"
+                                 Style="{DynamicResource MaterialDesignRaisedButton}"
+                                 Background="Gainsboro"
+                                 Foreground="Black"
+                                 x:Name="devRedEable"
+                                 Height="25"
+                                 VerticalAlignment="Top"
+                                 HorizontalAlignment="Stretch"
+                                 HorizontalContentAlignment="Left"
+                                 Margin="0 5 0 0"
+                                 Padding="2"
+                                 ToolTip="Icon">
+                                    <StackPanel Orientation="Horizontal" 
+                                        HorizontalAlignment="Left">
+                                        <materialDesign:PackIcon  Kind="GamepadSquare" 
+                                                         Width="15" 
+                                                         Height="15" 
+                                                         HorizontalAlignment="Left"
+                                                         Margin="0 0 15 0" 
+                                                         Foreground="Green"/>
+                                        <TextBlock>
+                                <Bold FontSize="10">Dev-RedEagleLegend</Bold>
+                                <LineBreak></LineBreak>
+                                <Italic Foreground="Gray" FontSize="6" >Created at 10/10/2020</Italic>
+                                        </TextBlock>
+                                    </StackPanel>
+                                </RadioButton>
+                                <RadioButton GroupName="Desactivated"
+                                 Style="{DynamicResource MaterialDesignRaisedButton}"
+                                 Background="Gainsboro"
+                                 Foreground="Black"
+                                 x:Name="devAldmeriv2"
+                                 Height="25"
+                                 VerticalAlignment="Top"
+                                 HorizontalAlignment="Stretch"
+                                 HorizontalContentAlignment="Left"
+                                 Margin="0 5 0 0"
+                                 Padding="2"
+                                 ToolTip="Icon">
+                                    <StackPanel Orientation="Horizontal" 
+                                        HorizontalAlignment="Left">
+                                        <materialDesign:PackIcon  Kind="GamepadSquare" 
+                                                         Width="15" 
+                                                         Height="15" 
+                                                         HorizontalAlignment="Left"
+                                                         Margin="0 0 15 0" 
+                                                         Foreground="Purple"/>
+                                        <TextBlock>
+                                <Bold FontSize="10">Dev-AldmediDominionStreng2</Bold>
+                                <LineBreak></LineBreak>
+                                <Italic Foreground="Gray" FontSize="6" >Created at 10/10/2020</Italic>
+                                        </TextBlock>
+                                    </StackPanel>
+                                </RadioButton>
+                            </StackPanel>
+
+                        </Grid>
+                    </Grid>
+                </materialDesign:Card>
+            </Border>
+            
+            
+
+            <!-- Profile Board desactivated 
+            <GroupBox Grid.Row="1"
+                      Grid.RowSpan="2"
+                      Grid.Column="3"
+                      FontSize="12"
+                      Header="Desactivated Profiles"
+                      Height="Auto"
+                      Style="{DynamicResource MaterialDesignCardGroupBox}"
+                      Margin="0 16 0 0">
+
+                <StackPanel Height="Auto">
+
+                    <RadioButton GroupName="Desactivated"
+                                 Style="{DynamicResource MaterialDesignRaisedButton}"
+                                 Background="Lavender"
+                                 Foreground="Black"
+                                 x:Name="devDsilhand"
+                                 Height="25"
+                                 VerticalAlignment="Top"
+                                 HorizontalAlignment="Stretch"
+                                 HorizontalContentAlignment="Left"
+                                 Margin="0 5 0 0"
+                                 Padding="2"
+                                 ToolTip="Icon">
+                        <StackPanel Orientation="Horizontal" 
+                                        HorizontalAlignment="Left">
+                            <materialDesign:PackIcon  Kind="GamepadSquare" 
+                                                         Width="15" 
+                                                         Height="15" 
+                                                         HorizontalAlignment="Left"
+                                                         Margin="0 0 15 0" 
+                                                         Foreground="Silver"/>
+                            <TextBlock>
+                                <Bold FontSize="10">Dev-DSilHand</Bold>
+                                <LineBreak></LineBreak>
+                                <Italic Foreground="Gray" FontSize="6" >Created at 10/10/2020</Italic>
+                            </TextBlock>
+                        </StackPanel>
+                    </RadioButton>
+                    <RadioButton GroupName="Desactivated"
+                                 Style="{DynamicResource MaterialDesignRaisedButton}"
+                                 Background="Lavender"
+                                 Foreground="Black"
+                                 x:Name="devRedEable"
+                                 Height="25"
+                                 VerticalAlignment="Top"
+                                 HorizontalAlignment="Stretch"
+                                 HorizontalContentAlignment="Left"
+                                 Margin="0 5 0 0"
+                                 Padding="2"
+                                 ToolTip="Icon">
+                        <StackPanel Orientation="Horizontal" 
+                                        HorizontalAlignment="Left">
+                            <materialDesign:PackIcon  Kind="GamepadSquare" 
+                                                         Width="15" 
+                                                         Height="15" 
+                                                         HorizontalAlignment="Left"
+                                                         Margin="0 0 15 0" 
+                                                         Foreground="Green"/>
+                            <TextBlock>
+                                <Bold FontSize="10">Dev-RedEagleLegend</Bold>
+                                <LineBreak></LineBreak>
+                                <Italic Foreground="Gray" FontSize="6" >Created at 10/10/2020</Italic>
+                            </TextBlock>
+                        </StackPanel>
+                    </RadioButton>
+                    <RadioButton GroupName="Desactivated"
+                                 Style="{DynamicResource MaterialDesignRaisedButton}"
+                                 Background="Lavender"
+                                 Foreground="Black"
+                                 x:Name="devAldmeriv2"
+                                 Height="25"
+                                 VerticalAlignment="Top"
+                                 HorizontalAlignment="Stretch"
+                                 HorizontalContentAlignment="Left"
+                                 Margin="0 5 0 0"
+                                 Padding="2"
+                                 ToolTip="Icon">
+                        <StackPanel Orientation="Horizontal" 
+                                        HorizontalAlignment="Left">
+                            <materialDesign:PackIcon  Kind="GamepadSquare" 
+                                                         Width="15" 
+                                                         Height="15" 
+                                                         HorizontalAlignment="Left"
+                                                         Margin="0 0 15 0" 
+                                                         Foreground="Purple"/>
+                            <TextBlock>
+                                <Bold FontSize="10">Dev-AldmediDominionStreng2</Bold>
+                                <LineBreak></LineBreak>
+                                <Italic Foreground="Gray" FontSize="6" >Created at 10/10/2020</Italic>
+                            </TextBlock>
+                        </StackPanel>
+                    </RadioButton>
+                </StackPanel>
+            </GroupBox>
+             -->
+            
+        </Grid>
+
+
+        <!-- CONSOLE OUTPUT BOARD-->
+        <Grid Grid.Row="1">
+            <!-- CONSOLE OUTPUT COMPONENT-->
+            <Border BorderBrush="{DynamicResource PrimaryHueDarkBrush}" 
+                    BorderThickness="2"  
+                    Grid.Row="2" 
+                    Grid.Column="0" 
+                    Grid.ColumnSpan="5">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="20" ></RowDefinition>
+                        <RowDefinition Height="*" ></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Border Grid.Row="0" 
+                            Background="{DynamicResource PrimaryHueDarkBrush}" 
+                            BorderThickness="0"
+                            VerticalAlignment="Stretch"
+                            Margin="0">
+                    </Border>
+                    <TextBlock Grid.Row="0" 
+                               Padding="15 0 0 0" 
+                               Foreground="White"> 
+                        Console Output
+                    </TextBlock>
+                    <TextBlock Grid.Row="1" 
+                               Padding="5 5 5 5"  
+                               VerticalAlignment="Stretch" 
+                               Background="LightSlateGray">
+                        AAAA
+                    </TextBlock>
+                </Grid>
+            </Border>
+        </Grid>
+
+    </Grid>
+    </Border>
+</UserControl>

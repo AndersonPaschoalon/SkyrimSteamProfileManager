@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.VisualBasic.FileIO;
-using ProfileManager.Enum;
+using SteamProfileManager.Enum;
 using Utils;
 using Utils.Loggers;
 using System.Security.Permissions;
@@ -14,7 +14,7 @@ using System.Windows.Forms;
 using System.Diagnostics;
 using SpearSettings;
 
-namespace ProfileManager
+namespace SteamProfileManager
 {
     /** 
      * Usage:

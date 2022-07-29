@@ -10,6 +10,8 @@ namespace SpearSettings
 {
     public class SettingsFactory
     {
+        static SPConfig config = null;
+
         /// <summary>
         /// Tells if a game name exists on the list of configured games.
         /// </summary>
@@ -31,8 +33,11 @@ namespace SpearSettings
         /// <returns></returns>
         public static SPSettings getSettings()
         {
-            SPConfig config = SPConfig.loadConfig();
-            return config.settings; ;
+            if (SettingsFactory.config == null)
+            {
+                SettingsFactory.config = SPConfig.loadConfig();
+            }
+            return config.settings;
         }
 
         /// <summary>
@@ -42,7 +47,10 @@ namespace SpearSettings
         /// <returns></returns>
         public static SPGame getGameSettings(string gameName)
         {
-            SPConfig config = SPConfig.loadConfig();
+            if (SettingsFactory.config == null)
+            {
+                SettingsFactory.config = SPConfig.loadConfig();
+            }
             return  config.selectGame(gameName);
         }
 

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Drawing;
 using Utils;
 
-namespace ProfileManager
+namespace SteamProfileManager
 {
     public class ProfileData
     {

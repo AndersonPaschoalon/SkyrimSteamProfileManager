@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using Utils;
-using ProfileManager;
+using SteamProfileManager;
 using SpearSettings;
 
 namespace UnityTests
@@ -13,6 +13,9 @@ namespace UnityTests
     [TestClass]
     public class ProfileManagerTest
     {
+        const string CONFIG_PATH = "./Settings/";
+        const string CONFIG_FILE = "SPConfig.xml";
+        const string CONFIG_LOG = "logConfig.xml";
         const string GAME01 = "TestGame01";
         const string GAME02 = "TestGame02";
         const string GAME01_PROF1 = "Vanilla";
@@ -26,13 +29,16 @@ namespace UnityTests
         const string GAME_COLOR = "#FF00FF";
         const string GAME_CREATION_DATA = "2021/02/18";
         readonly string ENV_ROOT = Environment.CurrentDirectory + @"\\UNITY_TEST_ENVIROMENT\\";
-        SteamProfileManager manager;// = new SteamProfileManager()
+        SteamProfileManager.SteamProfileManager manager;// = new SteamProfileManager()
 
         #region TestGame01
 
         [TestMethod]
         public void TestMethod01_ActivateInactive_Prof1_TestGame01()
         {
+            Console.WriteLine("-- TestMethod01_ActivateInactive_Prof1_TestGame01()");
+            this.currentDirectory();
+
             string errMsg = "";
             string errlabel = "";
             int retVal = Errors.SUCCESS;
@@ -40,9 +46,10 @@ namespace UnityTests
             // install prof1
             this.helperCleanupEnv();
             this.helperInstallTestGame01();
+            this.helperConfigureApp("");
 
             // instantiate the profile manager
-            this.manager = new SteamProfileManager(ProfileManagerTest.GAME01);
+            this.manager = new SteamProfileManager.SteamProfileManager(ProfileManagerTest.GAME01);
 
             // activate prof1
             retVal = this.manager.activateInactiveProfile(ProfileManagerTest.GAME01_PROF1, 
@@ -66,7 +73,7 @@ namespace UnityTests
             int retVal = Errors.SUCCESS;
 
             // instantiate the profile manager
-            this.manager = new SteamProfileManager(ProfileManagerTest.GAME01);
+            this.manager = new SteamProfileManager.SteamProfileManager(ProfileManagerTest.GAME01);
 
             // desactivate prof1
             retVal = this.manager.desactivateActiveProfile(ProfileManagerTest.GAME01_PROF1,
@@ -93,7 +100,7 @@ namespace UnityTests
             this.helperInstallTestGame01();
 
             // instantiate the profile manager
-            this.manager = new SteamProfileManager(ProfileManagerTest.GAME01);
+            this.manager = new SteamProfileManager.SteamProfileManager(ProfileManagerTest.GAME01);
 
             // activate prof2
             retVal = this.manager.activateInactiveProfile(ProfileManagerTest.GAME01_PROF2,
@@ -119,7 +126,7 @@ namespace UnityTests
             int retVal = Errors.SUCCESS;
 
             // instantiate the profile manager
-            this.manager = new SteamProfileManager(ProfileManagerTest.GAME01);
+            this.manager = new SteamProfileManager.SteamProfileManager(ProfileManagerTest.GAME01);
 
             // desactivate prof2
             retVal = this.manager.desactivateActiveProfile(ProfileManagerTest.GAME01_PROF2,
@@ -146,7 +153,7 @@ namespace UnityTests
             this.helperInstallTestGame01();
 
             // instantiate the profile manager
-            this.manager = new SteamProfileManager(ProfileManagerTest.GAME01);
+            this.manager = new SteamProfileManager.SteamProfileManager(ProfileManagerTest.GAME01);
 
             // activate prof3
             retVal = this.manager.activateInactiveProfile(ProfileManagerTest.GAME01_PROF3,
@@ -172,7 +179,7 @@ namespace UnityTests
 
 
             // instantiate the profile manager
-            this.manager = new SteamProfileManager(ProfileManagerTest.GAME01);
+            this.manager = new SteamProfileManager.SteamProfileManager(ProfileManagerTest.GAME01);
 
             // switch  3 -> 1
             retVal = this.manager.switchProfile(ProfileManagerTest.GAME01_PROF3, 
@@ -206,7 +213,7 @@ namespace UnityTests
             int retVal = Errors.SUCCESS;
 
             // instantiate the profile manager
-            this.manager = new SteamProfileManager(ProfileManagerTest.GAME01);
+            this.manager = new SteamProfileManager.SteamProfileManager(ProfileManagerTest.GAME01);
 
             // switch  3 -> 1
             retVal = this.manager.editProfile(ProfileManagerTest.GAME01_PROF1,
@@ -227,7 +234,7 @@ namespace UnityTests
         [TestMethod]
         public void TestMethod08_Cleanup_TestGame01()
         {
-            //this.helperCleanupEnv();
+            this.helperCleanupEnv();
         }
 
         #endregion TestGame01
@@ -245,7 +252,7 @@ namespace UnityTests
             this.helperInstallTestGame02();
 
             // instantiate the profile manager
-            this.manager = new SteamProfileManager(ProfileManagerTest.GAME02);
+            this.manager = new SteamProfileManager.SteamProfileManager(ProfileManagerTest.GAME02);
 
             // activate prof1
             retVal = this.manager.activateInactiveProfile(ProfileManagerTest.GAME02_PROF1,
@@ -268,7 +275,7 @@ namespace UnityTests
             int retVal = Errors.SUCCESS;
 
             // instantiate the profile manager
-            this.manager = new SteamProfileManager(ProfileManagerTest.GAME02);
+            this.manager = new SteamProfileManager.SteamProfileManager(ProfileManagerTest.GAME02);
 
             // desactivate prof1
             retVal = this.manager.desactivateActiveProfile(ProfileManagerTest.GAME02_PROF1,
@@ -294,7 +301,7 @@ namespace UnityTests
             this.helperInstallTestGame02();
 
             // instantiate the profile manager
-            this.manager = new SteamProfileManager(ProfileManagerTest.GAME02);
+            this.manager = new SteamProfileManager.SteamProfileManager(ProfileManagerTest.GAME02);
 
             // activate prof2
             retVal = this.manager.activateInactiveProfile(ProfileManagerTest.GAME02_PROF2,
@@ -319,7 +326,7 @@ namespace UnityTests
             int retVal = Errors.SUCCESS;
 
             // instantiate the profile manager
-            this.manager = new SteamProfileManager(ProfileManagerTest.GAME02);
+            this.manager = new SteamProfileManager.SteamProfileManager(ProfileManagerTest.GAME02);
 
             // desactivate prof2
             retVal = this.manager.desactivateActiveProfile(ProfileManagerTest.GAME02_PROF2,
@@ -345,7 +352,7 @@ namespace UnityTests
             this.helperInstallTestGame02();
 
             // instantiate the profile manager
-            this.manager = new SteamProfileManager(ProfileManagerTest.GAME02);
+            this.manager = new SteamProfileManager.SteamProfileManager(ProfileManagerTest.GAME02);
 
             // activate prof3
             retVal = this.manager.activateInactiveProfile(ProfileManagerTest.GAME02_PROF3,
@@ -369,7 +376,7 @@ namespace UnityTests
             int retVal = Errors.SUCCESS;
 
             // instantiate the profile manager
-            this.manager = new SteamProfileManager(ProfileManagerTest.GAME02);
+            this.manager = new SteamProfileManager.SteamProfileManager(ProfileManagerTest.GAME02);
 
             // switch  3 -> 1
             retVal = this.manager.switchProfile(ProfileManagerTest.GAME02_PROF3,
@@ -401,7 +408,7 @@ namespace UnityTests
             int retVal = Errors.SUCCESS;
 
             // instantiate the profile manager
-            this.manager = new SteamProfileManager(ProfileManagerTest.GAME02);
+            this.manager = new SteamProfileManager.SteamProfileManager(ProfileManagerTest.GAME02);
 
             // switch  3 -> 1
             retVal = this.manager.editProfile(ProfileManagerTest.GAME02_PROF1,
@@ -428,6 +435,20 @@ namespace UnityTests
         #endregion TestGame02
 
         #region envBuilders
+
+        private void helperConfigureApp(string resourceFolder)
+        {
+            string appSettingsDst = CONFIG_PATH + CONFIG_FILE;
+            string logSettingsDst = CONFIG_PATH + CONFIG_LOG;
+            string logSettings = CONFIG_LOG;
+            string appSettings = resourceFolder + CONFIG_FILE;
+            if (!Directory.Exists(CONFIG_PATH))
+            {
+                Directory.CreateDirectory(CONFIG_PATH);
+            }
+            File.Copy(appSettings, appSettingsDst, true);
+            File.Copy(logSettings, logSettingsDst, true);
+        }
 
         private bool helperInstallTestGame01()
         {
@@ -530,6 +551,11 @@ namespace UnityTests
             }
             
             return true;
+        }
+
+        void currentDirectory()
+        {
+            Console.WriteLine("Working Directory: " + Utils.CSharp.getCurrentDirectory());
         }
 
         #endregion envBuilders
